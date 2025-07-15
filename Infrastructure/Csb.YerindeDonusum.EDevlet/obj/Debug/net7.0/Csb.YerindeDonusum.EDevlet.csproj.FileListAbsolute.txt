@@ -1,0 +1,17 @@
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\bin\Debug\net7.0\Csb.YerindeDonusum.EDevlet.deps.json
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\bin\Debug\net7.0\Csb.YerindeDonusum.EDevlet.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\bin\Debug\net7.0\Csb.YerindeDonusum.EDevlet.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\bin\Debug\net7.0\Csb.YerindeDonusum.Application.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\bin\Debug\net7.0\Csb.YerindeDonusum.Application.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\obj\Debug\net7.0\Csb.YerindeDonusum.EDevlet.csproj.AssemblyReference.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\obj\Debug\net7.0\Csb.YerindeDonusum.EDevlet.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\obj\Debug\net7.0\Csb.YerindeDonusum.EDevlet.AssemblyInfoInputs.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\obj\Debug\net7.0\Csb.YerindeDonusum.EDevlet.AssemblyInfo.cs
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\obj\Debug\net7.0\Csb.YerindeDonusum.EDevlet.csproj.CoreCompileInputs.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\obj\Debug\net7.0\Csb.Yeri.8712E8A1.Up2Date
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\obj\Debug\net7.0\Csb.YerindeDonusum.EDevlet.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\obj\Debug\net7.0\refint\Csb.YerindeDonusum.EDevlet.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\obj\Debug\net7.0\Csb.YerindeDonusum.EDevlet.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.EDevlet\obj\Debug\net7.0\ref\Csb.YerindeDonusum.EDevlet.dll

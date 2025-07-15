@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "dgSpecHash": "8Xhf25pLbwY=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Core\\Csb.YerindeDonusum.Domain\\Csb.YerindeDonusum.Domain.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.11\\microsoft.entityframeworkcore.7.0.11.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.11\\microsoft.entityframeworkcore.abstractions.7.0.11.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\7.0.11\\microsoft.entityframeworkcore.analyzers.7.0.11.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\7.0.11\\microsoft.entityframeworkcore.relational.7.0.11.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\7.0.0\\microsoft.extensions.caching.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.extensions.caching.memory\\7.0.0\\microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.extensions.logging\\7.0.0\\microsoft.extensions.logging.7.0.0.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.extensions.options\\7.0.0\\microsoft.extensions.options.7.0.0.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\nettopologysuite\\2.5.0\\nettopologysuite.2.5.0.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\nettopologysuite.io.postgis\\2.1.0\\nettopologysuite.io.postgis.2.1.0.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\npgsql\\7.0.6\\npgsql.7.0.6.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\7.0.11\\npgsql.entityframeworkcore.postgresql.7.0.11.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql.nettopologysuite\\7.0.11\\npgsql.entityframeworkcore.postgresql.nettopologysuite.7.0.11.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\npgsql.nettopologysuite\\7.0.6\\npgsql.nettopologysuite.7.0.6.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\sixlabors.imagesharp\\3.1.5\\sixlabors.imagesharp.3.1.5.nupkg.sha512",
+    "C:\\Users\\oguzkaan.yuce\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'SixLabors.ImageSharp' 3.1.5 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8",
+      "projectPath": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Core\\Csb.YerindeDonusum.Domain\\Csb.YerindeDonusum.Domain.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Core\\Csb.YerindeDonusum.Domain\\Csb.YerindeDonusum.Domain.csproj",
+      "libraryId": "SixLabors.ImageSharp",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
+}

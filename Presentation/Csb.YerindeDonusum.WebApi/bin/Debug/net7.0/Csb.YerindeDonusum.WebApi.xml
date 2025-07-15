@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Csb.YerindeDonusum.WebApi</name>
+    </assembly>
+    <members>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.BilgilendirmeMesajController.GetirBilgilendirmeMesajById(System.Int32)">
+            <summary>
+            Id bilgisine gore ilgili bilgilendirme mesaj bilgisini dondurmektedir.
+            </summary>
+            <param name="id">Bilgilendirme Mesaj Id bilgisi</param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.BilgilendirmeMesajController.GetirBilgilendirmeMesajByAnahtar(System.String)">
+            <summary>
+            Anahtar bilgisine gore ilgili bilgilendirme mesaj bilgisini dondurmektedir.
+            </summary>
+            <param name="anahtar">Bilgilendirme mesaj anahtar bilgisi</param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.BilgilendirmeMesajController.GetirListeBilgilendirmeMesaj">
+            <summary>
+            Anahtar bilgisine gore ilgili bilgilendirme mesaj bilgisini dondurmektedir.
+            </summary>
+            <param name="anahtar">Bilgilendirme mesaj anahtar bilgisi</param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.BilgilendirmeMesajWebController.GetirBilgilendirmeMesajById(System.Int32)">
+            <summary>
+            Id bilgisine gore ilgili bilgilendirme mesaj bilgisini dondurmektedir.
+            </summary>
+            <param name="id">Bilgilendirme Mesaj Id bilgisi</param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.BilgilendirmeMesajWebController.GetirBilgilendirmeMesajByAnahtar(System.String)">
+            <summary>
+            Anahtar bilgisine gore ilgili bilgilendirme mesaj bilgisini dondurmektedir.
+            </summary>
+            <param name="anahtar">Bilgilendirme mesaj anahtar bilgisi</param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.BilgilendirmeMesajWebController.GetirListeBilgilendirmeMesaj">
+            <summary>
+            Anahtar bilgisine gore ilgili bilgilendirme mesaj bilgisini dondurmektedir.
+            </summary>
+            <param name="anahtar">Bilgilendirme mesaj anahtar bilgisi</param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.OfisKonumController.GetirOfisKonumListe(Csb.YerindeDonusum.Application.CQRS.OfisKonumCQRS.Queries.GetirOfisKonumListeQuery)">
+            <summary>
+            Web portalı için ofis konum listesini döndürmektedir.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.OfisKonumController.GetirDetayliListe(Csb.YerindeDonusum.Application.CQRS.OfisKonumCQRS.Queries.GetirOfisKonumListeDetayliQuery)">
+            <summary>
+            Admin paneli için ofis konum listesini döndürmektedir.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.OfisKonumController.GetirOfisKonumDetay(Csb.YerindeDonusum.Application.CQRS.OfisKonumCQRS.Queries.GetirOfisKonumDetayQuery)">
+            <summary>
+            Web portalı için ofis konum detayını getirir.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Csb.YerindeDonusum.WebApi.Controllers.TakbisController">
+            <summary>
+            takbis web servisi islemleri
+            </summary>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisController.#ctor(MediatR.IMediator)">
+            <summary>
+            ctor
+            </summary>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisController.GetirListeIl">
+            <summary>
+            takbis servisi uzerinden tum illerin listesini doner
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisController.GetirListeDepremIl">
+            <summary>
+            takbis servisi uzerinden deprem illerin listesini doner
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisController.GetirListeByTakbisIlId(System.Int32)">
+            <summary>
+            takbis il id bilgisi ile takbis servis uzerinden ildeki ilcelerin listesini doner
+            </summary>
+            <param name="takbisIlId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisController.GetirListeMahalleByIlceId(System.Int32)">
+            <summary>
+            ilçe id bilgisi ile takbis servis üzerinden ilçedeki mahalle listesini donuyor
+            </summary>
+            <param name="takbisIlceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisController.GetirListeAdaByMahalleId(System.Int32)">
+            <summary>
+            mahalle id bilgisi ile takbis servis üzerinden ilçedeki ada listesini donuyor
+            </summary>
+            <param name="takbisMahalleId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisController.GetirListeParselByMahalleId(System.Int32,System.String)">
+            <summary>
+            mahalle id bilgisi ile takbis servis üzerinden ilçedeki ada listesini donuyor
+            </summary>
+            <param name="takbisMahalleId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Csb.YerindeDonusum.WebApi.Controllers.TakbisWebController">
+            <summary>
+            takbis web servisi islemleri
+            </summary>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisWebController.#ctor(MediatR.IMediator)">
+            <summary>
+            ctor
+            </summary>
+            <param name="mediator"></param>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisWebController.GetirListeIl(Csb.YerindeDonusum.Application.CQRS.IlCQRS.Queries.GetAllTakbisIlQuery.GetAllTakbisIlQuery)">
+            <summary>
+            takbis servisi uzerinden tum illerin listesini doner
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisWebController.GetirListeDepremIl(Csb.YerindeDonusum.Application.CQRS.IlCQRS.Queries.GetAllTakbisDepremIlQuery.GetAllTakbisDepremIlQuery)">
+            <summary>
+            takbis servisi uzerinden deprem illerin listesini doner
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisWebController.GetirListeByTakbisIlId(Csb.YerindeDonusum.Application.CQRS.TakbisCQRS.Queries.GetirListeIlceByTakbisIlId.GetirListeIlceByTakbisIlIdQuery)">
+            <summary>
+            takbis il id bilgisi ile takbis servis uzerinden ildeki ilcelerin listesini doner
+            </summary>
+            <param name="takbisIlId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisWebController.GetirListeMahalleByIlceId(Csb.YerindeDonusum.Application.CQRS.TakbisCQRS.Queries.GetirListeMahalleByTakbisIlceIdQuery.GetirListeMahalleByTakbsiIlceIdQuery)">
+            <summary>
+            ilçe id bilgisi ile takbis servis üzerinden ilçedeki mahalle listesini donuyor
+            </summary>
+            <param name="takbisIlceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisWebController.GetirListeAdaByMahalleId(Csb.YerindeDonusum.Application.CQRS.TakbisCQRS.Queries.GetirListeMahalleByTakbisIlceIdQuery.GetirListeAdaByTakbisMahalleIdQuery)">
+            <summary>
+            mahalle id bilgisi ile takbis servis üzerinden ilçedeki ada listesini donuyor
+            </summary>
+            <param name="takbisMahalleId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApi.Controllers.TakbisWebController.GetirListeParselByMahalleId(Csb.YerindeDonusum.Application.CQRS.TakbisCQRS.Queries.GetirParselMahalleIdAdaIdDenQuery.GetirListeParselByTakbisMahalleIdAdaIdQuery)">
+            <summary>
+            mahalle id bilgisi ile takbis servis üzerinden ilçedeki ada listesini donuyor
+            </summary>
+            <param name="takbisMahalleId"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

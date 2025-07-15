@@ -1,0 +1,17 @@
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\bin\Debug\net7.0\Csb.YerindeDonusum.Takbis.deps.json
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\bin\Debug\net7.0\Csb.YerindeDonusum.Takbis.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\bin\Debug\net7.0\Csb.YerindeDonusum.Takbis.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\bin\Debug\net7.0\Csb.YerindeDonusum.Application.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\bin\Debug\net7.0\Csb.YerindeDonusum.Application.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\obj\Debug\net7.0\Csb.YerindeDonusum.Takbis.csproj.AssemblyReference.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\obj\Debug\net7.0\Csb.YerindeDonusum.Takbis.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\obj\Debug\net7.0\Csb.YerindeDonusum.Takbis.AssemblyInfoInputs.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\obj\Debug\net7.0\Csb.YerindeDonusum.Takbis.AssemblyInfo.cs
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\obj\Debug\net7.0\Csb.YerindeDonusum.Takbis.csproj.CoreCompileInputs.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\obj\Debug\net7.0\Csb.Yeri.059938B7.Up2Date
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\obj\Debug\net7.0\Csb.YerindeDonusum.Takbis.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\obj\Debug\net7.0\refint\Csb.YerindeDonusum.Takbis.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\obj\Debug\net7.0\Csb.YerindeDonusum.Takbis.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Takbis\obj\Debug\net7.0\ref\Csb.YerindeDonusum.Takbis.dll

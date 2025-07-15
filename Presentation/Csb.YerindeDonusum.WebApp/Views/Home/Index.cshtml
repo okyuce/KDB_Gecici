@@ -1,0 +1,152 @@
+﻿@{
+    ViewData["Title"] = "Yerinde Dönüşüm - Kentsel Dönüşüm Başkanlığı";
+}
+@model List<IllerViewModel>
+
+<!-- hero section ==------------------- -->
+<section class="hero-section ">
+    <div class="container">
+        <div class="content">
+            <div class="text">
+                <h3 style="font-size: 1.9rem;color:var(--bs-heading-color);">DEPREM BÖLGESİNDE <em style="color:#e41010;">YERİNDE DÖNÜŞÜM</em></h3>
+                <h4 style="font-size: 1.7rem;margin-top:40px;">DEPREMZEDE VATANDAŞLARIMIZA <em>HİBE VE KREDİ</em> DESTEĞİ</h4>
+                <p style="font-size: 12pt;margin-top:40px;">
+                    Yerinde dönüşüm modeliyle deprem bölgesinde yaralar daha hızla sarılıyor. Yerinde dönüşüm modeliyle yerinde dönüştürülecek konutlara 750 BİN ₺ ve iş yerlerine 400 BİN ₺ hibe desteği veriyoruz. Konutlar için 750 BİN ₺, Ahırlı Köy Evleri için 1 MİLYON ₺ ve İş yerleri için 400 BİN ₺; 2 yıl ödemesiz olmak üzere toplam azami 10 yıl vadeli ve faizsiz kredi desteği sunuyoruz.
+                </p>
+                <br />
+                <div class="bottom">
+                    <h5>Köy Tipi Afet Konutları Kitapçığı</h5>
+                    <a target="_blank" href="https://webdosya.csb.gov.tr/db/yapiisleri/menu/afet-konutlari-kitapcigi-_17-07-2023-_20230717080443.pdf"><img src="~/storage/qrs/afet_konutlari_qr.jpeg" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- hero section ==------------------- -->
+<section class="projects-section mt-5" id="ofisilleri">
+    <div class="container">
+        <div class="title">
+            <span style="font-size:18pt;"><b style="color: #e41010;">YAPIM ve DÖNÜŞÜM OFİSİ</b> BULUNAN İLLERİMİZ</span>
+        </div>
+    </div>
+</section>
+<!-- hero carousel ==------------------- -->
+<section class="herocarousel-section large-container mt-3" id="basvuru">
+    <div class="container">
+        <div class="owl-carousel owl-theme" id="herocarousel">
+            @if(Model?.Count() > 0)
+            {
+                foreach (var il in Model)
+                {
+                    <div class="item">
+                        <div class="content">
+                            <div class="card" style="width: 100%; min-height:250px;border:none; margin: 10px; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.2) 3px 3px 8px 1px;">
+                                <div class="card-body pb-0">
+                                    <h5 class="card-title py-1">@il?.IlAdi?.ToUpper()</h5>
+                                    <div class="d-flex align-items-center" style="height: calc(100% - 55px);">  
+                                        <img style="width:17%" src="~/img/map-128.png"> 
+                                        <ul class="my-0" style="margin-left:20%;">
+                                            @if (il?.Ilceler?.Count > 0)
+                                            {
+                                                foreach (var ilce in il.Ilceler)
+                                                {
+                                                    <li class="h6" style="list-style-type: disc;">@ilce.IlceAdi.ToUpper()</li>
+                                                } 
+                                            }                                           
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>          
+                        </div>
+                    </div>
+                }
+            }   
+        </div>
+    </div>
+</section> <!-- hero carousel ==------------------- -->
+<!-- paying plans- ==------------------- -->
+<section class="payingplans-section" id="payment">
+    <div class="container">
+        <div class="m-title">
+            <h3>Deprem Bölgesinin Yerinde Dönüşüm Modeli</h3>
+            <h4>Deprem Bölgesinin İhya ve İnşasında Yeni Bir Dönem Başlıyor</h4>
+        </div>
+    </div>
+    <div class="container">
+        <div class="payingexpans">
+            <div class="tabs-sec">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="tab-pane1" role="tabpanel" aria-labelledby="tab1" tabindex="0">
+                        <div class="boxes">
+                            <div class="row">
+                                <div class="item col-md-12 col-lg-6">
+                                    <div class="content">
+                                        <div class="top-image"></div>
+                                        <div class="bottom-details">
+                                            <div class="top bg-primary">
+                                                <img src="img/icon/yerinde_logo_beyaz.png" width="40" alt="">
+                                                <h4>Kredi</h4>
+                                            </div>
+                                            <div class="bottom" style="padding: 15px 15px 5px 15px;text-align: justify;">
+                                                <ul>
+                                                    <li>Konutlar için 750 BİN ₺, Ahırlı Köy Evleri için 1 MİLYON ₺ ve İş yerleri için 400 BİN ₺ kredi verilebilir.</li>
+                                                    <li>En fazla 3 bağımsız bölüm için kredi alınabilir.</li>
+                                                    <li>Kredi kullandırıldıktan sonra 2 yıl ödemesiz olmak üzere toplam azami 10 yıl vadeli ve faizsiz olarak ödenir.</li>
+                                                    <li>7269 sayılı Kanun kapsamında hak sahibi olanlara kredi verilmez.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item col-md-12 col-lg-6">
+                                    <div class="content">
+                                        <div class="top-image">
+                                        </div>
+                                        <div class="bottom-details">
+                                            <div class="top ">
+                                                <img src="~/img/icon/yerinde_logo_beyaz.png" width="40" alt="">
+                                                <h4>Hibe</h4>
+                                            </div>
+                                            <div class="bottom" style="padding: 15px 15px 5px 15px;text-align: justify;">
+                                                <ul>
+                                                    <li>Hibe tutarı konut için 750.000 ₺, iş yeri için ise 400.000 ₺' dir.</li>
+                                                    <li>Bir hak sahibine sadece bir konut ve bir iş yeri için hibe verilebilir.</li>
+                                                    <li>Birden fazla taşınmazı olan hak sahipleri yalnızca bir konut ve bir iş yeri için bu yardımdan yararlanabilirler</li>
+                                                    <li>7269 sayılı Kanun kapsamında hak sahibi olanlara hibe verilmez.</li>
+                                                </ul>  
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<section class="projects-section mt-5" id="map-section">
+    <div class="container">
+        <div class="title">
+            <h3>Yapım ve Dönüşüm Ofislerimiz</h3>
+            <p>
+                06.02.2023 tarihli deprem afeti nedeniyle yapısı hasar gören malikler yeni yapacakları yapılarına ilişkin yapı ruhsatı alındıktan sonraki bir yıl içerisinde hibe ve kredi başvurusunda bulunabilir.
+            </p>
+            <p>
+                Son Yapı Ruhsat Tarihi: 30.06.2025
+            </p>
+            <p>
+                İmar ve Kentsel Dönüşüm Alan çalışmalarından dolayı gecikenler için: 31.08.2025
+            </p>
+
+            <p>Bilgi almak isteyen vatandaşlarımız <a style="font-weight:700;display: contents;color: #e41010;" href="tel:181">ALO 181</a> çağrı merkezimizi arayabilirler ya da <strong>yapım ve dönüşüm ofislerimizi</strong> ziyaret edebilirler.</p>
+        </div>
+    </div>
+    <div id="map"></div>
+    <div id="popup" class="ol-popup">
+        <div id="popup-content">
+        </div>
+    </div>
+</section>

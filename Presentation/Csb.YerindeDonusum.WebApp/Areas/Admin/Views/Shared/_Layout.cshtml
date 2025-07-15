@@ -1,0 +1,114 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Security.Claims;
+@using System.Globalization;
+@{
+    string title = "Yerinde Dönüşüm Yönetim Paneli";
+    title = ViewBag.Title != null ? (ViewBag.Title + " - " + title) : title;
+}
+<!DOCTYPE html>
+<html lang="tr" data-bs-theme-mode="light">
+<head>
+    <title>@title</title>
+    @await Html.PartialAsync("_Head.cshtml")
+    @RenderSection("Head", required: false)
+</head>
+<body id="kt_app_body" data-kt-app-layout="light-sidebar" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
+    <script>var defaultThemeMode = "light"; var themeMode; if (document.documentElement) { if (document.documentElement.hasAttribute("data-bs-theme-mode")) { themeMode = document.documentElement.getAttribute("data-bs-theme-mode"); } else { if (localStorage.getItem("data-bs-theme") !== null) { themeMode = localStorage.getItem("data-bs-theme"); } else { themeMode = defaultThemeMode; } } if (themeMode === "system") { themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } document.documentElement.setAttribute("data-bs-theme", themeMode); }</script>
+    <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
+        <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
+            @await Html.PartialAsync("_Header.cshtml")
+            <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
+                @await Html.PartialAsync("_Sidebar.cshtml")
+                <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+                    <div class="d-flex flex-column flex-column-fluid">
+                        <div id="kt_app_content" class="app-content flex-column-fluid">
+                            <div id="kt_app_toolbar" class="app-toolbar  py-3 py-lg-6 "> </div>
+                            @RenderBody()
+                        </div>
+                    </div>
+                    @await Html.PartialAsync("_Footer.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
+        <i class="ki-duotone ki-arrow-up">
+            <span class="path1"></span>
+            <span class="path2"></span>
+        </i>
+    </div>
+    @await Html.PartialAsync("_Foot.cshtml")
+    <script type="text/javascript">
+        window.kullanici = {
+            id: @int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value ?? ""),
+            kullaniciAdi: '@Html.Raw(User.Claims.FirstOrDefault(x => x.Type == "KullaniciAdi")?.Value ?? "")',
+            tcKimlikNo: @(User.Claims.FirstOrDefault(x => x.Type == "TcKimlikNo")?.Value ?? "0"),
+            ad: '@Html.Raw(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)?.Value ?? "")',
+            soyad: '@Html.Raw(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Surname)?.Value ?? "")',
+            adSoyad: '@Html.Raw(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value ?? "")',
+            birimAdi: '@Html.Raw(User.Claims.FirstOrDefault(x => x.Type == "BirimAdi")?.Value ?? "")',
+            birimIlId: @int.Parse(User.Claims.FirstOrDefault(x => x.Type == "BirimIlId")?.Value ?? "0")
+        };
+        window.culture = {
+            dateSeparator: "@CultureInfo.CurrentCulture.DateTimeFormat.DateSeparator",
+            timeSeparator: "@CultureInfo.CurrentCulture.DateTimeFormat.TimeSeparator",
+            shortDatePattern: "@CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.Replace('d','D')",
+            currencySymbol: "₺", //'@CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol',
+            numberDecimalSeparator: "@CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator",
+            numberDecimalDigits: @CultureInfo.CurrentCulture.NumberFormat.NumberDecimalDigits,
+            currencyDecimalSeparator: "@CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator",
+            currencyDecimalDigits: @CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalDigits,
+            numberGroupSeparator: "@CultureInfo.CurrentCulture.NumberFormat.NumberGroupSeparator"
+        };
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#model_sifre_degistir').on('hidden.bs.modal', function (event) {
+                $("#model_sifre_degistir input").val("").trigger('change');
+            });
+
+            $('#model_sifre_degistir').on('shown.bs.modal', function (event) {
+
+            });
+            $(document).on('click', "#model_sifre_degistir_iptal", function (e) {
+                $("#model_sifre_degistir").modal("hide");
+            });
+
+            $(document).on('click', "#model_sifre_degistir_kaydet", function (e) {
+                e.preventDefault();
+
+                if (!validateForm("#model_sifre_degistir_form")) {
+                    return;
+                }
+
+                let formData = serializeFormAsObject("#model_sifre_degistir_form");
+                startLoader($("#model_sifre_degistir"));
+                Request("/admin/kullanici/sifreDegistir", formData, 'post')
+                    .done(function (response) {
+                        stopLoader($("#model_sifre_degistir"));
+
+                        toastr.success("Şifreniz başarıyla değiştirilmiştir.");
+
+                        $("#model_sifre_degistir").modal("hide");
+                    })
+                    .fail(function (jqXHR, textStatus) {
+                        stopLoader($("#model_sifre_degistir"));
+                        toastr.error(getAjaxErrorMessage(jqXHR));
+                    });
+            });
+
+        });
+        function SifreDegistirModal(uyariGorunsun) {
+            $("#model_sifre_degistir").modal("show");
+            if (uyariGorunsun) {
+                $("#divAlertParolaYenile").show();
+            }
+            else {
+                $("#divAlertParolaYenile").hide();
+            }
+            return;
+        }
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

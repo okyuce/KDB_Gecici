@@ -1,0 +1,218 @@
+﻿@using Csb.YerindeDonusum.Application.CustomAddons;
+@using Csb.YerindeDonusum.Application.Enums;
+@using Csb.YerindeDonusum.WebApp.Areas.Admin.Enums;
+
+@{
+    ViewBag.Title = "Başvuru Değerlendirme";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    string BinaDegerlendirmeControllerUrl = "/admin/binadegerlendirme";
+}
+
+<div class="app-container container-fluid">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div class="card mb-5 mb-xl-8">
+            <div class="card-header collapsible cursor-pointer rotate collapsed" data-bs-toggle="collapse" data-bs-target="#kt_docs_card_collapsible">
+                <h3 class="card-title">Filtrele</h3>
+                <div class="card-toolbar rotate-180">
+                    <i class="ki-duotone ki-down fs-1"></i>
+                </div>
+            </div>
+            <div id="kt_docs_card_collapsible" class="collapse">
+                <form data-name="tableListFilter" class="card-body py-2 px-6">
+                    <div class="row mt-4">
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>İl</span>
+                            </label>
+                            <select name="UavtIlNo"
+                                class="form-select select-2" 
+                                data-ajax-target="/admin/uavt/GetirListeDepremIl" 
+                                data-custom-value="id" data-custom-text="ad">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>İlçe</span>
+                            </label>
+                            <select name="UavtIlceNo" class="form-select select-2">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Mahalle</span>
+                            </label>
+                            <select name="UavtMahalleNo"
+                                    class="form-select select-2">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Ada No</span>
+                            </label>
+                            <input type="text"
+                                   class="form-control integer-mask"
+                                   data-onenter-submit="true"
+                                   data-onenter-click="#rapor_sorgula"
+                                   autocomplete="off"
+                                   placeholder="Ada No"
+                                   name="TapuAda" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Parsel No</span>
+                            </label>
+                            <input type="text"
+                                   class="form-control integer-mask"
+                                   data-onenter-submit="true"
+                                   data-onenter-click="#rapor_sorgula"
+                                   autocomplete="off"
+                                   placeholder="Parsel No"
+                                   name="TapuParsel" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Askı Kodu</span>
+                            </label>
+                            <input type="text" class="form-control"
+                                   data-onenter-submit="true"
+                                   data-onenter-click="#rapor_sorgula"
+                                   autocomplete="off" placeholder="Askı Kodu" name="HasarTespitAskiKodu" />
+                        </div>
+                        <div class="col-md-6 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Başvuru Değerlendirme Durumu</span>
+                            </label>
+                            <select name="BinaDegerlendirmeDurumId"
+                                    class="form-select select-2"
+                                    multiple="multiple"
+                                    data-ajax-target="/admin/select/GetirBinaDegerlendirmeDurumListe"
+                                    data-custom-value="basvuruDurumId"
+                                    data-custom-text="ad">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12 text-right">
+                            <button type="reset" id="rapor_filtre_temizle" class="btn btn-dark mr-10">
+                                <i class="ki-duotone ki-trash fs-1"><i class="path1"></i><i class="path2"></i><i class="path3"></i><i class="path4"></i><i class="path5"></i></i> Temizle
+                            </button>
+                            <button type="button" id="rapor_sorgula" class="btn btn-primary">
+                                <i class="ki-duotone ki-filter fs-1"><i class="path1"></i><i class="path2"></i></i> Sorgula
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-5 mb-xl-8">
+        <div class="card-header">
+            <h3 class="card-title">Değerlendirme Listesi</h3>
+        </div>
+        <div class="card-body py-2 px-6">
+            <div class="table-responsive">
+                <table class="table table-row-bordered table-striped table-row-gray-200 align-middle dataTable"
+                       data-name="tableList"
+                       data-ajax-target="@BinaDegerlendirmeControllerUrl/GetirListeBinaDegerlendirmeServerSide"
+                       data-server-side="true"
+                       data-responsive="true"
+                       data-searching="false">
+                    <thead>
+                        <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                            <th data-name="hasarTespitIlAdi" data-sort="false">İl</th>
+                            <th data-name="hasarTespitIlceAdi" data-sort="false">İlçe</th>
+                            <th data-name="hasarTespitMahalleAdi" data-sort="false">Mahalle</th>
+                            <th data-name="hasarTespitAskiKodu" data-sort="false">Askı Kodu</th>
+                            <th data-name="katAdedi" data-sort="false">Kat Adeti</th>
+                            <th data-name="basvuruSay" data-sort="false">Başvuru Sayısı</th>
+                            <th data-name="sonHasarDurumu" data-sort="false" data-width="140px">Son Hasar Durumu</th>
+                            <th data-name="oran" class="all" data-sort="false">Oran</th>
+                            <th data-name="basvuruDegerlendirmeDurumAd" class="all" data-sort="false" data-width="222px">Başvuru Değerlendirme Sonucu</th>
+                            <th data-name="odemeDurumAd" class="all" data-sort="false">Ödeme Durumu</th>
+                            <th data-name="Buttons" class="all text-center" data-sort="false" data-export="false" data-width="110px">İşlem</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/admin/metronic/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js"></script>
+
+    <script type="text/javascript">
+        //#region ...: Global Variables :...
+        const BinaDegerlendirmeControllerUrl = "/admin/binadegerlendirme";
+        //#endregion ...: Global Variables : ...
+
+        //#region ...: Document & Event Methods :...
+        $(document).ready(function () {
+            $(document).on('click', "#rapor_filtre_temizle", function (e) {
+                resetForm($("form[data-name='tableListFilter']"));
+                reloadTable("data-name='tableList']", $(this));
+            });
+
+            $(document).on('click', "#rapor_sorgula", function (e) {
+                reloadTable("[data-name='tableList']");
+            });
+
+            $(document).on('change', "form[data-name='tableListFilter'] select[name='UavtIlNo']", function (e) {
+                let ilKod = parseInt($(this).val() || 0);
+
+                if (ilKod <= 0) {
+                    $("form[data-name='tableListFilter'] select[name='UavtIlceNo']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                startLoader("form[data-name='tableListFilter'] select[name='UavtIlceNo']");
+                fillSelect("form[data-name='tableListFilter'] select[name='UavtIlceNo']", "/admin/uavt/GetirListeIlce?ilKod=" + ilKod, null, function () {
+                    stopLoader("form[data-name='tableListFilter'] select[name='UavtIlceNo']");
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("form[data-name='tableListFilter'] select[name='UavtIlceNo']");
+                });
+            });
+
+            $(document).on('change', "form[data-name='tableListFilter'] select[name='UavtIlceNo']", function (e) {
+                let ilceKod = parseInt($(this).val() || 0);
+
+                if (ilceKod <= 0) {
+                    $("form[data-name='tableListFilter'] select[name='UavtMahalleNo']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                $("form[data-name='tableListFilter'] input[name='UavtIlceAdi']").val($(this).select2('data')[0]?.text?.trim());
+
+                startLoader("form[data-name='tableListFilter'] select[name='UavtMahalleNo']");
+                fillSelect("form[data-name='tableListFilter'] select[name='UavtMahalleNo']", "/admin/uavt/GetirListeMahalle?ilceKod=" + ilceKod, null, function () {
+                    stopLoader("form[data-name='tableListFilter'] select[name='UavtMahalleNo']");
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("[data-name='tableListFilter'] select[name='UavtMahalleNo']");
+                });
+            });
+        });
+
+        function ajaxTableComplete(data, tableElem) {
+            let tableName = tableElem.attr("data-name");
+            if (tableName == "tableList") {
+                $.each(data, function (index, row) {
+                    row.Buttons = `<div class="d-flex flex-center">`;
+
+                    row.Buttons += `<button type="button" class="btn btn-sm btn-icon btn-light-dark me-2" data-placement="top" data-toggle="tooltip" title="Yapı İşlemleri Sayfasına Git" onclick="(function(){window.open('/admin/basvurudegerlendirme/?askiKodu=${row.hasarTespitAskiKodu}&uavtMahalleNo=${row.uavtMahalleNo}','_blank'); return false;})();return false;"><i class="fa fa-building"></i></button>`;
+
+                    row.Buttons += `</div>`;
+                    row.oran = `<label class="badge badge-${(row.oran > 50 ? "success" : "danger")}">%${row.oran}</label>`;
+                });
+            }
+            return data;
+        }
+
+        //#endregion ...: Document & Event Methods :...
+    </script>
+}

@@ -1,0 +1,53 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "yerinde_donusumContext",
+   "ContextNamespace": "Csb.YerindeDonusum.Persistance.Context",
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": "Csb.YerindeDonusum.Domain.Entities",
+   "OutputContextPath": "Context\/",
+   "OutputPath": "..\/..\/Core\/Csb.YerindeDonusum.Domain\/Entities\/",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "public.basvuru",
+         "ObjectType": 0
+      },
+      {
+        "Name": "public.basvuru_dosya",
+        "ObjectType": 0
+      },
+      {
+         "Name": "public.aydinlatma_metni",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.kullanici",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": ".yerinde_donusum",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": true,
+   "UseSchemaFolders": false,
+   "UseSpatial": true,
+   "UseT4": false
+}

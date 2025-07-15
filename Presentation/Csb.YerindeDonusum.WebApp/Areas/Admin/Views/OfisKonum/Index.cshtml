@@ -1,0 +1,446 @@
+﻿@{
+    ViewBag.Title = "Ofislerimiz";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #zoomLabel {
+        display: none;
+        background: #8d8d8d9e;
+        border-radius: 5px;
+        padding: 1em;
+        font-size: 15pt;
+        font-weight: 700;
+        position: absolute;
+        top: 45%;
+        z-index: 9999;
+        width: 100%;
+        align-items: center;
+        align-content: center;
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+<div class="modal fade" id="modal_ofiskonum" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered mw-800px">
+        <div class="modal-content rounded">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+            </div>
+            <div class="modal-body scroll-y px-10 px-lg-10 pt-0 pb-10">
+                <form id="modal_ofiskonum_form" onsubmit="return false;" novalidate="novalidate" class="form" action="#">
+                    <div class="mb-13 text-center">
+                        <h1 id="modal_ofiskonum_title" class="mb-3">Ofis Güncelle</h1>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex flex-column mb-8 fv-row">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span class="required">İl</span>
+                                </label>
+                                <input type="hidden" id="OfisKonumId" name="OfisKonumId" />
+                                <input type="text" class="form-control form-control-solid" placeholder="İl" name="IlAdi" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex flex-column mb-8 fv-row">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span class="required">İlçe</span>
+                                </label>
+                                <input type="text" class="form-control form-control-solid" placeholder="İlçe" name="IlceAdi" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Adres</span>
+                        </label>
+                        <input type="text" class="form-control form-control-solid" placeholder="Adres" name="Adres" />
+                    </div>
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Konum</span>
+                        </label>
+                        <input type="hidden" name="Enlem" />
+                        <input type="hidden" name="Boylam" />
+                        <div class="input-group mb-3">
+                            <input type="text" name="Koordinat" class="form-control form-control-solid col-md-8" placeholder="Enlem, Boylam" disabled>
+                            <div class="input-group-append">
+                                <button type="button" id="konum_sifirla" class="btn btn-primary">Sıfırla</button>
+                            </div>
+                        </div>
+                        <label class="d-flex align-items-center fs-6 fw-semibold text-danger">
+                            <small>Lütfen enlem boylamı haritadan seçiniz.</small>
+                        </label>
+                        <div id="map" style="height:300px;margin-top:20px;"></div>
+                        <div id="popup" class="ol-popup">
+                            <div id="popup-content">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Durum</span>
+                        </label>
+                        <select name="AktifMi" class="form-control form-control-solid select-2">
+                            <option></option>
+                            <option value="true">Aktif</option>
+                            <option value="false">Pasif</option>
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="reset" id="modal_ofiskonum_iptal" class="btn btn-light me-3">İptal</button>
+                        <button type="submit" id="modal_ofiskonum_kaydet" class="btn btn-primary">
+                            <span id="modal_ofiskonum_kaydet_text" class="indicator-label">Kaydet</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="kt_app_content_container" class="app-container container-fluid">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div class="card mb-5 mb-xl-8">
+            <div class="card-body py-2 px-6">
+                <div class="table-responsive">
+                    <table class="table table-row-bordered table-striped table-row-gray-200 align-middle dataTable"
+                           data-name="tableList"
+                           data-ajax-target="/admin/ofiskonum/GetirDetayliListe"
+                           data-server-side="false"
+                           data-responsive="true"
+                           data-export-buttons="true"
+                           data-custom-button="Ofis Ekle"
+                           data-custom-button-function="OfisKonumEkleGuncelleModal"
+                           data-custom-button-param="0">
+                        <thead>
+                            <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                                <th data-name="ilAdi" data-sort="false">İl</th>
+                                <th data-name="ilceAdi" data-sort="false">İlçe</th>
+                                <th data-name="adres" data-sort="false">Adres</th>
+                                <th data-name="enlem" data-sort="false">Koordinat</th>
+                                <th data-name="aktifMi" data-sort="false" data-width="70px">Durum</th>
+                                <th data-name="Buttons" class="all" data-sort="false" data-export="false" data-width="70px"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/ol.js"></script>
+
+    <script type="text/javascript">
+
+        let iconFeature;
+        let markerSource;
+        let markerSource2;
+        let cevapEditor = false;
+        let ofisKonumRowData = false;
+
+        function addMarker(loc, newMarker = false) {
+            let iconFeatureTemp = new ol.Feature({
+                geometry: new ol.geom.Point(ol.proj.transform([loc.boylam, loc.enlem], 'EPSG:4326', 'EPSG:3857')),
+                name: loc.ilAdi + "/" + loc.ilceAdi,
+                desc: loc.adres,
+                enlem: loc.enlem,
+                boylam: loc.boylam,
+                population: 1,
+                rainfall: 1
+            });
+
+            if (newMarker) {
+                if (iconFeature) markerSource2.removeFeature(iconFeature);
+
+                iconFeature = iconFeatureTemp;
+
+                markerSource2.addFeature(iconFeature);
+
+                $("input[name='Koordinat']").val(loc.boylam + ", " + loc.enlem);
+                $("input[name='Enlem']").val(loc.enlem);
+                $("input[name='Boylam']").val(loc.boylam);
+            }
+            else {
+                markerSource.addFeature(iconFeatureTemp);
+            }
+        }
+
+        function OpenLayerInit(location = false) {
+            if (!location) {
+                location = {
+                    enlem: "37.38607500041787",
+                    boylam: "37.29585478680868"
+                };
+            }
+
+            let enlem = location.enlem;
+            let boylam = location.boylam;
+            let defZoom = 8.3;
+
+            markerSource = new ol.source.Vector();
+            markerSource2 = new ol.source.Vector();
+            let markerStyle = new ol.style.Style({
+                image: new ol.style.Icon({
+                    anchor: [0.5, 1],
+                    scale: 0.6,
+                    //size: [ 10, 10],
+                    title: 'Detay için tıklayınız.',
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    opacity: 1,
+                    src: '/img/location64.png'
+                })
+            });
+            let markerStyle2 = new ol.style.Style({
+                image: new ol.style.Icon({
+                    anchor: [0.5, 1],
+                    scale: 0.6,
+                    //size: [ 10, 10],
+                    title: 'Detay için tıklayınız.',
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    opacity: 1,
+                    src: '/img/placeholderB.png'
+                })
+            });
+
+            let map = new ol.Map({
+                target: 'map',
+                interactions: ol.interaction.defaults.defaults({ mouseWheelZoom: false }),
+                //controls: ol.control.defaults.defaults({ fullscreen: true }),
+                controls: ol.control.defaults.defaults().extend([
+                    new ol.control.FullScreen()
+                ]),
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.OSM(),
+                    }),
+                    new ol.layer.Vector({
+                        source: markerSource,
+                        style: markerStyle,
+                    }),
+                    new ol.layer.Vector({
+                        source: markerSource2,
+                        style: markerStyle2,
+                    }),
+                ],
+                view: new ol.View({
+                    center: ol.proj.fromLonLat([boylam, enlem]),
+                    zoom: defZoom,
+                    maxZoom: 20
+                })
+            });
+
+            //create globaly a mouse wheel interaction and add it to the map
+            let mouseWheelInt = new ol.interaction.MouseWheelZoom();
+            map.addInteraction(mouseWheelInt);
+
+            map.on('wheel', function (evt) {
+                let ctrlDown = evt.originalEvent.ctrlKey;
+                mouseWheelInt.setActive(ctrlDown);
+
+                if (!ctrlDown) {
+                    $("#zoomLabel").show();
+                    setTimeout(function () {
+                        $("#zoomLabel").fadeOut(300);
+                    }, 2000);
+                }
+
+            });
+
+            let container = document.getElementById('popup');
+            let content = document.getElementById('popup-content');
+            //let closer = document.getElementById('popup-closer');
+
+            const overlay = new ol.Overlay({
+                element: container,
+                positioning: 'bottom-center',
+                stopEvent: false,
+            });
+            map.addOverlay(overlay);
+
+            $("#map .ol-viewport").append('<p id="zoomLabel">Yakınlaştırmak İçin Ctrl tuşuna basılı tutun.</p>');
+
+            map.on('click', function (event) {
+                let point = map.getCoordinateFromPixel(event.pixel)
+                let lonLat = ol.proj.toLonLat(point);
+                let clickedLocation = {
+                    enlem: 0,
+                    boylam: 0
+                };
+                if (lonLat[0] >= '44.308049784333335' || lonLat[0] <= '26.279051210536064' || lonLat[1] >= '42.08651509895316' || lonLat[1] <= '35.952519248903315') {
+                    //toastrHandler.alert('Türkiye sınırları içerisinden seçim yapmalısınız.');
+                }
+                else {
+                    clickedLocation.enlem = lonLat[1];
+                    clickedLocation.boylam = lonLat[0];
+                    addMarker(clickedLocation, true);
+                }
+            });
+
+            if (ofisKonumRowData) {
+                addMarker(location);
+            }
+        }
+
+        $(document).ready(function () {
+            $('#modal_ofiskonum').on('shown.bs.modal', function (event) {
+                OpenLayerInit(ofisKonumRowData);
+            });
+
+            $('#modal_ofiskonum').on('hidden.bs.modal', function (event) {
+                $("#OfisKonumId").val("");
+                $("#modal_ofiskonum_title").html("");
+                $("#modal_ofiskonum_kaydet_text").html("");
+                $("#map").html("");
+                $("input[name='IlAdi']").val("");
+                $("input[name='IlceAdi']").val("");
+                $("input[name='Adres']").val("");
+                $("input[name='Koordinat']").val("");
+                $("input[name='Enlem']").val("");
+                $("input[name='Boylam']").val("");
+                $("[name='AktifMi']").val("").trigger("change");
+                ofisKonumRowData = false;
+            });
+
+            $(document).on('click', "#modal_ofiskonum_iptal", function (e) {
+                $("#modal_ofiskonum").modal("hide");
+            });
+
+            $(document).on('click', "#konum_sifirla", function (e) {
+                if (ofisKonumRowData) {
+                    $("input[name='Koordinat']").val(ofisKonumRowData.enlem + ", " + ofisKonumRowData.boylam);
+                    $("input[name='Enlem']").val(ofisKonumRowData.enlem);
+                    $("input[name='Boylam']").val(ofisKonumRowData.boylam);
+                    if (iconFeature) {
+                        markerSource2.removeFeature(iconFeature);
+                        iconFeature = null;
+                    }
+                } 
+                else 
+                {
+                    $("input[name='Koordinat']").val("");
+                    $("input[name='Enlem']").val("");
+                    $("input[name='Boylam']").val("");
+                    if (iconFeature) {
+                        markerSource2.removeFeature(iconFeature);
+                        iconFeature = null;
+                    }
+                }
+            });
+
+            $(document).on('click', "#modal_ofiskonum_kaydet", function (e) {
+                e.preventDefault();
+
+                let formData = serializeFormAsObject("#modal_ofiskonum_form");
+
+                formData["enlem"] = formData["enlem"]?.replace(".", ",");
+                formData["boylam"] = formData["boylam"]?.replace(".", ",");
+                formData["konum"] = "POINT(" + formData["enlem"]?.replace(",", ".") + " " + formData["boylam"]?.replace(",", ".") + ")";
+
+                startLoader("#modal_ofiskonum");
+
+                Request("/admin/ofiskonum/" + (ofisKonumRowData ? "guncelle" : "ekle"), formData, 'post')
+                    .done(function (response) {
+                        stopLoader("#modal_ofiskonum");
+
+                        toastr.success("Ofis başarıyla " + (ofisKonumRowData ? "güncellendi." : "eklendi."));
+
+                        $("#modal_ofiskonum").modal("hide");
+
+                        reloadTable("[data-name='tableList']");
+                    })
+                    .fail(function (jqXHR, textStatus) {
+                        stopLoader("#modal_ofiskonum");
+                        toastr.error(getAjaxErrorMessage(jqXHR));
+                    });
+            });
+
+        });
+
+        function OfisKonumEkleGuncelleModal(id) {
+            if (!(id > 0)) {
+                $("#modal_ofiskonum_kaydet_text").html("Ekle");
+                $("#modal_ofiskonum_title").html("Ofis Ekle");
+                $("#modal_ofiskonum").modal("show");
+                return;
+            }
+
+            startLoader("[data-name='tableList']");
+
+            Request("/admin/ofiskonum/getirdetay", { ofisKonumId: id }, 'get')
+                .done(function (response) {
+                    stopLoader("[data-name='tableList']");
+
+                    ofisKonumRowData = response;
+
+                    if (ofisKonumRowData) {
+                        $("#modal_ofiskonum_title").html("Ofis Güncelle");
+                        $("#modal_ofiskonum_kaydet_text").html("Güncelle");
+                        $("#OfisKonumId").val(ofisKonumRowData.ofisKonumId);
+                        $("input[name='IlAdi']").val(ofisKonumRowData.ilAdi);
+                        $("input[name='IlceAdi']").val(ofisKonumRowData.ilceAdi);
+                        $("input[name='Adres']").val(ofisKonumRowData.adres);
+                        $("input[name='Koordinat']").val(ofisKonumRowData.enlem + ", " + ofisKonumRowData.boylam);
+                        $("input[name='Enlem']").val(ofisKonumRowData.enlem);
+                        $("input[name='Boylam']").val(ofisKonumRowData.boylam);
+                        $("[name='AktifMi']").val(ofisKonumRowData.aktifMi == 1 ? "true" : "false").trigger("change");
+                    }
+
+                    $("#modal_ofiskonum").modal("show");
+                })
+                .fail(function (jqXHR, textStatus) {
+                    stopLoader("[data-name='tableList']");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+
+        function OfisKonumSil(id) {
+            startLoader("[data-name='tableList']");
+
+            Request("/admin/ofiskonum/sil", { ofisKonumId: id }, 'post')
+                .done(function (response) {
+                    stopLoader("[data-name='tableList']");
+
+                    toastr.success("Ofis başarıyla silindi.");
+
+                    reloadTable("[data-name='tableList']");
+                })
+                .fail(function (jqXHR, textStatus) {
+                    stopLoader("[data-name='tableList']");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+
+        function ajaxTableComplete(data, tableElem) {
+            let tableName = tableElem.attr("data-name");
+            if (tableName == "tableList") {
+                $.each(data, function (index, row) {
+                    row.enlem = '<a href="http://maps.google.com/?q=' + row.enlem + "," + row.boylam + '" target="_blank"><span class="badge badge-secondary"><i class="ki-duotone ki-geolocation text-dark"><span class="path1"></span><span class="path2"></span></i> ' + row.enlem + ", " + row.boylam + '</span></a>';
+
+                    row.aktifMi = `<label class="badge badge-${(row.aktifMi == 1 ? "success" : "danger")}">${(row.aktifMi == 1 ? "Aktif" : "Pasif")}</label>`;
+
+                    row.Buttons = `<div class="d-flex justify-content-end">
+                                        <button type="button" data-placement="top" data-toggle="tooltip" data-bs-original-title="Güncelle" class="btn btn-sm btn-icon btn-light-primary me-2" onclick="OfisKonumEkleGuncelleModal(${row.ofisKonumId})">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-icon btn-light-danger" data-placement="top" data-bs-original-title="Sil" data-toggle="tooltip" data-confirm="true" data-confirm-function="OfisKonumSil" data-confirm-param="${row.ofisKonumId}" data-confirm-text="Ofis konumu silmek istediğinize emin misiniz?">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>`;
+                });
+            }
+            return data;
+        }
+
+    </script>
+}

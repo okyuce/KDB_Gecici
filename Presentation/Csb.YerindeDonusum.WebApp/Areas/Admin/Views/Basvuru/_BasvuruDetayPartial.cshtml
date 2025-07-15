@@ -1,0 +1,366 @@
+﻿@using Csb.YerindeDonusum.Application.Enums;
+@using Csb.YerindeDonusum.Application.Extensions;
+@model Csb.YerindeDonusum.Application.CQRS.BasvuruCQRS.Queries.GetirBasvuruDetayById.GetirBasvuruDetayByIdQueryResponseModel
+@{
+    Layout = null;
+}
+<div class="mb-4 text-center">
+    <h1 class="modal-title">Başvuru Detay</h1>
+</div>
+
+<div class="card mb-6 mb-xl-9">
+    <div class="card-header">
+        <h3 class="card-title">Başvuru Bilgileri</h3>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table align-middle table-row-dashed table-striped gy-5">
+                <tbody class="fs-6 fw-semibold text-gray-600">
+                    <tr>
+                        <td>Başvuru Numarası</td>
+                        <td>@Model?.BasvuruKodu</td>
+                    </tr>
+                    <tr>
+                        <td>Başvuru Tarihi</td>
+                        <td>@Model?.OlusturmaTarihi</td>
+                    </tr>
+                    <tr>
+                        <td>Başvuru Durumu</td>
+                        <td>
+                            @if (Model?.BasvuruDurumId == (long)BasvuruDurumEnum.BasvuruIptalEdildi || Model?.BasvuruDurumId == (long)BasvuruDurumEnum.BasvurunuzIptalEdilmistir)
+                            {
+                                <span class="alert alert-warning px-2 py-1">@Model?.BasvuruDurumu</span>
+                            }
+                            else if (Model?.BasvuruDurumId == (long)BasvuruDurumEnum.BasvuruReddedilmistir)
+                            {
+                                <span class="alert alert-danger px-2 py-1">@Model?.BasvuruDurumu</span>
+                            }
+                            else if (Model?.BasvuruDurumId == (long)BasvuruDurumEnum.BasvurunuzOnaylanmistir)
+                            {
+                                <span class="alert alert-success px-2 py-1">@Model?.BasvuruDurumu</span>
+                            }
+                            else
+                            {
+                                <span class="alert alert-dark px-2 py-1">@Model?.BasvuruDurumu</span>
+                            }
+                        </td>
+                    </tr>
+                    @if (Model?.BasvuruDurumId == (long)BasvuruDurumEnum.BasvurunuzIptalEdilmistir)
+                    {
+                        <tr>
+                            <td>Başvuru İptal Açıklaması</td>
+                            <td>
+                                @Model.BasvuruIptalAciklamasi
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>Başvuru Türü</td>
+                        <td>@Model?.BasvuruTuru</td>
+                    </tr>
+                    <tr>
+                        <td>Başvuru Destek Türü</td>
+                        <td>@Model?.BasvuruDestekTuru</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-6 mb-xl-9">
+    <div class="card-header">
+        <h3 class="card-title">Hasar Tespit Bilgileri</h3>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table align-middle table-row-dashed table-striped gy-5">
+                <tbody class="fs-6 fw-semibold text-gray-600">
+                    <tr>
+                        <td>Askı Kodu</td>
+                        <td>@Model?.HasarTespitAskiKodu</td>
+                    </tr>
+                    <tr>
+                        <td>Güçlendirme/Mahkeme Sonucu</td>
+                        <td>@Model?.HasarTespitGuclendirmeMahkemeSonucu</td>
+                    </tr>
+                    <tr>
+                        <td>İtiraz Sonucu</td>
+                        <td>@Model?.HasarTespitItirazSonucu</td>
+                    </tr>
+                    <tr>
+                        <td>Hasar Durumu</td>
+                        <td>@Model?.HasarTespitHasarDurumu</td>
+                    </tr>
+                    <tr>
+                        <td>İl</td>
+                        <td>@Model?.HasarTespitIlAdi</td>
+                    </tr>
+                    <tr>
+                        <td>İlçe</td>
+                        <td>@Model?.HasarTespitIlceAdi</td>
+                    </tr>
+                    <tr>
+                        <td>Mahalle / Köy</td>
+                        <td>@Model?.HasarTespitMahalleAdi</td>
+                    </tr>
+                    <tr>
+                        <td>Ada</td>
+                        <td>@Model?.HasarTespitAda</td>
+                    </tr>
+                    <tr>
+                        <td>Parsel</td>
+                        <td>@Model?.HasarTespitParsel</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-6 mb-xl-9">
+    <div class="card-header">
+        <h3 class="card-title">Tapu Bilgileri</h3>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table align-middle table-row-dashed table-striped gy-5">
+                <tbody class="fs-6 fw-semibold text-gray-600">
+                    <tr>
+                        <td>Taşınmaz Tipi</td>
+                        <td>@Model?.TapuTasinmazTipi</td>
+                    </tr>
+                    <tr>
+                        <td>Bağımsız Bölüm Numarası / Kat / Blok / Giriş</td>
+                        <td>@Model?.TapuBagimsizBolumNo / @Model?.TapuKat / @Model?.TapuBlok / @Model?.TapuGirisBilgisi</td>
+                    </tr>
+                    <tr>
+                        <td>Niteliği</td>
+                        <td>@Model?.TapuNitelik</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-6 mb-xl-9">
+    <div class="card-header">
+        <h3 class="card-title">Adres Bilgileri</h3>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table align-middle table-row-dashed table-striped gy-5">
+                <tbody class="fs-6 fw-semibold text-gray-600">
+                    <tr>
+                        <td>İl</td>
+                        <td>@Model?.UavtIlAdi</td>
+                    </tr>
+                    <tr>
+                        <td>İlçe</td>
+                        <td>@Model?.UavtIlceAdi</td>
+                    </tr>
+                    <tr>
+                        <td>Mahalle</td>
+                        <td>@Model?.UavtMahalleAdi</td>
+                    </tr>
+                    <tr>
+                        <td>Cadde / Sokak</td>
+                        <td>@Model?.UavtCsbm</td>
+                    </tr>
+                    <tr>
+                        <td>Dış Kapı Numarası</td>
+                        <td>@Model?.UavtDisKapiNo</td>
+                    </tr>
+                    <tr>
+                        <td>İç Kapı Numarası</td>
+                        <td>@Model?.UavtIcKapiNo</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-6 mb-xl-9">
+    <div class="card-header">
+        <h3 class="card-title">İletişim Bilgileri</h3>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table align-middle table-row-dashed table-striped gy-5">
+                <tbody class="fs-6 fw-semibold text-gray-600">
+                    <tr>
+                        <td>Cep Telefonu Numarası</td>
+                        <td>@Model?.CepTelefonu</td>
+                    </tr>
+                    <tr>
+                        <td>E-Posta Adresi</td>
+                        <td>@Model?.Eposta</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-6 mb-xl-9">
+    <div class="card-header">
+        <h3 class="card-title">Dosyalar</h3>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table align-middle table-row-dashed table-striped gy-5">
+                <tbody class="fs-6 fw-semibold text-gray-600">
+                    @if (Model?.DosyaBasvuruListe?.Count() > 0)
+                    {
+                        foreach (var dosya in Model.DosyaBasvuruListe)
+                        {
+                            <tr>
+                                <td>@dosya.DosyaTurAdi</td>
+                                <td>@dosya.DosyaAdi</td>
+                                <td class="text-end mr-4">
+                                    <button onclick="BasvuruDosyaIndir('@dosya.Id', '@Model.TcKimlikNo')" type="button" class="btn btn-icon btn-active-light-primary w-30px h-30px mr-10">
+                                        <i class="ki-duotone ki-folder-down fs-3">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>Dosya yok.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="div-basvuru-detay-yazdir d-none">
+    <img class="m-auto w-150px h-50px mb-10" src="~/img/logo2.png" />
+    <table class="table align-middle table-bordered border gy-2 gs-2">
+        <tbody class="fs-6 fw-semibold text-gray-600">
+            <tr>
+                <td class="fw-bold" colspan="2">BAŞVURU BİLGİLERİ</td>
+            </tr>
+            <tr>
+                <td>Başvuru Numarası</td>
+                <td>@Model?.BasvuruKodu</td>
+            </tr>
+            <tr>
+                <td>Başvuru Tarihi</td>
+                <td>@Model?.OlusturmaTarihi</td>
+            </tr>
+            <tr>
+                <td>Başvuru Durumu</td>
+                <td>@Model?.BasvuruDurumu</td>
+            </tr>
+            <tr>
+                <td>Başvuru Türü</td>
+                <td>@Model?.BasvuruTuru</td>
+            </tr>
+            <tr>
+                <td>Başvuru Destek Türü</td>
+                <td>@Model?.BasvuruDestekTuru</td>
+            </tr>
+            <tr>
+                <td class="fw-bold" colspan="2">HASAR TESPİT BİLGİLERİ</td>
+            </tr>
+            <tr>
+                <td>Askı Kodu</td>
+                <td>@Model?.HasarTespitAskiKodu</td>
+            </tr>
+            <tr>
+                <td>Güçlendirme/Mahkeme Sonucu</td>
+                <td>@Model?.HasarTespitGuclendirmeMahkemeSonucu</td>
+            </tr>
+            <tr>
+                <td>İtiraz Sonucu</td>
+                <td>@Model?.HasarTespitItirazSonucu</td>
+            </tr>
+            <tr>
+                <td>Hasar Durumu</td>
+                <td>@Model?.HasarTespitHasarDurumu</td>
+            </tr>
+            <tr>
+                <td>İl</td>
+                <td>@Model?.HasarTespitIlAdi</td>
+            </tr>
+            <tr>
+                <td>İlçe</td>
+                <td>@Model?.HasarTespitIlceAdi</td>
+            </tr>
+            <tr>
+                <td>Mahalle / Köy</td>
+                <td>@Model?.HasarTespitMahalleAdi</td>
+            </tr>
+            <tr>
+                <td>Ada</td>
+                <td>@Model?.HasarTespitAda</td>
+            </tr>
+            <tr>
+                <td>Parsel</td>
+                <td>@Model?.HasarTespitParsel</td>
+            </tr>
+            <tr>
+                <td class="fw-bold" colspan="2">TAPU BİLGİLERİ</td>
+            </tr>
+            <tr>
+                <td>Taşınmaz Tipi</td>
+                <td>@Model?.TapuTasinmazTipi</td>
+            </tr>
+            <tr>
+                <td>Bağımsız Bölüm Numarası / Kat / Blok / Giriş</td>
+                <td>@Model?.TapuBagimsizBolumNo / @Model?.TapuKat / @Model?.TapuBlok / @Model?.TapuGirisBilgisi</td>
+            </tr>
+            <tr>
+                <td>Niteliği</td>
+                <td>@Model?.TapuNitelik</td>
+            </tr>
+            <tr>
+                <td class="fw-bold" colspan="2">ADRES BİLGİLERİ</td>
+            </tr>
+            <tr>
+                <td>İl</td>
+                <td>@Model?.UavtIlAdi</td>
+            </tr>
+            <tr>
+                <td>İlçe</td>
+                <td>@Model?.UavtIlceAdi</td>
+            </tr>
+            <tr>
+                <td>Mahalle</td>
+                <td>@Model?.UavtMahalleAdi</td>
+            </tr>
+            <tr>
+                <td>Cadde / Sokak</td>
+                <td>@Model?.UavtCsbm</td>
+            </tr>
+            <tr>
+                <td>Dış Kapı Numarası</td>
+                <td>@Model?.UavtDisKapiNo</td>
+            </tr>
+            <tr>
+                <td>İç Kapı Numarası</td>
+                <td>@Model?.UavtIcKapiNo</td>
+            </tr>
+            <tr>
+                <td class="fw-bold" colspan="2">İLETİŞİM BİLGİLERİ</td>
+            </tr>
+            <tr>
+                <td>Cep Telefonu Numarası</td>
+                <td>@Model?.CepTelefonu</td>
+            </tr>
+            <tr>
+                <td>E-Posta Adresi</td>
+                <td>@Model?.Eposta</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

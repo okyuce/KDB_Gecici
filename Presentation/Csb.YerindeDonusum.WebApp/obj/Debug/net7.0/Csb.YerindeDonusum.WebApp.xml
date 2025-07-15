@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Csb.YerindeDonusum.WebApp</name>
+    </assembly>
+    <members>
+        <member name="M:Csb.YerindeDonusum.WebApp.Areas.Admin.Controllers.TakbisController.GetirListeDepremIl(Csb.YerindeDonusum.Application.CQRS.IlCQRS.Queries.GetAllTakbisDepremIlQuery.GetAllTakbisDepremIlQuery)">
+            <summary>
+            takbis servisi uzerinden deprem illerin listesini doner
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApp.Areas.Admin.Controllers.TakbisController.GetirListeByTakbisIlId(Csb.YerindeDonusum.Application.CQRS.TakbisCQRS.Queries.GetirListeIlceByTakbisIlId.GetirListeIlceByTakbisIlIdQuery)">
+            <summary>
+            takbis il id bilgisi ile takbis servis uzerinden ildeki ilcelerin listesini doner
+            </summary>
+            <param name="takbisIlId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApp.Areas.Admin.Controllers.TakbisController.GetirListeMahalleByIlceId(Csb.YerindeDonusum.Application.CQRS.TakbisCQRS.Queries.GetirListeMahalleByTakbisIlceIdQuery.GetirListeMahalleByTakbsiIlceIdQuery)">
+            <summary>
+            ilçe id bilgisi ile takbis servis üzerinden ilçedeki mahalle listesini donuyor
+            </summary>
+            <param name="takbisIlceId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApp.Areas.Admin.Controllers.TakbisController.GetirListeAdaByMahalleId(Csb.YerindeDonusum.Application.CQRS.TakbisCQRS.Queries.GetirListeMahalleByTakbisIlceIdQuery.GetirListeAdaByTakbisMahalleIdQuery)">
+            <summary>
+            mahalle id bilgisi ile takbis servis üzerinden ilçedeki ada listesini donuyor
+            </summary>
+            <param name="takbisMahalleId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Csb.YerindeDonusum.WebApp.Areas.Admin.Controllers.TakbisController.GetirListeParselByMahalleId(Csb.YerindeDonusum.Application.CQRS.TakbisCQRS.Queries.GetirParselMahalleIdAdaIdDenQuery.GetirListeParselByTakbisMahalleIdAdaIdQuery)">
+            <summary>
+            mahalle id bilgisi ile takbis servis üzerinden ilçedeki ada listesini donuyor
+            </summary>
+            <param name="takbisMahalleId"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

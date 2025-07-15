@@ -1,0 +1,283 @@
+﻿@using System.Security.Claims
+@using Csb.YerindeDonusum.Application.CustomAddons;
+@using Csb.YerindeDonusum.Application.Enums
+@using Csb.YerindeDonusum.Application.Extensions;
+@using Csb.YerindeDonusum.Application.Interfaces;
+@using Csb.YerindeDonusum.WebApp.Services;
+@using Csb.YerindeDonusum.WebApp.Utilities.Helpers
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.Extensions.Configuration;
+@inject IHttpContextAccessor _httpContextAccessor
+@inject IAuthService _authService
+@inject IConfiguration Configuration
+@{
+    string? currentUrl = Context.Request.Path.Value?.TrimEnd('/').ToLower();
+    string? ip = _httpContextAccessor.HttpContext?.GetIpAddress();
+
+    string birimAdi = User.Claims.FirstOrDefault(x => x.Type == "BirimAdi")?.Value ?? "?";
+    var url = Configuration.GetValue<string>("PowerBi:Url")?.TrimEnd('/');
+    var userName = Configuration.GetValue<string>("PowerBi:Username")?.TrimEnd('/');
+    var password = Configuration.GetValue<string>("PowerBi:Password")?.TrimEnd('/');
+    var powerBiUrl = "https://" + userName + ":" + password + "@" + url;
+
+    var urlYapiIlerleme = Configuration.GetValue<string>("PowerBiYapiIlerleme:Url")?.TrimEnd('/');
+    var userNameYapiIlerleme = Configuration.GetValue<string>("PowerBiYapiIlerleme:Username")?.TrimEnd('/');
+    var passwordYapiIlerleme = Configuration.GetValue<string>("PowerBiYapiIlerleme:Password")?.TrimEnd('/');
+    var powerBiUrlYapiIlerleme = "https://" + userNameYapiIlerleme + ":" + passwordYapiIlerleme + "@" + urlYapiIlerleme;
+
+    var urlYdBilgi = Configuration.GetValue<string>("PowerBiYdBilgi:Url")?.TrimEnd('/');
+    var userNameYdBilgi = Configuration.GetValue<string>("PowerBiYdBilgi:Username")?.TrimEnd('/');
+    var passwordYdBilgi = Configuration.GetValue<string>("PowerBiYdBilgi:Password")?.TrimEnd('/');
+    var powerBiUrlYdBilgi = "https://" + userNameYdBilgi + ":" + passwordYdBilgi + "@" + urlYdBilgi;
+}
+<div data-apppppp="@currentUrl" id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
+    <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
+        <a href="~/admin/" style="margin: 0 auto;">
+            <img alt="Logo" src="~/img/logo2.png" class="theme-light-show h-50px app-sidebar-logo-default" />
+            <img alt="Logo" src="~/img/logo2.png" class="theme-light-show h-20px app-sidebar-logo-minimize" />
+            <img alt="Logo" src="~/img/logo_white.png" class="theme-dark-show h-50px app-sidebar-logo-default" />
+            <img alt="Logo" src="~/img/logo_white.png" class="theme-dark-show h-20px app-sidebar-logo-minimize" />
+        </a>
+        <div id="kt_app_sidebar_toggle" class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary h-30px w-30px position-absolute top-50 start-100 translate-middle rotate" data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="app-sidebar-minimize">
+            <i class="ki-duotone ki-black-left-line fs-3 rotate-180">
+                <span class="path1"></span>
+                <span class="path2"></span>
+            </i>
+        </div>
+    </div>
+    <div class="app-sidebar-menu overflow-hidden flex-column-fluid">
+        <div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper">
+            <div id="kt_app_sidebar_menu_scroll" class="scroll-y my-5 mx-3" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer" data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
+                <div class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6" id="#kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false">
+                    <div class="menu-item">
+                        <a class="menu-link @(currentUrl == "/admin" ? "active" : "")" href="/admin/">
+                            <span class="menu-icon"><i class="ki-duotone ki-chart-pie-3 fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i></span>
+                            <span class="menu-title">Ana Sayfa</span>
+                        </a>
+                    </div>
+                    @if (_authService.IsInRole(RoleEnum.BasvuruEkle, RoleEnum.BasvuruListele, RoleEnum.BasvuruYoneticisi, RoleEnum.OdemeTalebiOnay, RoleEnum.AfadBasvuruYoneticisi))
+                    {
+                        <div data-kt-menu-trigger="click" class="menu-item @(currentUrl.StartsWith("/admin/basvuru")
+                                                                            || currentUrl == "/admin/afadbasvuru"
+                                                                            || currentUrl == "/admin/binaodeme"
+                                                                            || currentUrl == "/admin/basvurudegerlendirme" ? "show" : "") menu-accordion">
+                            <span class="menu-link">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-bank fs-2"><span class="path1"></span><span class="path2"></span></i>
+                                </span>
+                                <span class="menu-title">Başvuru Takip</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <div class="menu-sub menu-sub-accordion">
+                                @if (_authService.IsInRole(RoleEnum.BasvuruEkle, RoleEnum.BasvuruYoneticisi))
+                                {
+                                    <div class="menu-item">
+                                        <a class="menu-link @(currentUrl.StartsWith("/admin/basvuru/ekle") ? "active" : "")" href="/admin/basvuru/ekle/">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Yeni Başvuru</span>
+                                        </a>
+                                    </div>
+                                }
+                                @if (_authService.IsInRole(RoleEnum.BasvuruListele, RoleEnum.BasvuruYoneticisi))
+                                {
+                                    <div class="menu-item">
+                                        <a class="menu-link @(currentUrl == "/admin/basvuru" || currentUrl == "/admin/basvuru/duzenle" ? "active" : "")" href="/admin/basvuru/">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Başvuru Listesi</span>
+                                        </a>
+                                    </div>
+                                }
+                                @if (_authService.IsInRole(RoleEnum.BasvuruListele, RoleEnum.BasvuruYoneticisi))
+                                {
+                                    <div class="menu-item">
+                                        <a class="menu-link @(currentUrl == "/admin/basvurudegerlendirme" ? "active" : "")" href="/admin/basvurudegerlendirme/">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Başvuru Değerlendirme</span>
+                                        </a>
+                                    </div>
+                                }
+                                @if (_authService.IsInRole(RoleEnum.BasvuruListele, RoleEnum.BasvuruYoneticisi, RoleEnum.OdemeTalebiOnay))
+                                {
+                                    <div class="menu-item">
+                                        <a class="menu-link @(currentUrl == "/admin/binaodeme" ? "active" : "")" href="/admin/binaodeme/">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Ödeme Talepleri</span>
+                                        </a>
+                                    </div>
+                                }
+                                @if (_authService.IsInRole(RoleEnum.AfadBasvuruYoneticisi))
+                                {
+                                    <div class="menu-item">
+                                        <a class="menu-link @(currentUrl == "/admin/afadbasvuru" ? "active" : "")" href="/admin/afadbasvuru/">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">AYDES</span>
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    @if (_authService.IsInRole(RoleEnum.BelediyeKullanicisi) || _authService.IsInRole(RoleEnum.Tebligat))
+                    {
+
+                        <div data-kt-menu-trigger="click" class="menu-item @((currentUrl.StartsWith("/admin/belediye") || currentUrl.StartsWith("/admin/tebligat")) ? "show" : "") menu-accordion">
+                            <span class="menu-link">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-bank fs-2"><span class="path1"></span><span class="path2"></span></i>
+                                </span>
+                                <span class="menu-title">Belediye</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <div class="menu-sub menu-sub-accordion">
+                                <div class="menu-item">
+                                    <a class="menu-link @(currentUrl == "/admin/belediye" ? "active" : "")" href="/admin/belediye/">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Başvurular</span>
+                                    </a>
+                                </div>
+                                <div class="menu-item">
+                                    <a class="menu-link @(currentUrl == "/admin/tebligat" ? "active" : "")" href="/admin/tebligat/">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Tebligat Gönderim</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (_authService.IsInRole(RoleEnum.Raporlama))
+                    {
+                        <div data-kt-menu-trigger="click" class="menu-item @(currentUrl.StartsWith("/admin/rapor") ? "show" : "") menu-accordion">
+                            <span class="menu-link">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-chart-simple fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i>
+                                </span>
+                                <span class="menu-title">Raporlar</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+                            <div class="menu-sub menu-sub-accordion">
+                                <div class="menu-item">
+                                    <a class="menu-link @(currentUrl.StartsWith("/admin/rapor/binaodeme") ? "active" : "")" href="/admin/rapor/BinaOdeme/">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Ödeme Raporu</span>
+                                    </a>
+                                </div>
+                                @*<div class="menu-item">
+                            <a class="menu-link @(currentUrl.StartsWith("/admin/rapor/binabazlioran") ? "active" : "")" href="/admin/rapor/BinaBazliOran/">
+                            <span class="menu-bullet">
+                            <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Bina Bazlı Oran</span>
+                            </a>
+                            </div>*@
+                                <div class="menu-item">
+                                    <a class="menu-link @(currentUrl.StartsWith("/admin/rapor/yapiruhsat") ? "active" : "")" href="@powerBiUrl" target="_blank">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Yapı Ruhsat</span>
+                                    </a>
+                                </div>
+                                <div class="menu-item">
+                                    <a class="menu-link @(currentUrl.StartsWith("/admin/rapor/yapiIlerleme") ? "active" : "")" href="@powerBiUrlYapiIlerleme" target="_blank">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Yapı İlerleme</span>
+                                    </a>
+                                </div>
+                                <div class="menu-item">
+                                    <a class="menu-link @(currentUrl.StartsWith("/admin/rapor/ydBilgi") ? "active" : "")" href="@powerBiUrlYdBilgi" target="_blank">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Bilgi</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @* ————— Natamam Yapı İşlemleri Menüsü ————— *@
+                    @if (_authService.IsInRole(RoleEnum.NatamamYapiIslemleri))
+                    {
+                        <div data-kt-menu-trigger="click"
+                             class="menu-item menu-accordion @(currentUrl.StartsWith("/admin/natamamYapiIslemleri") ? "show" : "")">
+                            <span class="menu-link">
+                                <span class="menu-icon"><i class="ki-duotone ki-user-shield fs-2">...</i></span>
+                                <span class="menu-title">Yönetici</span>
+                                <span class="menu-arrow"></span>
+                            </span>
+
+                            <div class="menu-sub menu-sub-accordion">
+                                <div class="menu-item">
+                                    <a asp-area="Admin"
+                                       asp-controller="NatamamYapiIslemleri"
+                                       asp-action="Index"
+                                       class="menu-link @(currentUrl.StartsWith("/admin/natamamYapiIslemleri") ? "active" : "")">
+                                        <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                        <span class="menu-title">Natamam Yapı İşlemleri</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (_authService.IsInRole(RoleEnum.SikcaSorulanSoruYoneticisi))
+                    {
+                        <div class="menu-item">
+                            <a class="menu-link @(currentUrl == "/admin/sss" ? "active" : "")" href="/admin/sss/">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-message-text-2 fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                </span>
+                                <span class="menu-title">Sıkça Sorulan Sorular</span>
+                            </a>
+                        </div>
+                    }
+                    @if (_authService.IsInRole(RoleEnum.OfislerimizYoneticisi))
+                    {
+                        <div class="menu-item">
+                            <a class="menu-link @(currentUrl == "/admin/ofisler" ? "active" : "")" href="/admin/ofisler/">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-geolocation fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                </span>
+                                <span class="menu-title">Ofislerimiz</span>
+                            </a>
+                        </div>
+                    }
+                    @if (_authService.IsInRole(RoleEnum.KullanicilarYoneticisi))
+                    {
+                        <div class="menu-item">
+                            <a class="menu-link @(currentUrl == "/admin/kullanici" ? "active" : "")" href="/admin/kullanici/">
+                                <span class="menu-icon">
+                                    <i class="ki-duotone ki-user fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                                </span>
+                                <span class="menu-title">Kullanıcılar</span>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="app-sidebar-footer flex-column-auto pt-2 pb-6 px-6" id="kt_app_sidebar_footer">
+        @if (birimAdi.Length > 1)
+        {
+            <p><b>Birim Adı:</b> @birimAdi</p>
+        }
+        <p><b>IP Adresi:</b> @ip</p>
+    </div>
+</div>

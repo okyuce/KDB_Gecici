@@ -1,0 +1,92 @@
+﻿@using Csb.YerindeDonusum.Application.Enums;
+@using Csb.YerindeDonusum.WebApp.Areas.Admin.Enums;
+@using Csb.YerindeDonusum.Application.Extensions;
+@model Csb.YerindeDonusum.Application.CQRS.BinaDegerlendirmeCQRS.Queries.GetirDetaySozlesmeGeriOdemeBilgileri.GetirDetaySozlesmeGeriOdemeBilgileriQueryResponseModel;
+@{
+    Layout = null;
+    string BinaDegerlendirmeControllerUrl = "/admin/binadegerlendirme";
+    string birimIdString = User.Claims.FirstOrDefault(x => x.Type == "BirimId")?.Value ?? "?";
+    int birimId = (birimIdString == "?" || birimIdString == "") ? 0 : Int32.Parse(birimIdString);
+}
+@if (ViewBag.HataMesaji != null)
+{
+    @ViewBag.HataMesaji
+}
+else
+{
+    <html>
+    <head>
+        <link href="/admin/metronic/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+        <link href="/admin/metronic/assets/css/custom.css" rel="stylesheet" type="text/css" />
+        <link href="/admin/metronic/assets/css/print.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <div class="text-right">
+            <img class="w-100px h-100px" src="~/img/logo-yuvarlak.png" />
+        </div>
+        <h3 class="text-center">
+            Kredi Geri Ödeme Bilgileri
+        </h3>
+
+
+        <table class="table align-middle table-bordered border gy-2 gs-2">
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                <tr>
+                    <td colspan="1" class="fw-bold">Sözleşme Numarası</td>
+                    <td colspan="2">@(Model.SozlesmeTarihi?.Year.ToString() + Model.SozlesmeTarihi?.Month.ToString() + Model.SozlesmeTarihi?.Day.ToString() + Model.BinaDegerlendirmeId.ToString())</td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="fw-bold">Sözleşme Tarihi</td>
+                    <td colspan="2">@(Model.SozlesmeTarihi?.ToString("dd/MM/yyyy"))</td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="fw-bold">Yapı Kimlik No/Bülten No</td>
+                    <td colspan="2">@(Model.YapiKimlikNo != null ? Model.YapiKimlikNo : Model.IzinBelgeNo != null ? Model.IzinBelgeNo : "-") </td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="fw-bold">Adı Soyadı</td>
+                    <td colspan="2">@Model.Ad @Model.Soyad</td>
+                </tr>
+                <tr>
+                    <td colspan="1" class="fw-bold">TC Kimlik No</td>
+                    <td colspan="2">@Model.TcKimlikNo</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Ödemesiz Dönem</td>
+                    <td colspan="2">@(Model.SozlesmeTarihi?.ToString("dd/MM/yyyy") + " - " + Model.SozlesmeTarihi?.AddYears(2).ToString("dd/MM/yyyy") + " (Toplam 2 yıl)")</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table align-middle table-bordered border gy-2 gs-2">
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                <tr>
+                    <td class="fw-bold">Taksit Sayısı</td>
+                    <td class="fw-bold">Ödeme Tarihi</td>
+                    <td class="fw-bold">Ödeme Tutarı</td>
+                </tr>
+                @for (int i = 1; i < 97; i++)
+                {
+                    <tr>
+                        <td class="fw-bold">@(i.ToString() + ". Taksit ")</td>
+                        <td class="fw-bold">@(Model.SozlesmeTarihi?.AddMonths(i).AddYears(2).ToString("dd/MM/yyyy"))</td>
+                        <td>@(Model.KrediOdemeTutar == null ? "" : (Model.KrediOdemeTutar.Value / 96).ToTurkishLira(decimalNumber: 2, hideIsZeroOrThanLess: true))</td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="2" class="fw-bold">Toplam Tutar</td>
+                    <td colspan="1" class="fw-bold">@(Model.KrediOdemeTutar.ToTurkishLira(decimalNumber: 2, hideIsZeroOrThanLess: true))</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="fw-bold">***Ödemeler taksitin ait olduğu ayın son günü itibari ile yapılabilir.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function (event) {
+                window.print();
+            });
+        </script>
+    </body>
+    </html>
+}

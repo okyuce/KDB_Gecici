@@ -1,0 +1,87 @@
+﻿@using Csb.YerindeDonusum.Application.Enums;
+@using Csb.YerindeDonusum.WebApp.Areas.Admin.Enums;
+@using Csb.YerindeDonusum.Application.Extensions;
+@model Csb.YerindeDonusum.Application.CQRS.TebligatCQRS.Queries.GetirTebligatGonderimDetayById.GetirTebligatGonderimDetayByIdQueryResponseModel;
+@{
+    Layout = null;
+    string TebligatControllerUrl = "/admin/tebligat";
+}
+@if (ViewBag.HataMesaji != null)
+{
+    @ViewBag.HataMesaji
+}
+else
+{
+    <html>
+    <head>
+        <link href="/admin/metronic/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+        <link href="/admin/metronic/assets/css/custom.css" rel="stylesheet" type="text/css" />
+        <link href="/admin/metronic/assets/css/print.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="p-7">
+        <div class="text-right">
+            <img class="w-100px h-100px" src="~/img/logo-yuvarlak.png" />
+        </div>
+        <br />
+        <h3 class="text-center">7452 sayılı Kanun Ek-1 inci Maddesi Kapsamında Yerinde Dönüşüm Projesine Dahil Olan Yapılardaki Anlaşma Sağlanamayan/Ulaşılamayan Maliklere Yönelik Tebligat Tutanağı</h3>
+        <h3 class="text-center">(Anahtar Teslim)</h3>
+        <br />
+
+        <p style="text-align: justify;">
+            &emsp;@Model.TapuIlAdi İli, @Model.TapuIlceAdi İlçesi, @Model.TapuMahalleAdi Mahallesi, @Model.TapuAda ada @Model.TapuParsel parsel @Model.TapuTasinmazId.ToString() numaralı taşınmaz üzerinde iken 06.02.2023 tarihli depremler neticesinde 7269 sayılı Kanun uyarınca @Model.HasarTespitAskiKodu askı kodu ile @Model.HasarTespitHasarDurumu olarak tespit edilerek yıkılan yapının; 7452 sayılı Olağanüstü Hal Kapsamında Yerleşme Ve Yapılaşmaya İlişkin Cumhurbaşkanlığı Kararnamesinin Kabul Edilmesine Dair Kanunun ek 1’inci maddesine istinaden yürütülen Yerinde Dönüşüm Projesi ile yerinde yeniden yapım işlemlerinin tamamlandığı ve Kanun uyarınca tapuda geçici olarak Hazine adına tescil edilen taşınmaz hisseleri üzerinde yapımı gerçekleştirilen bağımsız bölümlerin teslim alınması için anlaşmaya katılmayan maliklere yönelik tebligat yapılmak üzere İdaremize başvuru yapıldığı tespit edilmiştir.
+        </p>
+
+		<p style="text-align: justify;">
+            &emsp;7452 sayılı Kanunun Ek-1’inci maddesinin beşinci fıkrasında <i><u>“Bu madde kapsamında maliklere yapılacak tebligatlar e-Devlet Kapısı üzerinden bildirim yapılması ve ilgili muhtarlıklarda on beş gün süre ile ilan edilmesi suretiyle yapılır. Bu şekilde yapılan tebligatlar 11/2/1959 tarihli ve 7201 sayılı Tebligat Kanunu hükümlerine göre yapılan tebligat yerine geçer.”</u></i> 7nci maddesinde, <i><u>“Yapım işinin tamamlanmasından sonra, Hazine adına tescil olunan hisselerin maliklerine, dördüncü fıkraya göre oluşturulan cetvel uyarınca belirlenen bağımsız bölümlerini teslim almaları için tebligat yapılır. Tebligatta belirtilen süre içerisinde teslim alınmaması halinde, maliklerin bu bağımsız bölüm/bölümler üzerindeki hakkı sona erer…”</u></i> hükümleri haizdir.
+        </p>
+
+        <p style="text-align: justify;">
+            &emsp;Bu suretle iş bu Tutanak; ayni ve şahsi hak sahiplerine tebliğ yerine kaim olmak üzere, e-Devlet Kapısı üzerinden bildirilecek ve muhtarlıkta on beş gün süre ile ilan edilecektir. Muhtarlıkta yapılan ilanın son günü ayni ve şahsi hak sahiplerine tebligat yapılmış sayılacaktır. Muhtarlıkta yapılacak ilanın süresinin dolmasından itibaren başlamak üzere, belirlenen bağımsız bölümlerini teslim almaları için maliklere 15 (onbeş) gün süre verilmiştir.
+        </p>
+
+        <p style="text-align: justify;">
+            &emsp;Söz konusu taşınmaz üzerinde hisseder oldukları halde anlaşmaya iştirak etmeyen maliklerin; yapım maliyeti Hazine tarafından karşılanarak imalatı tamamlanan bağımsız bölümlerinin teslim alınıp/alınmayacağına dair nihai kararlarının; verilen süre içerisinde Çevre, Şehircilik ve İklim Değişikliği İl Müdürlüğüne dilekçe ile bildirilmesi gerekmektedir.
+        </p>
+
+        <p style="text-align: justify;">
+            &emsp;Belirtilen malikler adına üretilen bağımsız bölümlerin teslim alınmaması halinde bu maliklerin zikredilen taşınmazdaki arsa paylarına ilişkin 7452 sayılı Kanunun ek-1 inci maddesinin yedinci fıkrası gereğince işlem tesis edileceği;
+        </p>
+
+        <p style="text-align: justify;">
+            &emsp;Tebliğ olunur. (@Model.TebligTarihi?.ToString("dd/MM/yyyy"))
+		</p>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <table class="table align-middle gy-2 gs-2">
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                <tr>
+                    <td style="width:300px; text-align: center;"><p>Yetkili Personel</p></td>
+                    <td><p style="text-align: center;"></p></td>
+                    <td style="width:300px; text-align: center;"><p>Yetkili Amir</p></td>
+                </tr>
+                <tr>
+                    <td style="width:300px; text-align: center;"><p>İmza</p></td>
+                    <td><p style="text-align: center;"></p></td>
+                    <td style="width:300px; text-align: center;"><p>İmza</p></td>
+                </tr>
+                <tr>
+                    <td style="width:300px; text-align: center;"><p></p></td>
+                    <td style="width:300px; text-align: center;"><p>Mühür</p></td>
+                    <td style="width:300px; text-align: center;"><p></p></td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+            window.print();
+        });
+    </script>
+    </html>
+}

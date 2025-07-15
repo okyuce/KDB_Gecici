@@ -1,0 +1,219 @@
+﻿@using Csb.YerindeDonusum.Application.CustomAddons;
+
+@{
+    ViewBag.Title = "Sıkça Sorulan Sorular";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="modal fade" id="modal_sss" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered mw-800px">
+        <div class="modal-content rounded">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+            </div>
+            <div class="modal-body scroll-y px-10 px-lg-10 pt-0 pb-10">
+                <form id="modal_sss_form" onsubmit="return false;" novalidate="novalidate" class="form" action="#">
+                    <div class="mb-13 text-center">
+                        <h1 class="mb-3 modal-title">Sıkça Sorulan Sorular</h1>
+                    </div>
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Soru</span>
+                        </label>
+                        <input type="hidden" name="SikcaSorulanSoruId" />
+                        <input type="text" name="Soru" class="form-control form-control-solid" placeholder="Soru" maxlength="500" />
+                    </div>
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Sıra</span>
+                        </label>
+                        <input type="text" name="SiraNo" class="form-control form-control-solid integer-mask" autocomplete="off" placeholder="Sıra" />
+                    </div>
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Cevap</span>
+                        </label>
+                        <textarea name="Cevap" class="ckEditor"></textarea>
+
+                    </div>
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Durum</span>
+                        </label>
+                        <select name="AktifMi" class="form-control form-control-solid select-2">
+                            <option></option>
+                            <option value="true">Aktif</option>
+                            <option value="false">Pasif</option>
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="reset" id="modal_sss_iptal" class="btn btn-light me-3">İptal</button>
+                        <button type="submit" id="modal_sss_kaydet" class="btn btn-primary">
+                            <span class="indicator-label">Kaydet</span>
+                            <span class="indicator-progress">
+                                Lütfen Bekleyiniz...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="kt_app_content_container" class="app-container container-fluid">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div class="card mb-5 mb-xl-8">
+            <div class="card-body py-2 px-6">
+                <div class="table-responsive">
+                    <table class="table table-row-bordered table-striped table-row-gray-200 align-middle dataTable"
+                           data-name="tableList"
+                           data-ajax-target="/admin/sss/getirListeServerSide"
+                           data-server-side="true"
+                           data-responsive="true"
+                           data-export-buttons="true"
+                           data-custom-button="SSS Ekle"
+                           data-custom-button-function="SSSEkleGuncelleModal"
+                           data-custom-button-param="0">
+                        <thead>
+                            <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                                <th data-name="siraNo" data-sort="false" data-width="40px">Sıra</th>
+                                <th data-name="soru" data-sort="false">Soru</th>
+                                <th data-name="aktifMi" data-sort="false" data-width="70px">Durum</th>
+                                <th data-name="Buttons" class="all" data-sort="false" data-export="false" data-width="70px"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/admin/metronic/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            renderCkEditor("[name='Cevap']")
+                .then(editor => {
+                    window["cevap"] = editor; // ne olursa olsun bas harf lowercase olmali.
+                })
+                .catch(error => {
+                });
+
+            $(document).on("change", "#cb_AktifMi", function () {
+                $("#sp_AktifMi").html($(this).is(":checked") ? "Aktif" : "Pasif");
+            });
+
+            $('#modal_sss').on('hidden.bs.modal', function (event) {
+                if (window.cevap) {
+                    window.cevap.setData("");
+                }
+                $("input[name='SikcaSorulanSoruId']").val("");
+                $("input[name='Soru']").val("");
+                $("input[name='SiraNo']").val("");
+                $("[name='AktifMi']").val("").trigger("change");
+            });
+
+
+            $(document).on('click', "#modal_sss_iptal", function (e) {
+                $("#modal_sss").modal("hide");
+            });
+
+            $(document).on('click', "#modal_sss_kaydet", function (e) {
+                e.preventDefault();
+
+                const formData = serializeFormAsObject("#modal_sss_form");
+
+                let isUpdate = parseInt(formData.sikcaSorulanSoruId || 0) > 0;
+
+                startLoader("#modal_sss");
+                Request("/admin/sss/" + (isUpdate ? "guncelle" : "ekle"), formData, 'post')
+                    .done(function (response) {
+                        stopLoader("#modal_sss");
+
+                        toastr.success("Sıkça sorulan soru başarıyla " + (isUpdate ? "güncellendi." : "eklendi."));
+
+                        $("#modal_sss").modal("hide");
+
+                        reloadTable("[data-name='tableList']");
+                    })
+                    .fail(function (jqXHR, textStatus) {
+                        stopLoader("#modal_sss");
+                        toastr.error(getAjaxErrorMessage(jqXHR));
+                    });
+            });
+        });
+
+        function SSSEkleGuncelleModal(id) {
+            if (id == 0) {
+                $("#modal_sss .modal-title").html("Sıkça Sorulan Soru Ekle");
+                $("#modal_sss").modal("show");
+                return;
+            }
+
+            startLoader("[data-name='tableList']");
+
+            Request("/admin/sss/getiridile", { sikcaSorulanSoruId: id }, 'get')
+                .done(function (response) {
+                    stopLoader("[data-name='tableList']");
+
+                    if (window.cevap) window.cevap.setData(response.cevap);
+                    $("input[name='SikcaSorulanSoruId']").val(response.sikcaSorulanSoruId);
+                    $("input[name='Soru']").val(response.soru);
+                    $("input[name='SiraNo']").val(response.siraNo);
+                    $("[name='AktifMi']").val(response.aktifMi == 1 ? "true" : "false").trigger("change");
+
+                    $("#modal_sss .modal-title").html("Sıkça Sorulan Soru Düzenle");
+                    $("#modal_sss").modal("show");
+                })
+                .fail(function (jqXHR, textStatus) {
+                    stopLoader("[data-name='tableList']");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+
+        function SSSSil(id) {
+            startLoader("[data-name='tableList']");
+            Request("/admin/sss/sil", { sikcaSorulanSoruId: id }, 'post')
+                .done(function (response) {
+                    stopLoader("[data-name='tableList']");
+                    toastr.success("Sıkça Sorulan Soru başarıyla silindi.");
+
+                    reloadTable("[data-name='tableList']");
+                })
+                .fail(function (jqXHR, textStatus) {
+                    stopLoader("[data-name='tableList']");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+
+        function ajaxTableComplete(data, tableElem) {
+            var tableName = tableElem.attr("data-name");
+            if (tableName == "tableList") {
+                $.each(data, function (index, row) {
+                    row.aktifMi = `<label class="badge badge-${(row.aktifMi == 1 ? "success" : "danger")}">${(row.aktifMi == 1 ? "Aktif" : "Pasif")}</label>`;
+
+                    row.Buttons = `<div class="d-flex justify-content-end">
+                                        <button type="button" data-placement="top" data-toggle="tooltip" data-bs-original-title="Güncelle" class="btn btn-sm btn-icon btn-light-primary me-2" onclick="SSSEkleGuncelleModal(${row.sikcaSorulanSoruId})">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-icon btn-light-danger" data-placement="top" data-bs-original-title="Sil" data-toggle="tooltip" data-confirm="true" data-confirm-function="SSSSil" data-confirm-param="${row.sikcaSorulanSoruId}" data-confirm-text="Sıkça sorulan soruyu silmek istediğinize emin misiniz?">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>`;
+                });
+            }
+            return data;
+        }
+
+    </script>
+}

@@ -1,0 +1,159 @@
+﻿@using Csb.YerindeDonusum.Application.Enums;
+@using Csb.YerindeDonusum.WebApp.Areas.Admin.Enums;
+@using Csb.YerindeDonusum.Application.Extensions;
+@model Csb.YerindeDonusum.Application.CQRS.BinaDegerlendirmeCQRS.Queries.GetirDetayHibeTaahhutnameSozlesme.GetirDetayHibeTaahhutnameSozlesmeQueryResponseModel;
+@{
+    Layout = null;
+    string BinaDegerlendirmeControllerUrl = "/admin/binadegerlendirme";
+    string birimIdString = User.Claims.FirstOrDefault(x => x.Type == "BirimId")?.Value ?? "?";
+    int birimId = (birimIdString == "?" || birimIdString == "") ? 0 : Int32.Parse(birimIdString);
+}
+@if (ViewBag.HataMesaji != null)
+{
+    @ViewBag.HataMesaji
+}
+else
+{
+    <html>
+    <head>
+        <link href="/admin/metronic/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+        <link href="/admin/metronic/assets/css/custom.css" rel="stylesheet" type="text/css" />
+        <link href="/admin/metronic/assets/css/print.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <h3 class="text-center">
+            7452 Sayılı Kanunun Ek-1. Maddesinin Altıncı Fıkrası Uyarınca Ödenecek Hibeye İlişkin
+        </h3>
+        <h3 class="mb-10 text-center">
+            TAAHHÜTNAME
+        </h3>
+
+        <table class="table align-middle table-bordered border gy-2 gs-2">
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                <tr>
+                    <td class="fw-bold">İli</td>
+                    <td>@Model.UavtIlAdi</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">İlçesi</td>
+                    <td>@Model.UavtIlceAdi</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Mahallesi/Köyü</td>
+                    <td>@Model.UavtMahalleAdi</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Ada</td>
+                    <td>@Model.TapuAda</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Parsel</td>
+                    <td>@Model.TapuParsel</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Dış Kapı No</td>
+                    <td>@Model.UavtDisKapiNo</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Bağımsız Birim No</td>
+                    <td>@Model.BagimsizBolumNo</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Hibe Türü</td>
+                    <td>Ayni/Nakdi</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Hibe Miktarı</td>
+                    <td style="width: 70%">@Model.HibeOdemeTutar.ToTurkishLira(decimalNumber: 2, hideIsZeroOrThanLess: true)</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Yapı Ruhsatı/İnşaat İznine Esas İş ve İşlemlere İlişkin Hibe Miktarı</td>
+                    <td>@Model.DigerHibeOdemeTutar.ToTurkishLira(decimalNumber: 2, hideIsZeroOrThanLess: true)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p style="text-align: justify;">
+            7452 Sayılı Kanunun Ek-1. maddesinin altıncı fıkrası hükümleri doğrultusunda yayımlanan 05/10/2023 tarih ve 7700 sayılı Cumhurbaşkanı Kararı’nın 6. maddesi hükümlerine uygun olarak, tapu bilgileri yukarıda yazılı gayrimenkulde, yapı ruhsatı/inşaat iznine esas iş ve işlemler ve yapılacak inşaat işinde kullanılmak üzere Çevre, Şehircilik ve İklim Değişikliği Bakanlığı tarafından sağlanan yukarıda türü ve miktarı yazılı hibenin Kanunun amacına uygun olarak kullanılacağını,
+        </p>
+        <p style="text-align: justify;">
+            Yukarıda yazılı olup Bakanlık tarafından verilecek hibe tutarının; 4708 sayılı Yapı Denetimi Hakkında Kanuna tabi işlerde yapı denetim sistemindeki seviyeler, diğer yapılarda ise ilgili idarenin yerinde yapacağı inceleme ile belirlenecek seviyeler dikkate alınarak aşağıdaki yapım seviyelerine karşılık gelen taksitlerle, nam ve hesabıma yapım işini üstlenen müteahhidin banka hesabına ödeneceğini,
+        </p>
+        <table class="table align-middle table-bordered border gy-2 gs-2">
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                <tr>
+                    <td class="fw-bold">Yapım Aşaması</td>
+                    <td class="fw-bold">Aktarılacak Hibenin Oranı</td>
+                    <td class="fw-bold">Genel Seviye</td>
+                </tr>
+                <tr>
+                    <td>Yapı Ruhsatının Alınması</td>
+                    <td>%10</td>
+                    <td>%10</td>
+                </tr>
+                <tr>
+                    <td>Subasman Seviyesine Gelinmesi</td>
+                    <td>%30</td>
+                    <td>%20</td>
+                </tr>
+                <tr>
+                    <td>Taşıyıcı Sistemin Tamamlanması</td>
+                    <td>%30</td>
+                    <td>%60</td>
+                </tr>
+                <tr>
+                    <td>Yapının Tamamlanması</td>
+                    <td>%30</td>
+                    <td>%100</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p style="text-align: justify;">
+            Bakanlık tarafından müteahhidin banka hesabına yatırılan tutarlardan dolayı başkaca bir hak talep etmeyeceğimi,
+        </p>
+
+        <p style="text-align: justify;">
+            Söz konusu taşınmaz üzerinde yapılacak inşaatın plan ve projesine, fen ve sanat kurallarına ve imar mevzuatına uygun olarak yapılmaması halinde hibe ödemesinin durdurulacağını, tarafıma verilen süre içinde aykırılık düzeltilmediği takdirde kullanmış olduğum nakdi hibe tutarının kanuni faizi ile birlikte, varsa ayni hibenin inşaatın durdurulduğu tarihte hesaplanacak güncel değerinin muaccel kılınacağını
+        </p>
+
+        <p style="text-align: justify;">
+            kabul, beyan ve taahhüt ederim.
+        </p>
+
+        <table class="table align-middle table-bordered border gy-2 gs-2">
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                <tr>
+                    <td class="fw-bold">Malik Adı Soyadı/ Tüzel Kişi Adı</td>
+                    <td>@Model.Ad @Model.Soyad</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">T.C. Kimlik No / Vergi Kimlik No</td>
+                    <td>@Model.TcKimlikNo</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Telefon</td>
+                    <td>@Model.CepTelefonu</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Adres</td>
+                    <td>@Model.Adres</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">İmza</td>
+                    <td style="width: 70%">
+                        <br />
+                        <br />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function (event) {
+                window.print();
+            });
+        </script>
+    </body>
+    </html>
+}

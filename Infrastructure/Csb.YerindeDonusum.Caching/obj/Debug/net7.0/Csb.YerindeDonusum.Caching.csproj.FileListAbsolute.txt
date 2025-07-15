@@ -1,0 +1,17 @@
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\bin\Debug\net7.0\Csb.YerindeDonusum.Caching.deps.json
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\bin\Debug\net7.0\Csb.YerindeDonusum.Caching.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\bin\Debug\net7.0\Csb.YerindeDonusum.Caching.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\bin\Debug\net7.0\Csb.YerindeDonusum.Application.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\bin\Debug\net7.0\Csb.YerindeDonusum.Application.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\obj\Debug\net7.0\Csb.YerindeDonusum.Caching.csproj.AssemblyReference.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\obj\Debug\net7.0\Csb.YerindeDonusum.Caching.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\obj\Debug\net7.0\Csb.YerindeDonusum.Caching.AssemblyInfoInputs.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\obj\Debug\net7.0\Csb.YerindeDonusum.Caching.AssemblyInfo.cs
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\obj\Debug\net7.0\Csb.YerindeDonusum.Caching.csproj.CoreCompileInputs.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\obj\Debug\net7.0\Csb.Yeri.28C8397D.Up2Date
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\obj\Debug\net7.0\Csb.YerindeDonusum.Caching.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\obj\Debug\net7.0\refint\Csb.YerindeDonusum.Caching.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\obj\Debug\net7.0\Csb.YerindeDonusum.Caching.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Caching\obj\Debug\net7.0\ref\Csb.YerindeDonusum.Caching.dll

@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Presentation\\Csb.YerindeDonusum.WebApi\\Csb.YerindeDonusum.WebApi.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

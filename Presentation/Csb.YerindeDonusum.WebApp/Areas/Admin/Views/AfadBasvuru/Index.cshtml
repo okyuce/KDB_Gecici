@@ -1,0 +1,526 @@
+﻿@using System.Security.Claims
+@using Csb.YerindeDonusum.Application.CustomAddons;
+@using Csb.YerindeDonusum.WebApp.Utilities.Helpers
+@{
+    ViewBag.Title = "AYDES Başvuru Listesi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="modal fade" id="modal_aydes_detay" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content rounded">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+            </div>
+            <div class="modal-body scroll-y px-10 px-lg-10 pt-0 pb-10">
+                <div class="mb-13 text-center">
+                    <h1 class="mb-3">AYDES Başvuru Detay</h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Başvuru No</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="basvuruNo" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Oluşturulma Tarihi</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="olusturulmaTarihi" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Ad</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="ad" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Soyad</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="soyad" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>T.C. Kimlik No</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="tckn" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Telefon</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="telefon" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Ebeveyn T.C. Kimlik No</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="ebeveynTckn" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Baba Ad</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="babaAd" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Olay Id</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="olayId" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Başvuru Tipi</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="basvuruTipi" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Komisyon Karar No</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="komisyonKararNo" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Kullanım Amacı</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="kullanimAmaci" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Hasar Durumu</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="hasarDurumu" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Askı Kodu</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="askiKodu" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Huid</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="huid" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Maks Yapı Kimlik No</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="maksYapiKimlikNo" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Tapu İl</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="tapuIl" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Tapu İlçe</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="tapuIlce" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Tapu Mahalle</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="tapuMahalle" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Ada</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="ada" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Parsel</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="parsel" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Taşınmaz Id</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="tasinmazId" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Alt Taşınmaz Id</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="altTasinmazId" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Taşınmaz Cinsi</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="tasinmazCinsi" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Değerlendirme Durumu</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="degerlendirmeDurumu" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>İtiraz Oluşmuş Mu</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="itirazOlusmus" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>İtiraz Tarihi</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="itirazTarihi" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>İtiraz Değerlendirme Sonucu</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="itirazDegerlendirmeSonucu" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Değerlendirme İptal Durumu</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="degerlendirmeIptalDurumu" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column mb-8 fv-row">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Kura İsabet Etti Mi</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid" name="kuraIsabetEttiMi" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column fv-row">
+                    <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                        <span>Açıklama</span>
+                    </label>
+                    <textarea class="form-control form-control-solid" name="aciklama" rows="3" readonly></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-container container-fluid">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div class="card mb-5 mb-xl-8">
+            <div class="card-header collapsible cursor-pointer rotate active" data-bs-toggle="collapse" data-bs-target="#kt_docs_card_collapsible">
+                <h3 class="card-title">Filtrele</h3>
+                <div class="card-toolbar rotate-180">
+                    <i class="ki-duotone ki-down fs-1"></i>
+                </div>
+            </div>
+            <div id="kt_docs_card_collapsible" class="collapse show">
+                <form id="rapor-filter-form" data-name="tableListFilter" class="card-body py-2 px-6">
+                    <div class="row mt-3">
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>T.C. KimlikNo</span>
+                            </label>
+                            <input type="text" class="form-control" name="tckn" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>İl</span>
+                            </label>
+                            <select name="ilId" class="form-select select-2" data-ajax-target="/admin/afadBasvuru/GetirListeIl">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>İlçe</span>
+                            </label>
+                            <select name="ilceId" class="form-select select-2">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Mahalle</span>
+                            </label>
+                            <select name="mahalleId" class="form-select select-2">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Askı Kodu</span>
+                            </label>
+                            <input type="text" class="form-control" name="askiKodu" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>HUID</span>
+                            </label>
+                            <input type="text" class="form-control" name="huid" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Ada</span>
+                            </label>
+                            <input type="text" class="form-control" name="ada" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Parsel</span>
+                            </label>
+                            <input type="text" class="form-control" name="parsel" />
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12 text-right">
+                            <button type="reset" id="rapor_filtre_temizle" class="btn btn-dark mr-10">
+                                <i class="ki-duotone ki-trash fs-1"><i class="path1"></i><i class="path2"></i><i class="path3"></i><i class="path4"></i><i class="path5"></i></i> Temizle
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ki-duotone ki-filter fs-1"><i class="path1"></i><i class="path2"></i></i> Sorgula
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-5 mb-xl-8">
+        <div class="card-header">
+            <h3 class="card-title">AYDES Başvuru Listesi</h3>
+        </div>
+        <div class="card-body py-2 px-6">
+            <div class="table-responsive">
+                <table class="table table-row-bordered table-striped table-row-gray-200 align-middle"
+                       data-name="tableList"
+                       data-server-side="true"
+                       data-responsive="true"
+                       data-searching="false">
+                    <thead>
+                        <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                            <th data-name="tckn" data-sort="false">T.C. Kimlik No</th>
+                            <th data-name="ad" data-sort="false">Ad</th>
+                            <th data-name="soyad" data-sort="false">Soyad</th>
+                            <th data-name="telefon" data-sort="false">Telefon</th>
+                            <th data-name="askiKodu" data-sort="false">Askı Kodu</th>
+                            <th data-name="huid" data-sort="false">HUID</th>
+                            <th data-name="il" data-sort="false">İl</th>
+                            <th data-name="ilce" data-sort="false">İlçe</th>
+                            <th data-name="mahalle" data-sort="false">Mahalle</th>
+                            <th data-name="ada" data-sort="false">Ada</th>
+                            <th data-name="parsel" data-sort="false">Parsel</th>
+                            <th data-name="itirazDegerlendirmeSonucu" data-sort="false">İtiraz Durumu</th>
+                            <th data-name="degerlendirmeDurumu" data-sort="false">Değerlendirme Durumu</th>
+                            <th data-name="kuraIsabetEttiMi" data-sort="false">Kura İsabet Durumu</th>
+                            <th data-name="Buttons" class="all" data-sort="false" data-export="false" data-width="70px"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-danger">KVKK kapsamında bu veriler kopyalanamaz, çoğaltılamaz ve paylaşılmaz.</div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(document).on('click', "#rapor_filtre_temizle", function (e) {
+                resetForm("#rapor-filter-form", function () {
+                    if (window.kullanici.birimIlId != 0) {
+                        if (isDataTable("[data-name='tableList']")) {
+                            reloadTable("[data-name='tableList']");
+                        }
+                        else {
+                            loadTable("[data-name='tableList']", "/admin/afadBasvuru/GetirListeServerSide");
+                        }
+                    }
+                });
+            });
+
+            $(document).on('submit', "#rapor-filter-form", function (e) {
+                e.preventDefault();
+
+                if (isDataTable("[data-name='tableList']")) {
+                    reloadTable("[data-name='tableList']");
+                }
+                else {
+                    loadTable("[data-name='tableList']", "/admin/afadBasvuru/GetirListeServerSide");
+                }
+            });
+
+            $(document).on('change', "select[name='ilId']", function (e) {
+                let ilId = parseInt($(this).val() || 0);
+
+                if (ilId <= 0) {
+                    $("select[name='ilceId']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                startLoader("select[name='ilceId']");
+                fillSelect("select[name='ilceId']", "/admin/afadBasvuru/GetirListeIlce?ilId=" + ilId, null, function () {
+                    stopLoader("select[name='ilceId']");
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("select[name='ilceId']");
+                });
+            });
+
+            $(document).on('change', "select[name='ilceId']", function (e) {
+                let ilceId = parseInt($(this).val() || 0);
+
+                if (ilceId <= 0) {
+                    $("select[name='mahalleId']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                startLoader("select[name='mahalleId']");
+                fillSelect("select[name='mahalleId']", "/admin/afadBasvuru/GetirListeMahalle?ilceId=" + ilceId, null, function () {
+                    stopLoader("select[name='mahalleId']");
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("select[name='mahalleId']");
+                });
+            });
+        });
+
+        function ajaxTableComplete(data, tableElem) {
+            let tableName = tableElem.attr("data-name");
+            if (tableName == "tableList") {
+                $.each(data, function (index, row) {
+                    row.kuraIsabetEttiMi = `<label class="badge badge-${(row.kuraIsabetEttiMi == 1 ? "success" : "danger")}">${(row.kuraIsabetEttiMi == 1 ? "Evet" : "Hayır")}</label>`;
+                    row.Buttons = `<div class="d-flex justify-content-end"><button type="button" data-placement="top" data-toggle="tooltip" data-bs-original-title="Detay" class="btn btn-sm btn-icon btn-light-primary me-2" onclick="DetayById('${row.csbId}')"><i class="fa fa-eye"></i></button></div>`;
+                    row.huid = `<div style="background-color:#ffbebe;">${(row.huid)}</div>`;
+                });
+            }
+            return data;
+        }
+
+        function DetayById(csbId) {
+            startLoader("[data-name='tableList']");
+
+            Request("/admin/afadBasvuru/getirById", { csbId: csbId }, 'get')
+                .done(function (response) {
+                    stopLoader("[data-name='tableList']");
+
+                    resetForm("#modal_aydes_detay .modal-body", function () {
+                        fillForm($("#modal_aydes_detay .modal-body"), response, function () {
+                            $("#modal_aydes_detay .modal-body [name='itirazOlusmus']").val(response.itirazOlusmus == 1 ? "Evet" : "Hayır");
+                            $("#modal_aydes_detay .modal-body [name='kuraIsabetEttiMi']").val(response.kuraIsabetEttiMi == 1 ? "Evet" : "Hayır");
+                            $("#modal_aydes_detay .modal-body [name='olusturulmaTarihi']").val(dateToString(response.olusturulmaTarihi));
+                            $("#modal_aydes_detay .modal-body [name='itirazTarihi']").val(dateToString(response.itirazTarihi));
+
+                            $("#modal_aydes_detay").modal("show");
+                        });
+                    });
+                })
+                .fail(function (jqXHR, textStatus) {
+                    stopLoader("[data-name='tableList']");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+    </script>
+}

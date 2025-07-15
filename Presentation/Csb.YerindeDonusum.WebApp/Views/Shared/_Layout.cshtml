@@ -1,0 +1,500 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration configuration
+@{
+    var matomoSiteId = configuration.GetValue<int>("Options:MatomoSiteId");
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>Yerinde Dönüşüm - Kentsel Dönüşüm Başkanlığı</title>
+    <meta name="description" content="Yerinde Dönüşüm - Kentsel Dönüşüm Başkanlığı">
+    <meta name="keywords" content="Yerinde Dönüşüm - Kentsel Dönüşüm Başkanlığı">
+    <meta name="author" content="csb.gov.tr">
+    <link rel="shortcut icon" type="image/icon" href="~/img/logo.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="~/lib/fontawesome-free-6.2.0-web/css/all.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap-5.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/lib/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/css/humberger.css">
+    <link rel="stylesheet" href="~/lib/animate.css-main/animate.min.css">
+    <link rel="stylesheet" href="~/lib/fancybox/dist/jquery.fancybox.min.css">
+    <link href="~/lib/aos-master/dist/aos.css" rel="stylesheet">
+    <link href="~/lib/select2-4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-nice-select-1.1.0/css/nice-select.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+    <link id="ol" rel="stylesheet" media="screen, print" href="~/css/ol.css">
+    <style>
+        #map {
+            width: 100%;
+            height: 700px;
+        }
+
+            #map:-webkit-full-screen {
+                height: 100%;
+                margin: 0;
+            }
+
+            #map:fullscreen {
+                height: 100%;
+            }
+
+            #map .ol-rotate {
+                top: 3em;
+            }
+    </style>
+</head>
+<body class="">
+    <div class="home">
+        <div class="desktop-header">
+            <section class="header-section large-container">
+                <div class="container">
+                    <div class="row">
+                        <div class="smlogos-sec">
+                            <ul>
+                                <li>
+                                    <a href="https://www.csb.gov.tr/" target="_blank">
+                                        <img class="center" src="~/img/lg1.png" alt="csb logo">
+                                    </a>
+                                </li>
+                                @* <li>
+                                <a href="https://www.toki.gov.tr/" target="_blank">
+                                <img class="center" src="~/img/toki_logo.png" alt="toki logo" width="160">
+                                </a>
+                                </li>
+                                <li>
+                                <a href="https://www.ilbank.gov.tr/" target="_blank">
+                                <img class="center" src="~/img/ilbank_logo.png" alt="ilbank logo" width="90">
+                                </a>
+                                </li>
+                                <li>
+                                <a href="https://www.emlakkonut.com.tr/" target="_blank">
+                                <img class="center" src="~/img/lg3.png" alt="emlak konut logo" width="120">
+                                </a>
+                                </li>*@
+                            </ul>
+                        </div>
+                        <div class="logo-sec">
+                            <div class="logo-content">
+                                <a href="/">
+                                    <img src="~/img/logo.png" alt="yerinde dönüşüm logo" class="logo">
+                                </a>
+                                @*<div class="logo-text">
+                                <h3></h3>
+                                </div>*@
+                            </div>
+                        </div>
+                        <div class="links-sec">
+                            <div class="menu-links">
+                                <ul>
+                                    <li><a href="/#map-section">Ofislerimiz</a></li>
+                                    <li><a href="/nasil-basvurulur">Nasıl Başvurulur?</a></li>
+                                    <li><a href="/sss">Sıkça Sorulan Sorular</a></li>
+                                </ul>
+                            </div>
+                            <div class="action-sec">
+                                <ul>
+                                    <li class="mail"><a href="#"><img src="~/img/icon/mail.png" alt=""></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="mobile-header">
+            <section class="header-section large-container">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-md-12 logo-section" style="display:flex;align-items: center;">
+                            <a href="https://www.csb.gov.tr/" target="_blank">
+                                <img src="~/img/lg1.png" alt="csb logo">
+                            </a>
+                            <a style="margin-left:15px;" href="/">
+                                <img src="~/img/logo.png" alt="yerinde dönüşüm logo" class="logo">
+                            </a>
+                            <div class="links-sec">
+                                <div class="toggle-menu">
+                                    <button><i class="fa-solid fa-bars"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="menu-content">
+                <div class="mobil-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 col-md-12 logo-section" style="display: flex;align-items: center;">
+                                <a href="https://www.csb.gov.tr/" target="_blank">
+                                    <img class="center" src="~/img/lg1.png" alt="csb logo">
+                                </a>
+                                <a style="margin-left:15px;" href="/">
+                                    <img src="~/img/logo.png" alt="yerinde dönüşüm logo" class="logo">
+                                </a>
+                                <div class="action-sec" style="width:calc(50%);justify-content:end;">
+                                    <ul>
+                                        <li class="mail"><a href="#"><img src="~/img/icon/mail.png" alt=""></a></li>
+                                        <li class="menu-btn"><button class="close_btn"><i class="fa-solid fa-xmark"></i></button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container" style="height: 100%;">
+                    <div class="mobil-menucontent">
+                        <div class="menu-links">
+                            <ul>
+                                <li><a class="close_btn" href="/#map-section">Ofislerimiz</a></li>
+                                <li><a class="close_btn" href="/nasil-basvurulur">Nasıl Başvurulur?</a></li>
+                                <li><a class="close_btn" href="/sss">Sıkça Sorulan Sorular</a></li>
+                                @*<li><a class="close_btn" href="#gallery">Örnek Proje Görselleri</a></li>
+                                <li><a class="close_btn" href="#floors">Örnek Kat Planı</a></li>
+                                <li><a class="close_btn" href="#payment">Örnek Ödeme Planı</a></li>*@
+                            </ul>
+                        </div>
+                        <div class="msmlogos-sec">
+                            <ul>
+                                @*<li>
+                                <a href="https://www.csb.gov.tr/" target="_blank">
+                                <img class="center" src="~/img/lg1.png" alt="csb logo">
+                                </a>
+                                </li>*@
+                                @* <li>
+                                <a href="https://www.toki.gov.tr/" target="_blank">
+                                <img class="center" src="~/img/toki_logo.png" alt="toki logo" width="160">
+                                </a>
+                                </li>
+                                <li>
+                                <a href="https://www.ilbank.gov.tr/" target="_blank">
+                                <img class="center" src="~/img/ilbank_logo.png" alt="ilbank logo" width="90">
+                                </a>
+                                </li>
+                                <li>
+                                <a href="https://www.emlakkonut.com.tr/" target="_blank">
+                                <img class="center" src="~/img/lg3.png" alt="emlak konut logo" width="120">
+                                </a>
+                                </li>*@
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @RenderBody()
+
+    <section class="footer-section">
+        <div class="text">
+            <div class="msmlogos-sec d-none">
+                <ul>
+                    @* <li>
+                    <a href="https://www.csb.gov.tr/" target="_blank">
+                    <img class="center" src="~/img/lg1.png" alt="csb logo">
+                    </a>
+                    </li>*@
+                    @* <li>
+                    <a href="https://www.toki.gov.tr/" target="_blank">
+                    <img class="center" src="~/img/toki_logo.png" alt="toki logo" width="160">
+                    </a>
+                    </li>
+                    <li>
+                    <a href="https://www.ilbank.gov.tr/" target="_blank">
+                    <img class="center" src="~/img/ilbank_logo.png" alt="ilbank logo" width="90">
+                    </a>
+                    </li>
+                    <li>
+                    <a href="https://www.emlakkonut.com.tr/" target="_blank">
+                    <img class="center" src="~/img/lg3.png" alt="emlak konut logo" width="120">
+                    </a>
+                    </li>*@
+                </ul>
+            </div>
+            <p> 2023 Yerinde Dönüşüm © Tüm hakları saklıdır</p>
+        </div>
+    </section>
+
+    <script src="~/lib/jquery/jquery-3.6.0.min.js"></script>
+    <script src="~/lib/OwlCarousel2-2.3.4/dist/owl.carousel.min.js"></script>
+    <script src="~/lib/bootstrap-5.2.0/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/fancybox/dist/jquery.fancybox.min.js"></script>
+    <script src="~/lib/select2-4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="~/lib/jquery-nice-select-1.1.0/js/jquery.nice-select.min.js"></script>
+    <script src="~/js/script.js"></script>
+    <script src="~/lib/aos-master/dist/aos.js"></script>
+    <script src="~/js/markerclusterer.min.js"></script>
+    <script src="~/js/ol.js"></script>
+
+    <script>
+        var _paq = window._paq = window._paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "https://analitik.csb.gov.tr/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '@matomoSiteId']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var markerSource;
+            var sssFilter = [];
+
+            var url = window.location.href;
+            if (!url.includes("#")) {
+                $("#popupVideo").click();
+            }
+
+            var timeout;
+            $(document).on("keyup", "#tb_search", function () {
+
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                }
+
+                timeout = setTimeout(function () {
+                    var val = $("#tb_search").val();
+
+                    RenderSSSList(sssFilter.filter(x => x.soru.toLowerCase().includes(val.toLowerCase()) || x.cevap.toLowerCase().includes(val.toLowerCase())));
+
+                }, 250);
+
+            });
+
+            function GetSSSList() {
+                $.get('/get-sss', function (response, textStatus, jqXHR) {
+                    sssFilter = response;
+
+                    RenderSSSList(sssFilter);
+                });
+            }
+
+            function RenderSSSList(data) {
+                var result = "";
+                for (var i = 0; i < data.length; i++) {
+                    result += '<div class="accordion-item"><h2 class="accordion-header">' +
+                        '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq_' + data[i].siraNo +
+                        '" aria-expanded="true" aria-controls="faq_' + data[i].siraNo + '">' +
+                        data[i].siraNo + '. ' + data[i].soru + '</button></h2>' +
+                        '<div id="faq_' + data[i].siraNo + '" class="accordion-collapse collapse " data-bs-parent="#sssDiv">' +
+                        '<div class="accordion-body">' + data[i].cevap + '</div></div></div>'
+                }
+
+                $("#sssDiv").html(result);
+            }
+
+            var sssDiv = document.getElementById("sssDiv");
+            if (sssDiv) {
+                GetSSSList();
+            }
+
+            function addMarker(loc) {
+                var iconFeature = new ol.Feature({
+                    // [loc.enlem, loc.boylam]
+                    geometry: new ol.geom.Point(ol.proj.transform([loc.boylam, loc.enlem], 'EPSG:4326', 'EPSG:3857')),
+                    name: loc.ilAdi + "/" + loc.ilceAdi,
+                    desc: loc.adres,
+                    enlem: loc.enlem,
+                    boylam: loc.boylam,
+                    population: 1,
+                    rainfall: 1
+                });
+                markerSource.addFeature(iconFeature);
+            }
+
+            function OpenLayerInit(locations) {
+                var googleMapsLoc = "37.29585478680868, 37.38607500041787";
+                var enlem = googleMapsLoc.split(",")[1];
+                var boylam = googleMapsLoc.split(",")[0];
+                var defZoom = 8.3;
+
+                markerSource = new ol.source.Vector();
+                var markerStyle = new ol.style.Style({
+                    image: new ol.style.Icon({
+                        anchor: [0.5, 1],
+                        scale: 0.6,
+                        //size: [ 10, 10],
+                        title: 'Detay için tıklayınız.',
+                        anchorXUnits: 'fraction',
+                        anchorYUnits: 'fraction',
+                        opacity: 1,
+                        src: '../img/location64.png'
+                    })
+                });
+
+                var map = new ol.Map({
+                    target: 'map',
+                    interactions: ol.interaction.defaults.defaults({ mouseWheelZoom: false }),
+                    //controls: ol.control.defaults.defaults({ fullscreen: true }),
+                    controls: ol.control.defaults.defaults().extend([
+                        new ol.control.FullScreen()
+                    ]),
+                    layers: [
+                        new ol.layer.Tile({
+                            source: new ol.source.OSM(),
+                        }),
+                        new ol.layer.Vector({
+                            source: markerSource,
+                            style: markerStyle,
+                        }),
+                    ],
+                    view: new ol.View({
+                        center: ol.proj.fromLonLat([enlem, boylam]),
+                        zoom: defZoom,
+                        maxZoom: 20
+                    })
+                });
+
+                //create globaly a mouse wheel interaction and add it to the map
+                var mouseWheelInt = new ol.interaction.MouseWheelZoom();
+                map.addInteraction(mouseWheelInt);
+
+                map.on('wheel', function (evt) {
+                    var ctrlDown = evt.originalEvent.ctrlKey;
+                    mouseWheelInt.setActive(ctrlDown);
+
+                    if (!ctrlDown) {
+                        $("#zoomLabel").show();
+                        setTimeout(function () {
+                            $("#zoomLabel").fadeOut(300);
+                        }, 2000);
+                    }
+
+                });
+
+                var container = document.getElementById('popup');
+                var content = document.getElementById('popup-content');
+                //var closer = document.getElementById('popup-closer');
+
+                const overlay = new ol.Overlay({
+                    element: container,
+                    positioning: 'bottom-center',
+                    stopEvent: false,
+                });
+                map.addOverlay(overlay);
+
+                $("#map .ol-viewport").append('<p id="zoomLabel">Yakınlaştırmak İçin Ctrl tuşuna basılı tutun.</p>');
+
+                map.on('singleclick', function (event) {
+
+                    var feature = map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
+                        return feature;
+                    });
+
+                    if (feature) {
+                        var coordinate = event.coordinate;
+
+                        content.innerHTML = '<b>' + feature.values_.name + '</b><br>' + feature.values_.desc + '<br><a style="color:#F36A54" href="http://maps.google.com/?q=' + feature.values_.enlem + "," + feature.values_.boylam + '" target="_blank">Yol Tarifi Al</a>';
+                        overlay.setPosition(coordinate);
+
+                    }
+                    else {
+                        overlay.setPosition(undefined);
+                        //closer.blur();
+                    }
+
+                });
+
+                for (var i = 0; i < locations.length; i++) {
+                    var loc = locations[i];
+                    addMarker(loc);
+                }
+            }
+
+            var mapElement = document.getElementById("map");
+            if (mapElement) {
+                $.get("/get-locations", function (response, textStatus, jqXHR) {
+                    OpenLayerInit(response);
+                });
+            }
+        });
+
+        $('#herocarousel').owlCarousel({
+            loop: false,
+            margin: 10,
+            nav: false,
+            dots: true,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 2
+                },
+                1000: {
+                    items: 2
+                },
+                1200: {
+                    items: 3
+                },
+                1600: {
+                    items: 3
+                }
+            }
+        });
+
+        $('.department-carousel').owlCarousel({
+            loop: false,
+            margin: 10,
+            nav: true,
+            dots: true,
+            navText: [
+                "<i class='fa-solid fa-chevron-left'></i>",
+                "<i class='fa-solid fa-chevron-right'></i>"
+            ],
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 1
+                },
+                768: {
+                    items: 2
+                },
+                991: {
+                    items: 3
+                }
+                ,
+                1000: {
+                    items: 3
+                }
+            }
+        });
+
+        $('.projects').owlCarousel({
+            loop: false,
+            margin: 10,
+            nav: false,
+            dots: true,
+            navText: [
+                "<i class='fa-solid fa-chevron-left'></i>",
+                "<i class='fa-solid fa-chevron-right'></i>"
+            ],
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 1
+                },
+                1000: {
+                    items: 2
+                }
+            }
+        });
+    </script>
+</body>
+</html>

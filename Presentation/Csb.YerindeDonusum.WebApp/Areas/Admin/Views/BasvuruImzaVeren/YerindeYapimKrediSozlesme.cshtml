@@ -1,0 +1,415 @@
+﻿@using Csb.YerindeDonusum.Application.Enums;
+@using Csb.YerindeDonusum.WebApp.Areas.Admin.Enums;
+@using Csb.YerindeDonusum.Application.Extensions;
+@model Csb.YerindeDonusum.Application.CQRS.BinaDegerlendirmeCQRS.Queries.GetirDetayYerindeYapimKrediSozlesme.GetirDetayYerindeYapimKrediSozlesmeQueryResponseModel;
+@{
+    Layout = null;
+    string BinaDegerlendirmeControllerUrl = "/admin/binadegerlendirme";
+    string birimIdString = User.Claims.FirstOrDefault(x => x.Type == "BirimId")?.Value ?? "?";
+    int birimId = (birimIdString == "?" || birimIdString == "") ? 0 : Int32.Parse(birimIdString);
+}
+@if (ViewBag.HataMesaji != null)
+{
+    @ViewBag.HataMesaji
+}
+else
+{
+    <html>
+    <head>
+        <link href="/admin/metronic/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+        <link href="/admin/metronic/assets/css/custom.css" rel="stylesheet" type="text/css" />
+        <link href="/admin/metronic/assets/css/print.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <h3 class="text-center">
+            7452 SAYILI KANUNUN EK-1. MADDESİ UYARINCA KULLANDIRILACAK YERİNDE YAPIM KREDİSİ SÖZLEŞMESİ
+        </h3>
+
+        <h4 class="mt-10">MADDE 1 – SÖZLEŞME KONUSU</h4>
+
+        <p style="text-align: justify;">
+            İşbu Sözleşme, Türkiye Cumhuriyeti Çevre, Şehircilik ve İklim Değişikliği Bakanlığı (@Model.UavtIlAdi Çevre, Şehircilik ve İklim Değişikliği İl Müdürlüğü - Bundan sonra “Bakanlık” olarak anılacaktır.) ile diğer taraftan son sayfada isim ve imzası bulunan malik arasında müzakere edilerek kabul edilen hükümler doğrultusunda, malik tarafından 06.02.2023 tarihli depremler sonrasında yapılan tespitlerde orta ve üzeri hasar alan yapısının yerinde ve yeniden inşa ettirilecek olan yapının yapım masraflarına devlet tarafından destek olunması amacıyla kredi tesis edilmesine ilişkin koşullar ile Bakanlık ve krediyi kullanan malik arasında kredi kullanımından doğacak ilişkileri belirlemek amacıyla düzenlenmiştir.
+        </p>
+
+        <h4>MADDE 2 – MALİK BEYANI</h4>
+
+        <p style="text-align: justify;">
+            Malik kredi başvurusu esnasında Bakanlık tarafından talep edilen belgelerde belirttiği bilgilerin doğru olduğunu, bu bilgilere dayanarak kredinin tahsis edileceğini, bu bilgilerin doğru olmadığının anlaşılması veya kredi kullandırma koşullarının değişmesi halinde Bakanlığın krediyi kullandırmaktan vazgeçebileceğini; doğru olmayan bilgi verildiğinin kredi kullandırım tarihinden sonra anlaşılması halinde ise Bakanlığın borcun tamamını muaccel kılmaya yetkili olduğunu kabul, beyan ve taahhüt eder.
+        </p>
+
+        <h4>MADDE 3 – KREDİ BİLGİLERİ</h4>
+
+        <p style="text-align: justify;">
+            İşbu Sözleşme kapsamında kullandırılacak kredi faizsiz olup, tutarı, vadesi ve krediden kaynaklanan toplam borç tutarının anapara, yasal yükümlülükler ve diğer ücretler itibarıyla dağılımı aşağıda gösterildiği gibi olacaktır. Geri ödeme tutarları kredi vadesi boyunca değişmeyecektir.
+        </p>
+
+
+        <table class="table align-middle table-bordered border gy-2 gs-2">
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                <tr>
+                    <td class="fw-bold">Kredi Tutarı (Anapara)</td>
+                    <td>@Model.KrediOdemeTutar?.ToTurkishLira(decimalNumber: 2, hideIsZeroOrThanLess: true)</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Kredi Vadesi</td>
+                    <td>8  Yıl (96  Ay)</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Taksit Tutarı</td>
+                    <td>@(Model.KrediOdemeTutar == null ? "" : (Model.KrediOdemeTutar.Value / 96).ToTurkishLira(decimalNumber: 2, hideIsZeroOrThanLess: true))</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Ödemesiz Dönem</td>
+                    <td>2 (İki) Yıl</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">İlk Taksit Tarihi</td>
+                    <td>@Model.IlkTaksitTarihi?.AddMonths(25).ToString("dd/MM/yyyy")</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Son Taksit Tarihi</td>
+                    <td>@Model.IlkTaksitTarihi?.AddMonths(120).ToString("dd/MM/yyyy")</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Gecikme Faizi</td>
+                    <td>Yıllık Yasal Faiz</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>MADDE 4 – GENEL HÜKÜMLER</h4>
+
+        <p style="text-align: justify;">
+            Sözleşmenin imzalandığı tarihten sonra Malikin vefatı halinde, hak sahipliğine ilişkin hakları mirasçılarına geçer. Mirasçılar birden fazla ise birlikte hak sahibi sayılırlar. Veraset ve intikal sonucu malik olanlarla ayrıca bir sözleşme imzalanmaksızın tüm mirasçılar, işbu Sözleşmeye göre müteselsilen borçlu ve sorumlu olacaklardır.
+        </p>
+
+        <p style="text-align: justify;">
+            Malik, kredi taksitleri sona ermeden krediye konu bağımsız bölümün tamamını ya da bir kısmını üçüncü bir kişiye devretmesi halinde, devir tarihinden sonraki taksitler ile ilgili olarak yasal mevzuat uyarınca doğacak olan mali yükümlülüklerin kendisine ait olacağını ve bu tutarları da ödemekle yükümlü bulunduğunu kabul, beyan ve taahhüt eder.
+        </p>
+
+        <p style="text-align: justify;">
+            Malikin inşaatını plân ve projesine, fen ve sanat kurallarına ve imar mevzuatına uygun yapmaması halinde inşaatı ile hibe ve kredisi durdurularak inşaatı düzeltmesi için otuz gün süre verilir. Bu süre sonunda inşaatın düzeltilmemesi hâlinde ödemeler kesilir ve kullanmış olduğu nakdî hibe ve kredi tutarları kanunî faizi ile birlikte, aynî hibe kullanılmış ise aynî hibe olarak verilen inşaat malzemesinin inşaatın durdurulduğu tarihteki güncel değeri muaccel olur ve tahsil edilir.
+        </p>
+
+        <h4>MADDE 5 – TAHSİLAT</h4>
+
+        <p style="text-align: justify;">
+            İşbu Sözleşmeye konu gayrimenkulde elbirliği mülkiyeti veya hisseli mülkiyet söz konusu ise, hissedarların veya elbirliği ortaklarının tamamı ile hisseleri oranında işbu Sözleşme şartlarına göre tek bir Sözleşme imzalanması esastır. İşlemler tapuda kayıtlı malikler adına yürütülecek olup, bir hissedar veya ortak, diğer hissedarlar veya ortaklar adına/lehine herhangi bir şekilde ferağda bulunamaz. Bu durumda tüm hissedarlar / ortaklar müteselsilen borçlu ve sorumlu sayılacak olup Bakanlık, borcun tamamının ya da bir kısmının ödenmesini müteselsil borçlu olarak her birinden ya da sadece birisinden istemeye yetkilidir.
+        </p>
+
+        <p style="text-align: justify;">
+            Kredi, işbu Sözleşmenin devamı ve ayrılmaz bir parçası olan geri ödeme planında gösterilen taksit tarihlerinde, taksit tutarlarının nakden ve defaten Bakanlık hesabına ödenmesi suretiyle tahsil edilecektir. Geri ödeme planında belirtilen taksit tarihlerinin resmi tatil ve/veya hafta sonu gününe denk gelmesi halinde, taksit ödemesi bir sonraki iş gününde yapılacaktır.
+        </p>
+
+        <p class="mt-10 page-break" style="text-align: justify;">
+            Bakanlık, işbu Sözleşme hükümlerini takip etmek, taksitleri tahsil etmek ve zamanında ödenmeyen kredi borçlarını yasal takibe konu etmek amacıyla bir Banka ile anlaşabilir. Bu durumda Malik, işbu Sözleşmenin Bakanlık tarafından Bankaya verileceğini, Banka tarafından yapılan bildirim ve tebligatların Bakanlık tarafından gönderilmiş sayılacağını, işbu Sözleşmeden doğan tüm sorumlulukların Banka nezdinde gerçekleştirileceğini beyan, kabul ve taahhüt eder.
+        </p>
+
+        <h4>MADDE 6 – KREDİNİN KULLANIMINDA BAKANLIĞIN SORUMLULUĞU</h4>
+
+        <p style="text-align: justify;">
+            Bakanlık, işbu Sözleşmeye konu kredi tutarını Malik nam ve hesabına olmak üzere, aşağıda belirlenmiş yapım seviyeleri gerçekleştiğinde, Malik tarafından anlaşma yapılan müteahhidin kredi başvurusu sırasında beyan edeceği banka hesabına yatıracaktır.  Malik, bu işlemlerin ve kendi adına tahsis edilen kredinin yine kendi nam ve hesabına yapılmış ödeme olarak müteahhit hesabına yapılması hususunda Bakanlığı yetkili kıldığını gayrikabili rücu olarak kabul ve taahhüt eder.
+        </p>
+
+        <table class="table align-middle table-bordered border gy-2 gs-2">
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                <tr>
+                    <td class="fw-bold">Yapım Aşaması</td>
+                    <td class="fw-bold">Aktarılacak Kredinin Oranı</td>
+                    <td class="fw-bold">Genel Seviye</td>
+                </tr>
+                <tr>
+                    <td>Yapı Ruhsatının Alınması</td>
+                    <td>%10</td>
+                    <td>%10</td>
+                </tr>
+                <tr>
+                    <td>Subasman Seviyesine Gelinmesi</td>
+                    <td>%30</td>
+                    <td>%20</td>
+                </tr>
+                <tr>
+                    <td>Taşıyıcı Sistemin Tamamlanması</td>
+                    <td>%30</td>
+                    <td>%60</td>
+                </tr>
+                <tr>
+                    <td>Yapının Tamamlanması</td>
+                    <td>%30</td>
+                    <td>%100</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p style="text-align: justify;">
+            Malik, krediye konu taşınmaz ile ilgili 3. şahıslar ile aralarında çıkabilecek uyuşmazlıklardan ve/veya malın ayıplı olması, teslim edilmemesi, iade edilmesi, hizmetin eksik yapılması veya hiç yapılmaması ve benzeri hususlarda çıkacak uyuşmazlıklardan dolayı Bakanlığın hiçbir sorumluluğu olmayacağını, bu gibi hususların kredinin geri ödenmesine ve işbu Sözleşmeden doğan yükümlülüklerin yerine getirilmesine engel oluşturmayacağını kabul ve taahhüt eder.
+        </p>
+
+        <h4>MADDE 7 – TEMİNATLAR </h4>
+
+        <p style="text-align: justify;">
+            Malik, işbu Sözleşme gereğince Bakanlığa borçlu olduğu tüm tutarların teminatı olarak işbu kredinin verilme nedeni olan ve özellikleri işbu Sözleşmede yer alan gayrimenkulü, mütemmim cüzü ve teferruatı ile birlikte Bakanlığa birinci derece, birinci sıra veya serbest dereceden istifade hakkı veya diğer derecelerden olmak üzere kredi tutarının iki katı kadar ipotek tesisi ile rehin etmeyi kabul ve taahhüt eder.
+        </p>
+
+        <p style="text-align: justify;">
+            Sözleşmeye konu gayrimenkul:
+        </p>
+
+        <table class="table align-middle table-bordered border gy-2 gs-2">
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                <tr>
+                    <td class="fw-bold">İli</td>
+                    <td>@Model.UavtIlAdi</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">İlçesi</td>
+                    <td>@Model.UavtIlceAdi</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Mahallesi/Köyü</td>
+                    <td>@Model.UavtMahalleAdi</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Ada</td>
+                    <td>@Model.TapuAda</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Parsel</td>
+                    <td>@Model.TapuParsel</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Bağımsız Bölüm No</td>
+                    <td style="width: 70%">@Model.BagimsizBolumNo</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p style="text-align: justify;">
+            Malik, üzerinde ipotek ve/veya rehin tesis edilmiş bulunan taşınmazın kıymetinin Bakanlık tarafından istendiği zaman yeniden değerlendirilebileceğini, teminatın yetersiz kalması halinde başkaca teminat vereceğini, üçüncü kişilere karşı olan borçlarından dolayı ipotek konusu gayrimenkul üzerine konulan haczin Bakanlıkça belirlenecek süre içinde kaldırılmaması, vergi ya da başkaca yükümlülük ya da borçlarından dolayı gayrimenkulün tamamının veya belirli bir payının satışa çıkarılması, mahkeme kararı ile taşınmaz üzerindeki tasarruf hakkının kısıtlanması, gayrimenkulde kısmi veya tam hasar meydana gelmesi, gayrimenkulün istimlâki halinde istimlâk bedelinin alacak miktarının altında kalması gibi hallerde Bakanlığın ilave teminat istemeye yetkili olduğunu, kendisinden istenen sürede ek teminat olarak aynı değerde başka ipotek veya Bakanlıkça kabul edilecek başka bir teminat vermemesi halinde Bakanlığın borcun tamamını muaccel kılmaya ve derhal ödenmesini talep etmeye yetkili olduğunu kabul, beyan ve taahhüt eder.
+        </p>
+
+        <h4>MADDE 8 – SİGORTA </h4>
+
+        <p style="text-align: justify;">
+            Malik tarafından işbu Sözleşme ve Krediye konu gayrimenkul için Zorunlu Deprem Sigortası yaptırılması zorunludur. Kredi vadesince Zorunlu Deprem Sigortası yaptırılmaması veya herhangi bir nedenle Zorunlu Deprem Sigortası’nın sona ermesi halinde Bakanlık,  Zorunlu Deprem Sigortası yaptırmaya ve prim tutarları ve sair masrafları Sözleşme kapsamında Malikten tahsil etmeye yetkilidir.
+        </p>
+
+        <h4 class="mt-10 page-break">MADDE 9 – ERKEN GERİ ÖDEME, ERKEN KAPATMA </h4>
+
+        <p style="text-align: justify;">
+            Malik, kredi borcunun tamamını veya bir taksit tutarından az olmamak üzere bir kısmını önceden ödeyebileceği gibi, vadesi gelmemiş bir ya da birden çok taksit için de erken ödemede bulunabilir.
+        </p>
+
+        <p style="text-align: justify;">
+            Erken ödeme durumunda, İşbu Sözleşmenin eki olan ödeme planı değiştirilmeyecek, Malik tarafından erken ödeme yapıldığı gerekçesiyle ödenecek toplam tutar üzerinden indirim yapılması talep edilmeyecektir.
+        </p>
+
+        <h4>MADDE 10 – GECİKME FAİZİ </h4>
+
+        <p style="text-align: justify;">
+            Malik, işbu Sözleşmenin eki ve ayrılmaz bir parçası olan geri ödeme planında gösterilen taksitlerden, vadelerinde ödenmeyen her taksit tutarı için, ayrıca bir ihbara gerek kalmaksızın, vade tarihinden ödeme tarihine kadar geçecek süreye karşılık, yıllık yasal faiz oranında ve basit faiz yöntemiyle hesaplanacak gecikme faizini ödemeyi kabul ve taahhüt eder.
+        </p>
+
+        <h4>MADDE 11 – MUACCELİYET, BORÇLUNUN TEMERRÜDE DÜŞMESİ SONUÇLARI </h4>
+
+        <p style="text-align: justify;">
+            Malik, işbu Sözleşmeye ekinde yer alan geri ödeme planında gösterilen kredi taksitlerinden birbirini izleyen en az iki tanesini taksit tarihinde ödemediği takdirde, Bakanlık Malike ihtarname göndererek, borcun 30 gün içinde ödenmesini talep etmeye, bu süre içinde borcun ödenmemesi durumunda kredi borcunun tamamını muaccel kılmaya yetkilidir.
+        </p>
+
+        <p style="text-align: justify;">
+            Malikten talep edilebilecek gecikme faizi hesaplanırken Malikin ödemeyi yaptığı tarih esas alınır. Bu süre hiçbir şekilde Malik aleyhine olacak şekilde değiştirilemez.
+        </p>
+
+        <p style="text-align: justify;">
+            Malik, Bakanlığın ihtarında verilen sürede borcunu ödemediği takdirde, Bakanlığın yasal takibat yapma yetkisinin bulunduğunu, tüm alacaklarının tahsili için Bakanlığın Malik aleyhinde haciz veya iflas yolu ile takibe geçebileceğini bu kredinin teminatı olarak verilmiş ipotekli gayrimenkulün paraya çevrilmesi için icra takibi başlatabileceğini ve krediye konu bağımsız bölümü yasal süreç içinde sattırabileceğini kabul ve taahhüt eder.
+        </p>
+
+        <h4>MADDE 12 –  SÖZLEŞMENİN SONA ERMESİ VE FESİH ŞARTLARI </h4>
+
+        <p style="text-align: justify;">
+            Tarafların karşılıklı edimlerini yerine getirmesi halinde işbu Sözleşme kendiliğinden sona erecektir.
+        </p>
+
+        <p style="text-align: justify;">
+            Taraflardan birinin Sözleşmede yer alan yükümlülüklerini yerine getirmemesi halinde diğer taraf kendi yükümlülüklerini yerine getirmek ve yazılı olarak bildirim yapmak kaydı ile Sözleşmeyi fesih etme hakkına sahiptir.
+        </p>
+
+        <p style="text-align: justify;">
+            Sözleşmenin feshi, Tarafların birbirlerinden olan hak ve alacaklarını ortadan kaldırmaz. İşbu Sözleşmede yer alan muacceliyet ve temerrüt hükümleri ile fesih şartları birbirinden ayrı değerlendirilir.
+        </p>
+
+        <h4>MADDE 13 – DEVİR VE TEMLİK </h4>
+
+        <p style="text-align: justify;">
+            Malik, Bakanlığın yazılı izni olmadan işbu Sözleşmeden doğan haklarını, yükümlülüğünü veya borcunu başkalarına devir ve temlik edemez.
+        </p>
+
+        <h4>MADDE 14 – TEBLİGAT ADRESİ </h4>
+
+        <p style="text-align: justify;">
+            Malik, işbu sözleşmedeki hususların yerine getirilmesi amacıyla Bakanlık tarafından yapılacak her türlü yazışma ve ihtarlar için, aşağıda isim ve imzasının yanında yazılı adrese yapılacak tebligatın geçerli olacağını, bu adrese tebligat yapılamaması halinde Adres Kayıt Sisteminde kayıtlı adresine yapılacak tebligatın 7201 sayılı Tebligat Kanunu gereği geçerli sayılacağını, malik adreste bulunmasa veya tebellüğden imtina etse bile Tebligat Kanunu’nun 21. maddesinin uygulanacağını kabul, beyan ve taahhüt eder.
+        </p>
+
+        <h4>MADDE 15 – BİLGİ VERME </h4>
+
+        <p style="text-align: justify;">
+            Malik, Bakanlığın, işbu Sözleşme konusu kredi ile ilgili her türlü bilgiyi, yetkili kurumlar yanı sıra, işbu Sözleşmeden doğan ilişki gereği uygun göreceği gerçek ve tüzel kişilere aktarmaya ve bunlardan kendisi hakkında bilgi/belgeleri talep etmeye/almaya yetkili olduğunu şimdiden gayrikabili rücu olarak kabul ve taahhüt eder.
+        </p>
+
+        <h4>MADDE 16 – CAYMA HAKKI</h4>
+
+        <p style="text-align: justify;">
+            Malik, işbu Sözleşmenin imza tarihini takip eden 14 (ondört) gün içerisinde herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin sözleşmeden cayma hakkına sahiptir. Cayma hakkının kullanıldığına dair bildirimin bu süre içinde Bakanlığa (veya Bakanlıkça Banka ile anlaşılmış olması durumunda Banka’ya) yazılı başvuruyla veya noter aracılığıyla yöneltilmiş olması şarttır. Cayma hakkını kullanan Malikin krediden faydalandığı hallerde Malik, faydalandığı tutarı cayma bildirimini göndermesinden sonra 30 (otuz) gün içinde geri ödemek zorundadır. 30 (otuz) gün içinde geri ödeme yapılmaması halinde krediden cayılmamış sayılır.
+        </p>
+
+        <h4>MADDE 17 – DAVA VE İCRA MASRAFLARI</h4>
+
+        <p style="text-align: justify;">
+            Malik, işbu Sözleşmeden doğan yükümlülüklerini yerine getirmemesinden dolayı Bakanlığın işbu Sözleşmeden doğan haklarının korunması ve infazı için yapacağı yasal takiple ilgili her türlü ihtar ve takip masrafları ile Bakanlık tarafından aleyhine dava açmak ya da icra takibi yapmak zorunda kalındığı takdirde Bakanlığın yapacağı, avukatlık ücreti dâhil, her türlü dava masraflarının kendisine ait olduğunu ve bu masrafları ödeyeceğini kabul, beyan ve taahhüt eder.
+        </p>
+
+        <h4 class="mt-10 page-break">MADDE 18 – HÜKÜMLERİN GEÇERSİZLİĞİ HALİ </h4>
+
+        <p style="text-align: justify;">
+            İşbu Sözleşmenin herhangi bir hükmü, herhangi bir yasa çerçevesinde geçersiz, yasalara aykırı veya uygulanamaz hale gelirse, diğer hükümlerin geçerliliği, yasalara uygunluğu ve uygulanabilirliği bu durumdan etkilenmez. Bu şekilde yasaya aykırı gelen hüküm, yasaya aykırı olmayacağı en geniş şekliyle yorumlanacaktır.
+        </p>
+
+        <h4>MADDE 19 – UYUŞMAZLIKLARIN ÇÖZÜMÜ</h4>
+
+        <p style="text-align: justify;">
+            İşbu sözleşmeden, eklerinden veya sözleşme ile bağlantılı olarak ortaya çıkan ve sözleşmeden kaynaklanmayan her türlü uyuşmazlıkta Türkiye Cumhuriyeti hukuku uygulanacaktır.
+        </p>
+
+        <p style="text-align: justify;">
+            Uyuşmazlıkların çözümünde, uyuşmazlık bedeli de dikkate alınarak Malikin krediyi kullandığı il veya Ankara Mahkemeleri ve İcra Daireleri yetkilidir.
+        </p>
+
+        <h4>MADDE 20 – YÜRÜRLÜK VE GEÇERLİLİK</h4>
+
+        <p style="text-align: justify;">
+            Taraflar işbu Sözleşmenin tamamını okuduğunu, Sözleşmenin tüm hükümlerini Bakanlık (Çevre, Şehircilik ve İklim Değişikliği İl Müdürlüğü) ile karşılıklı olarak müzakere ettiğini ve mutabık kaldığını, Sözleşmenin her sayfasının ayrı ayrı imzalanmasına veya paraflanmasına gerek olmadan sadece imza hanesinin bulunduğu son sayfasının imzalamış olmasıyla tüm Sözleşme hükümlerinin geçerli olacağını kabul, beyan ve taahhüt eder.
+        </p>
+
+        <p style="text-align: justify;">
+            İşbu Sözleşme taraflar arasında 3 (üç) nüsha halinde düzenlenerek … / … / 20… tarihinde imzalanmış olup imzalandığı tarihte yürürlüğe girer ve belirlenen kredi geri ödeme planı süresi sonuna kadar geçerlidir
+        </p>
+
+        <p class="mt-10 page-break" style="text-align: justify;">
+            Bu sayfa, … sayfa ve … maddeden oluşan … / … / 20… tarihli “7452 Sayılı Kanunun Ek-1. Maddesi Uyarınca Kullandırılacak Yerinde Yapım Kredisi Sözleşmesi”nin imza sayfasıdır.
+        </p>
+
+        <h6>Kredi Kullanan Malik:</h6>
+
+        <table class="table align-middle table-bordered border gy-2 gs-2">
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                <tr>
+                    <td>Malik Adı Soyadı / Tüzel Kişi Adı</td>
+                    <td>@Model.Ad @Model.Soyad</td>
+                </tr>
+                <tr>
+                    <td>T.C. Kimlik No / Vergi Kimlik No</td>
+                    <td>@Model.TcKimlikNo</td>
+                </tr>
+                <tr>
+                    <td>Telefon</td>
+                    <td>@Model.CepTelefonu</td>
+                </tr>
+                <tr>
+                    <td>EPosta</td>
+                    <td>@Model.Eposta</td>
+                </tr>
+                <tr>
+                    <td>Askı Kodu</td>
+                    <td>@Model.AskiKodu</td>
+                </tr>
+                <tr>
+                    <td>Adres</td>
+                    <td>@Model.Adres</td>
+                </tr>
+                <tr>
+                    <td>İmza</td>
+                    <td style="width: 70%">
+                        <br />
+                        <br />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h6>T.C. Çevre, Şehircilik ve İklim Değişikliği Bakanlığı</h6>
+
+        <h6>Adına:</h6>
+
+        <table class="table align-middle table-bordered border gy-2 gs-2">
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                <tr>
+                    <td>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        @*
+        <h3 class="mt-10 page-break text-center">
+            İpotek Alınacak Gayrimenkul İçin, Gayrimenkul Malikinin Eşinden Alınacak Muvafakatname
+        </h3>
+
+        <h3 class="text-center">
+            Çevre, Şehircilik ve İklim Değişikliği Bakanlığı’na
+        </h3>
+
+        <h3 class="text-center">
+            (@Model.UavtIlAdi Çevre, Şehircilik ve İklim Değişikliği İl Müdürlüğü)
+        </h3>
+
+        <p style="text-align: justify;">
+            Eşim ..............................................’in maliki bulunduğu ve tapunun @Model.UavtIlAdi ilinde, @Model.UavtIlceAdi ilçesinde, @Model.TapuAda ada, @Model.TapuParsel parselinde kayıtlı @Model.BagimsizBolumNo no.lu bağımsız bölümü Bakanlığınızca kullandırılacak kredilerden ve bununla ilişkili hukuki işlemlerden doğmuş ve doğacak borçların teminatını teşkil etmek üzere dilediği şart, miktar ve derecede ipotek etmesine muvafakat ederim.
+        </p>
+
+        <table class="table align-middle table-bordered border gy-2 gs-2">
+            <tbody class="fs-6 fw-semibold text-gray-600">
+                <tr>
+                    <td>Tarih</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>TC Kimlik NO</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Adı Soyadı</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Adresi</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>İmzası</td>
+                    <td style="width: 70%">
+                        <br />
+                        <br />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    *@
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function (event) {
+                window.print();
+            });
+        </script>
+    </body>
+    </html>
+}

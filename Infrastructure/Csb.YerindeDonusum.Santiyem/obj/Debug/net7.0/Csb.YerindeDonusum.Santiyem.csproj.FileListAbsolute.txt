@@ -1,0 +1,17 @@
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\bin\Debug\net7.0\Csb.YerindeDonusum.Santiyem.deps.json
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\bin\Debug\net7.0\Csb.YerindeDonusum.Santiyem.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\bin\Debug\net7.0\Csb.YerindeDonusum.Santiyem.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\bin\Debug\net7.0\Csb.YerindeDonusum.Application.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\bin\Debug\net7.0\Csb.YerindeDonusum.Application.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\obj\Debug\net7.0\Csb.YerindeDonusum.Santiyem.csproj.AssemblyReference.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\obj\Debug\net7.0\Csb.YerindeDonusum.Santiyem.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\obj\Debug\net7.0\Csb.YerindeDonusum.Santiyem.AssemblyInfoInputs.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\obj\Debug\net7.0\Csb.YerindeDonusum.Santiyem.AssemblyInfo.cs
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\obj\Debug\net7.0\Csb.YerindeDonusum.Santiyem.csproj.CoreCompileInputs.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\obj\Debug\net7.0\Csb.Yeri.28EBCBDD.Up2Date
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\obj\Debug\net7.0\Csb.YerindeDonusum.Santiyem.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\obj\Debug\net7.0\refint\Csb.YerindeDonusum.Santiyem.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\obj\Debug\net7.0\Csb.YerindeDonusum.Santiyem.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.Santiyem\obj\Debug\net7.0\ref\Csb.YerindeDonusum.Santiyem.dll

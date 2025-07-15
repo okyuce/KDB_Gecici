@@ -1,0 +1,1599 @@
+﻿@using CodeKicker.BBCode;
+@using Csb.YerindeDonusum.Application.Enums;
+@using Csb.YerindeDonusum.Application.CustomAddons;
+@using Csb.YerindeDonusum.Application.Extensions;
+@using Csb.YerindeDonusum.Application.CQRS.BilgilendirmeMesajCQRS.Queries.GetirBilgilendirmeMesajById
+@model Csb.YerindeDonusum.Application.CQRS.BasvuruCQRS.Queries.GetirBasvuruDetayById.GetirBasvuruDetayByIdQueryResponseModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    string? hasarTespitBilgilendirmeMesaji = null,
+            uavtBilgilendirmeMesaji = null,
+            tapuBilgilendirmeMesaji = null;
+
+    if (ViewBag.BilgilendirmeMesajListe != null)
+    {
+        var bilgilendirmeMesajListe = ViewBag.BilgilendirmeMesajListe as List<GetirBilgilendirmeMesajByIdQueryResponseModel>;
+
+        hasarTespitBilgilendirmeMesaji = bilgilendirmeMesajListe?.FirstOrDefault(x => x.Anahtar == "HIBE_KREDI_BASVURU_GERCEK_KISI_YENI_BASVURU_ASKI_KODU_BILGI_METNI")?.Deger;
+        uavtBilgilendirmeMesaji = bilgilendirmeMesajListe?.FirstOrDefault(x => x.Anahtar == "HIBE_KREDI_BASVURU_GERCEK_KISI_YENI_BASVURU_BILGI_DOGRULUGU_EVET_SECIMI_IC_KAPI_NO_OLMAYAN_METNI")?.Deger;
+        tapuBilgilendirmeMesaji = bilgilendirmeMesajListe?.FirstOrDefault(x => x.Anahtar == "HIBE_KREDI_BASVURU_GERCEK_KISI_YENI_BASVURU_TAPU_BILGISI_GIRIS_METNI")?.Deger;
+    }
+    var beyan = Model?.UavtBeyanMi;
+}
+
+<div id="kt_app_content_container" class="app-container container-fluid">
+    <div class="d-flex flex-column flex-column-fluid card">
+        <div class="card-header">
+            <h3 class="card-title">Deprem Bölgesinde Yerinde Dönüşüm Hibe / Kredi Ön Başvuru Oluştur</h3>
+        </div>
+        <div id="container-basvuru" class="card-body p-8">
+            @if (!FluentValidationExtension.NotEmpty(Model?.Id))
+            {
+                <div class="col-md-3 d-none">
+                    <select name="BasvuruTipi"
+                            data-value="1"
+                            class="form-select select-2">
+                        <option value="1">Gerçek Kişi</option>
+                        <option value="2">Tüzel Kişi</option>
+                    </select>
+                </div>
+            }
+            <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6">
+                @if (!FluentValidationExtension.NotEmpty(Model?.Id))
+                {
+                    <li id="li_tuzel" class="nav-item me-0 d-none" role="presentation">
+                        <a class="btn btn-sm btn-flex btn-active-light-primary" data-bs-toggle="tab" href="#kt_vtab_pane_0" aria-selected="true" role="tab">
+                            <span class="d-flex flex-column align-items-start">
+                                <span class="fs-5 fw-bold">1. Firma Bilgileri</span>
+                            </span>
+                        </a>
+                    </li>
+                    <li id="li_gercek" class="nav-item me-0" role="presentation">
+                        <a class="btn btn-sm btn-flex btn-active-light-primary active" data-bs-toggle="tab" href="#kt_vtab_pane_1" aria-selected="true" role="tab">
+                            <span class="d-flex flex-column align-items-start">
+                                <span class="fs-5 fw-bold">1. Kişi Bilgileri</span>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item me-0" role="presentation">
+                        <a class="btn btn-sm btn-flex btn-active-light-primary" href="#kt_vtab_pane_2" aria-selected="true" role="tab">
+                            <span class="d-flex flex-column align-items-start">
+                                <span class="fs-5 fw-bold">2. Hasar Tespit Bilgileri</span>
+                            </span>
+                        </a>
+                    </li>
+                }
+
+                <li class="nav-item me-0" role="presentation">
+                    <a class="btn btn-sm btn-flex btn-active-light-primary @(FluentValidationExtension.NotEmpty(Model?.Id) ? "active" : "")" href="#kt_vtab_pane_3" data-bs-toggle="@(FluentValidationExtension.NotEmpty(Model?.Id) ? "tab" : "")" aria-selected="false" role="tab" tabindex="-1">
+                        <span class="d-flex flex-column align-items-start">
+                            <span class="fs-5 fw-bold">@(FluentValidationExtension.NotEmpty(Model?.Id) ? "" : "3.")UAVT Adres Bilgileri</span>
+                        </span>
+                    </a>
+                </li>
+                @if (!FluentValidationExtension.NotEmpty(Model?.Id))
+                {
+                    <li class="nav-item me-0" role="presentation">
+                        <a class="btn btn-sm btn-flex btn-active-light-primary" href="#kt_vtab_pane_4" @*data-bs-toggle="tab"*@ aria-selected="false" role="tab" tabindex="-1">
+                            <span class="d-flex flex-column align-items-start">
+                                <span class="fs-5 fw-bold">4. Tapu Bilgileri</span>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item me-0" role="presentation">
+                        <a class="btn btn-sm btn-flex btn-active-light-primary" href="#kt_vtab_pane_5" aria-selected="false" role="tab" tabindex="-1">
+                            <span class="d-flex flex-column align-items-start">
+                                <span class="fs-5 fw-bold">5. Başvuru ve Destek Türü Bilgileri</span>
+                            </span>
+                        </a>
+                    </li>
+                }
+            </ul>
+            <form id="basvuruForm">
+                <input type="hidden" name="VatandaslikDurumu" value="1" />
+                <input type="hidden" name="BasvuruKanalId" value="60406df6-9174-4003-b4e8-80d9b15255dc" />
+                <input type="hidden" name="AydinlatmaMetniId" value="d368d6d8-cc92-446f-befe-9e4e0f330db4" />
+                <input type="hidden" name="HasarTespitUid" />
+                <input type="hidden" name="UavtIlAdi" value="@Model?.UavtIlAdi" />
+                <input type="hidden" name="UavtIlceAdi" value="@Model?.UavtIlceAdi" />
+                <input type="hidden" name="UavtMahalleAdi" value="@Model?.UavtMahalleAdi" />
+                <input type="hidden" name="UavtCsbm" value="@Model?.UavtCsbm" />
+                <input type="hidden" name="UavtDisKapiNo" value="@Model?.UavtDisKapiNo" />
+                <input type="hidden" name="UavtIcKapiNo" value="@Model?.UavtIcKapiNo" />
+                <input type="hidden" name="UavtAdresNo" value="@Model?.UavtAdresNo" />
+
+
+                <div class="tab-content pt-4" id="myTabContent">
+                    @if (!FluentValidationExtension.NotEmpty(Model?.Id))
+                    {
+                        <div class="tab-pane fade" id="kt_vtab_pane_0" role="tabpanel">
+                            <h5>Başvuru Yapmak İstediğiniz Firmanın Vergi Numarasını Giriniz</h5>
+                            <div class="row mt-8">
+                                <div class="col-md-12 d-flex flex-column">
+                                    <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                        <span>Vergi Numarası</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text"
+                                               data-validate="required"
+                                               data-title="Mersis No"
+                                               class="form-control form-control-solid mersisno-mask"
+                                               autocomplete="off"
+                                               placeholder="Mersis No"
+                                               name="MersisNo" />
+                                        <div class="input-group-append">
+                                            <button id="bt_tuzelSorgula" type="button" data-step="1" class="btn btn-primary">
+                                                Sorgula
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tuzelBilgiDiv" class="row mt-8" style="display:none;">
+                                <hr />
+                                <h5 class="mt-8">T.C. Kimlik Numarasına Ait Kişi Bilgileri</h5>
+                                <div class="alert alert-primary">
+                                    <div class="row mt-8">
+                                        <div class="col-md-6 d-flex flex-column">
+                                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                <span>Ad Soyad</span>
+                                            </label>
+                                            @*<label id="lb_adSoyad"></label>*@
+                                        </div>
+                                        <div class="col-md-6 d-flex flex-column">
+                                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                <span>Doğum Tarihi</span>
+                                            </label>
+                                            @*<label id="lb_dogumTarihi"></label>*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-10">
+                                    <div class="col-md-12 d-flex flex-column">
+                                        <label class="required form-check form-check-custom form-check-solid me-10">
+                                            <input class="form-check-input h-20px w-20px" type="checkbox" name="cb_onay0" value="true">
+                                            <span class="form-check-label fw-semibold">Girmiş olduğum Vergi Numarasına ait görüntülenen firma bilgilerini kontrol ettim, onaylıyorum.</span>
+                                        </label>
+                                        <small class="mt-2">Bu şartı kabul etmediğiniz taktirde işleme devam edemezsiniz.</small>
+                                    </div>
+                                </div>
+                                <div class="row mt-8">
+                                    <div class="col-md-12 text-right">
+                                        <button id="btDevamTab0" type="button" data-step="1" class="btn btn-primary">
+                                            Devam Et
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade active show" id="kt_vtab_pane_1" role="tabpanel">
+
+                            <div id="divGercekKisi" class="mt-8">
+                                <h5>Başvuru Yapmak İstediğiniz Kişinin T.C. Kimlik Numarasını Giriniz</h5>
+                                <div class="row mt-8">
+                                    <div class="col-md-12 d-flex flex-column">
+                                        <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                            <span>T.C. Kimlik Numarası</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="text"
+                                                   data-onenter-submit="true"
+                                                   data-onenter-click="#bt_kisiSorgula"
+                                                   data-validate="required, tckn"
+                                                   data-title="T.C. Kimlik Numarası"
+                                                   class="form-control form-control-solid identity-mask"
+                                                   autocomplete="off"
+                                                   placeholder="T.C. Kimlik Numarası"
+                                                   name="TcKimlikNo" />
+                                            <div class="input-group-append">
+                                                <button id="bt_kisiSorgula" type="button" data-step="1" class="btn btn-primary">
+                                                    Sorgula
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="kisiBilgiDiv" class="mt-8" style="display:none;">
+                                    <hr />
+                                    <h5 class="mt-8">T.C. Kimlik Numarasına Ait Kişi Bilgileri</h5>
+                                    <div class="alert alert-primary mt-8">
+                                        <div class="row">
+                                            <div class="col-md-6 d-flex flex-column">
+                                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                    <span>Ad</span>
+                                                </label>
+                                                <label id="lb_ad"></label>
+                                            </div>
+                                            <div class="col-md-6 d-flex flex-column">
+                                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                    <span>Soyad</span>
+                                                </label>
+                                                <label id="lb_soyad"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="divKisiBilgiHata" class="alert alert-danger mt-8 mb-0 d-none">Sorgulanan kişi vefat ettiği için başvuruya devam edemezsiniz!</div>
+                                    <div id="divKisiBilgiSartlariKabulEdiyorum" class="row mt-10">
+                                        <div class="col-md-12 d-flex flex-column">
+                                            <label class="required form-check form-check-custom form-check-solid me-10">
+                                                <input class="form-check-input h-20px w-20px" type="checkbox" name="cb_onay1" value="true">
+                                                <span class="form-check-label fw-semibold">Girmiş olduğum T.C. Kimlik Numarasına ait görüntülenen kişi bilgilerini kontrol ettim, onaylıyorum.</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 d-flex flex-column mt-8">
+                                        <label class="form-check form-check-custom form-check-solid me-10">
+                                            <input class="form-check-input h-20px w-20px" type="checkbox" id="cbTuzelKisiBasvuru">
+                                            <span class="form-check-label fw-semibold">Tüzel Kişi Kaydı Yapmak İstiyorum.</span>
+                                        </label>
+                                    </div>
+                                    <div id="divTuzelKisi" class="mt-8" style="display:none;">
+                                        <div class="row mt-8">
+                                            <div class="col-md-6 d-flex flex-column mt-2">
+                                                <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                    <span>Tüzel Kişi Tipi</span>
+                                                </label>
+                                                <select data-validate="required"
+                                                        data-title="Tüzel Kişi Tipi"
+                                                        name="TuzelKisiTipId"
+                                                        data-value="@Model?.TuzelKisiTipId"
+                                                        class="form-select select-2"
+                                                        data-ajax-target="/admin/select/GetirTuzelKisilikTipiListe"
+                                                        data-custom-value="tuzelKisilikTipiId"
+                                                        data-custom-text="tuzelKisilikTipiAd">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 d-flex flex-column mt-2">
+                                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                    <span>Vergi Numarası</span>
+                                                </label>
+                                                <input type="text"
+                                                       data-title="Vergi Numarası"
+                                                       class="form-control"
+                                                       autocomplete="off"
+                                                       placeholder="Vergi Numarası"
+                                                       value="@Model?.TuzelKisiVergiNumarasi"
+                                                       name="TuzelKisiVergiNo" />
+                                            </div>
+                                            <div class="col-md-6 d-flex flex-column mt-2">
+                                                <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                    <span>Tüzel Kişi Unvanı</span>
+                                                </label>
+                                                <input type="text" data-validate="required"
+                                                       data-title="Tüzel Kişi Unvanı"
+                                                       class="form-control"
+                                                       autocomplete="off"
+                                                       placeholder="Tüzel Kişi Unvanı"
+                                                       value="@Model?.TuzelKisiAdi"
+                                                       name="TuzelKisiAdi" />
+                                            </div>
+                                            <div class="col-md-6 d-flex flex-column mt-2">
+                                                <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                    <span>Tüzel Kişilik (Yetki) Belgesi (.pdf, .png, .jpg)</span>
+                                                </label>
+                                                <input data-validate="required, maxsize=1, maxcount=1"
+                                                       accept="image/png, image/jpeg, application/pdf"
+                                                       data-title="Tüzel Kişilik (Yetki) Belgesi"
+                                                       name="BasvuruTuzelYetkiDosyaListe"
+                                                       type="file"
+                                                       multiple
+                                                       class="form-control form-control-solid" autocomplete="off" placeholder="Tüzel Kişilik (Yetki) Belgesi" />
+                                            </div>
+                                            <div class="col-md-6 d-flex flex-column mt-2">
+                                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                    <span>Tüzel Kişi Yetki Türü</span>
+                                                </label>
+                                                <select name="TuzelKisiYetkiTuru"
+                                                        class="form-select select-2">
+                                                    <option>Tanımsız</option>
+                                                    <option value="Münferiden">Münferiden</option>
+                                                    <option value="Hizmete Yetkili">Hizmete Yetkili</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 d-flex flex-column mt-2">
+                                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                    <span>Tüzel Kişi Adres</span>
+                                                </label>
+                                                <textarea class="form-control form-control-solid" autocomplete="off" placeholder="Tüzel Kişi Adres" name="TuzelKisiAdres" rows="3"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="divKisiBilgiBtnDevam" class="row mt-8">
+                                        <div class="col-md-12 text-right">
+                                            <button id="btDevamTab1" type="button" data-step="1" class="btn btn-primary">
+                                                Devam Et
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade" id="kt_vtab_pane_2" role="tabpanel">
+                            @if (!string.IsNullOrWhiteSpace(hasarTespitBilgilendirmeMesaji))
+                            {
+                                <div class="alert alert-dark mb-10">
+                                    @Html.Raw(BBCode.ToHtml(hasarTespitBilgilendirmeMesaji))
+                                </div>
+                            }
+                            <h5>Başvuru Yapmak İstediğiniz Binanın Askı Kodunu Giriniz</h5>
+                            <div class="row mt-8">
+                                <div class="col-md-12 d-flex flex-column">
+                                    <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                        <span>Askı Kodu</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text"
+                                               data-onenter-submit="true"
+                                               data-onenter-click="#bt_askiSorgula"
+                                               data-validate="required"
+                                               data-title="Askı Kodu"
+                                               class="form-control form-control-solid"
+                                               autocomplete="off"
+                                               placeholder="Askı Kodu"
+                                               name="AskiKodu" />
+                                        <div class="input-group-append">
+                                            <button id="bt_askiSorgula" type="button" data-step="1" class="btn btn-primary">
+                                                Sorgula
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="hasarTespitDiv" class="mt-8" style="display:none;">
+                                <hr />
+                                <h5 class="mt-8">Askı Koduna Ait Hasar Tespit Bilgileri</h5>
+                                <div id="div-aski-kodu-hata-mesaji" class="alert alert-danger mt-8 d-none"></div>
+                                <div class="alert alert-primary mt-8">
+                                    <div class="row">
+                                        <div class="col-md-4 d-flex flex-column">
+                                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                <span>Güçlendirme/Mahkeme Sonucu</span>
+                                            </label>
+                                            <label id="lb_hasarTespitGuclendirmeMahkemeSonucu"></label>
+                                        </div>
+                                        <div class="col-md-4 d-flex flex-column">
+                                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                <span>İtiraz Sonucu</span>
+                                            </label>
+                                            <label id="lb_hasarTespitItirazSonucu"></label>
+                                        </div>
+                                        <div class="col-md-4 d-flex flex-column">
+                                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                <span>Hasar Durumu</span>
+                                            </label>
+                                            <label id="lb_hasarDurumu"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-md-4 d-flex flex-column">
+                                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                <span>İl</span>
+                                            </label>
+                                            <label id="lb_hasarTespitIl"></label>
+                                        </div>
+                                        <div class="col-md-4 d-flex flex-column">
+                                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                <span>İlçe</span>
+                                            </label>
+                                            <label id="lb_hasarTespitIlce"></label>
+                                        </div>
+                                        <div class="col-md-4 d-flex flex-column">
+                                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                <span>Mahalle / Köy</span>
+                                            </label>
+                                            <label id="lb_hasarTespitMahalle"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-md-4 d-flex flex-column">
+                                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                <span>Cadde / Sokak</span>
+                                            </label>
+                                            <label id="lb_hasarTespitCadde"></label>
+                                        </div>
+                                        <div class="col-md-4 d-flex flex-column">
+                                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                <span>Bina No</span>
+                                            </label>
+                                            <label id="lb_hasarTespitBina"></label>
+                                        </div>
+                                        <div class="col-md-4 d-flex flex-column">
+                                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                                <span>Ada No / Parsel No</span>
+                                            </label>
+                                            <div class="d-inline-block">
+                                            <label id="lb_hasarTespitAda"></label> /
+                                            <label id="lb_hasarTespitParsel"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="div-aski-kodu-onay" class="row mt-10">
+                                    <div class="col-md-12 d-flex flex-column">
+                                        <label class="required form-check form-check-custom form-check-solid me-10">
+                                            <input class="form-check-input h-20px w-20px" type="checkbox" name="cb_onay2" value="true">
+                                            <span class="form-check-label fw-semibold">Girmiş olduğum askı koduna ait görüntülenen hasar tespit bilgilerini kontrol ettim, onaylıyorum.</span>
+                                        </label>
+                                        <small class="mt-2">Bu şartı kabul etmediğiniz taktirde işleme devam edemezsiniz.</small>
+                                    </div>
+                                </div>
+                                <div id="div-aski-kodu-devam-et" class="row mt-8">
+                                    <div class="col-md-12 text-right">
+                                        <button id="btDevamTab2" type="button" data-step="1" class="btn btn-primary">
+                                            Devam Et
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" name="BasvuruGuid" value="@Model?.Id" />
+                        <input type="hidden" name="TcKimlikNo" value="@Model?.TcKimlikNo" />
+                    }
+                    <div class="tab-pane fade @(FluentValidationExtension.NotEmpty(Model?.Id) ? "active show" : "")" style="width:100%" id="kt_vtab_pane_3" role="tabpanel">
+                        @if (!string.IsNullOrWhiteSpace(uavtBilgilendirmeMesaji))
+                        {
+                            <div class="alert alert-dark mb-10">
+                                @Html.Raw(BBCode.ToHtml(uavtBilgilendirmeMesaji))
+                            </div>
+                        }
+
+                        @if (FluentValidationExtension.NotEmpty(Model?.Id) && Model?.TapuTasinmazId == null)
+                        {
+                            <div class="row mt-8">
+                                <div class="col-md-12 d-flex flex-column">
+                                    <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                        <span>Tapu Seçim / Beyanı</span>
+                                    </label>
+                                    <select data-title="Tapu Seçim / Beyanı"
+                                            name="TapuBeyan"
+                                            class="form-select select-2">
+                                        <option></option>
+                                        <option value="2" @(Model.TapuHazineArazisiMi != true ? "selected" : "")>Üzerine intikal olmayan tapu</option>
+                                        <option value="3" @(Model.TapuHazineArazisiMi == true ? "selected" : "")>Hazine arazisi olan tapu</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr class="my-10" />
+                        }
+
+                        <h5>Hasarlı Binaya Ait Adres Beyan Bilgileri</h5>
+                        <div class="row mt-8">
+                            <div class="col-md-4 d-flex flex-column ">
+                                <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>İl</span>
+                                </label>
+                                <select data-validate="required"
+                                        data-title="İl"
+                                        name="UavtIlNo"
+                                        data-value="@Model?.UavtIlNo"
+                                        class="form-select select-2"
+                                        data-ajax-target="/admin/uavt/GetirListeDepremIl"
+                                        data-custom-value="id"
+                                        data-custom-text="ad">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 d-flex flex-column ">
+                                <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>İlçe</span>
+                                </label>
+                                <select name="UavtIlceNo"
+                                        data-validate="required"
+                                        data-value="@Model?.UavtIlceNo"
+                                        data-title="İlçe"
+                                        class="form-select select-2">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 d-flex flex-column ">
+                                <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Mahalle</span>
+                                </label>
+                                <select name="UavtMahalleNo"
+                                        data-validate="required"
+                                        data-value="@Model?.UavtMahalleNo"
+                                        data-title="Mahalle"
+                                        class="form-select select-2">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-8">
+                            <div class="col-md-4 flex flex-column">
+                                <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Cadde / Sokak</span>
+                                </label>
+                                <select name="UavtCaddeNo"
+                                        data-value="@Model?.UavtCaddeNo"
+                                        data-validate="required"
+                                        data-title="Cadde / Sokak"
+                                        class="form-select select-2">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div id="binaNoMaks" class="col-md-4">
+                                <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Bina No</span>
+                                </label>
+                                <select name="UavtMeskenBinaNo"
+                                        data-value="@Model?.UavtMeskenBinaNo"
+                                        data-validate="required"
+                                        data-title="Bina No"
+                                        class="form-select select-2">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div id="icNoMaks" class="col-md-4">
+                                <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>İç Kapı No</span>
+                                </label>
+                                <select name="UavtAdresNo"
+                                        data-value="@Model?.UavtAdresNo"
+                                        data-title="İç Kapı No"
+                                        class="form-select select-2">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div id="binaNoBeyan" class="col-md-4" style="display:none;">
+                                <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Bina No</span>
+                                </label>
+                                <input type="text"
+                                       data-title="Mesken Bina No"
+                                       class="form-control"
+                                       autocomplete="off"
+                                       placeholder="Mesken Bina No"
+                                       value="@Model?.UavtDisKapiNo"
+                                       name="UavtDisKapiNoBeyan" />
+                            </div>
+                            <div id="icNoBeyan" class="col-md-4" style="display:none;">
+                                <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>İç Kapı No</span>
+                                </label>
+                                <input type="text"
+                                       data-title="İç Kapı No"
+                                       class="form-control"
+                                       autocomplete="off"
+                                       placeholder="İç Kapı No"
+                                       value="@Model?.UavtIcKapiNo"
+                                       name="UavtIcKapiNoBeyan" />
+                            </div>
+                        </div>
+                        <div class="row mt-8">
+
+                            <div class="col-md-5 d-flex flex-column">
+                                <label class="form-check form-check-custom form-check-solid me-10">
+                                    @if (beyan == true)
+                                    {
+                                        <input class="form-check-input h-20px w-20px" type="checkbox" name="uavtBeyan" checked="checked" />
+                                    }
+                                    else
+                                    {
+                                        <input class="form-check-input h-20px w-20px" type="checkbox" name="uavtBeyan" />
+                                    }
+                                    <span class="form-check-label fw-semibold">Dış Kapı ve İç Kapı Numaram Seçimler Arasında Yok. Beyan Etmek İstiyorum.</span>
+                                </label>
+                            </div>
+                            <div id="beyanMuhtarBelgeYukleme" class="col-md-7" style="display:none;">
+                                <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Muhtardan Alınan Beyan Belgesi (.pdf, .png, .jpg)</span>
+                                </label>
+                                <input data-validate="required, maxsize=1, maxcount=1"
+                                       accept="image/png, image/jpeg, application/pdf"
+                                       data-title="Muhtardan Alınan Beyan Belgesi"
+                                       name="BasvuruMuhtarBelge"
+                                       type="file"
+                                       multiple
+                                       class="form-control form-control-solid" autocomplete="off" placeholder="Muhtardan Alınan Beyan Belgesi" />
+                            </div>
+                            @*    <a href="#" id="btn-muhtar-beyan-belge-indir" class="input-group-text bg-primary" target="_blank">
+                            <i class="fas fa-download text-white"></i>
+                            </a>*@
+                        </div>
+                        <div class="row mt-8">
+                            <div class="col-md-12 text-right">
+                                @if (FluentValidationExtension.NotEmpty(Model?.Id))
+                                {
+                                    <button type="button" data-step="1" class="btn btn-primary"
+                                            data-confirm="true"
+                                            data-confirm-function="BasvuruGuncelle"
+                                            data-confirm-text="Başvuruyu güncellemek istediğinize emin misiniz?">
+                                        Güncelle
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button id="btDevamTab3" type="button" data-step="1" class="btn btn-primary">
+                                        Devam Et
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                        @*<div class="row">
+                        <div class="col-md-6 d-flex flex-column ">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                        <span>Açık Adres</span>
+                        </label>
+                        <textarea class="form-control form-control-solid" autocomplete="off" placeholder="Açık Adres" name="Adres" rows="3" /></textarea>
+                        </div>
+                        </div>*@
+                        @*</form>*@
+                    </div>
+                    @if (!FluentValidationExtension.NotEmpty(Model?.Id))
+                    {
+                        <div class="tab-pane fade" id="kt_vtab_pane_4" role="tabpanel">
+                            @if (!string.IsNullOrWhiteSpace(tapuBilgilendirmeMesaji))
+                            {
+                                <div class="alert alert-dark mb-10">
+                                    @Html.Raw(BBCode.ToHtml(tapuBilgilendirmeMesaji))
+                                </div>
+                            }
+                            <h5>Tapu Bilgileri</h5>
+                            <div class="row mt-8">
+                                <div class="col-md-12 d-flex flex-column">
+                                    <div class="alert alert-primary">
+                                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                            <span>Hasar Tespit Adresiniz</span>
+                                        </label>
+                                        <label id="lb_hasarTespitAdresi"></label>
+                                        <hr />
+                                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                            <span>Hasarlı Binaya Ait Beyan Edilen Adres</span>
+                                        </label>
+                                        <label id="lb_uavtAdresi"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="mt-8" />
+                            <div class="row mt-8">
+                                <div class="col-md-12 d-flex flex-column ">
+                                    <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                        <span>Tapu Seçim / Beyanı</span>
+                                    </label>
+                                    <select data-validate="required"
+                                            data-title="Tapu Seçim / Beyanı"
+                                            name="TapuBeyan"
+                                            class="form-select select-2">
+                                        <option value="1">Adıma kayıtlı tapu bilgilerini görüntülemek istiyorum.</option>
+                                        <option value="2">Üzerime intikal olmayan tapu bilgilerini beyan etmek istiyorum.</option>
+                                        <option value="3">Hazine arazisi olan tapu bilgilerini beyan etmek istiyorum.</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="tab3Option1Div" class="row mt-8" style="display:none;">
+                                <input type="hidden" name="TapuAnaTasinmazId" />
+                                <input type="hidden" name="TapuTasinmazId" />
+                                <input type="hidden" name="TapuIlAdi" />
+                                <input type="hidden" name="TapuIlceAdi" />
+                                <input type="hidden" name="TapuMahalleId" />
+                                <input type="hidden" name="TapuMahalleAdi" />
+                                <input type="hidden" name="TapuAda" />
+                                <input type="hidden" name="TapuParsel" />
+                                <input type="hidden" name="TapuBagimsizBolumNo" />
+                                <input type="hidden" name="TapuKat" />
+                                <input type="hidden" name="TapuBlok" />
+                                <input type="hidden" name="TapuGirisBilgisi" />
+                                <input type="hidden" name="TapuNitelik" />
+                                <input type="hidden" name="TapuBeyanAciklama" />
+                                <div class="table-responsive">
+                                    <table class="table table-row-bordered table-striped table-row-gray-200 align-middle"
+                                           data-name="tableTapuBilgileri"
+                                           data-title="Tapu"
+                                           data-validate="required"
+                                           data-responsive="false"
+                                           data-selectable="single"
+                                           data-searching="false">
+                                        <thead>
+                                            <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                                                <th data-name="il" data-sort="false">İl</th>
+                                                <th data-name="ilce" data-sort="false">İlçe</th>
+                                                <th data-name="mahalle" data-sort="false">Mahalle / Köy</th>
+                                                <th data-name="ada" data-sort="false">Ada No</th>
+                                                <th data-name="parsel" data-sort="false">Parsel No</th>
+                                                <th data-name="tip" data-sort="false">Taşınmaz Tipi</th>
+                                                <th data-name="bagimsizBolum" data-sort="false">Bağımsız Bölüm Numarası / Kat / Blok / Giriş</th>
+                                                <th data-name="nitelik" data-sort="false">Niteliği</th>
+                                                <th data-name="hissePayPayda" data-sort="false">Hisse Pay / Payda</th>
+                                                @*<th data-name="hisseListe" data-sort="false">Hisse Pay / Payda</th>*@
+                                                @* <th data-name="yevmiyeNo" data-sort="false">İştirak No</th>
+                                            <th data-name="istirakNo" data-sort="false">Yevmiye No</th>*@
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="tab3Option2Div" class="mt-8" style="display:none;">
+                                <h5 class="required">Tapu Bilgileri</h5>
+                                <div class="row mt-4">
+                                    <div class="col-md-6 d-flex flex-column">
+                                        <label class="d-flex align-items-center fs-6 fw-semibold required mb-2">
+                                            <span>İl</span>
+                                        </label>
+                                        <select data-validate="required"
+                                                data-title="İl"
+                                                name="TapuBeyanIlId"
+                                                class="form-select select-2"
+                                                data-ajax-target="/admin/takbis/Il/GetirListeDepremIl"
+                                                data-custom-value="id"
+                                                data-custom-text="ad">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 d-flex flex-column">
+                                        <label class="d-flex align-items-center fs-6 fw-semibold required mb-2">
+                                            <span>İlçe</span>
+                                        </label>
+                                        <select data-validate="required" data-title="İlçe" name="TapuBeyanIlceId" class="form-select select-2">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-md-12 d-flex flex-column">
+                                        <label class="d-flex align-items-center fs-6 fw-semibold required mb-2">
+                                            <span>Mahalle</span>
+                                        </label>
+                                        <select data-validate="required" data-title="Mahalle" name="TapuBeyanMahalleId" class="form-select select-2">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-md-6 d-flex flex-column">
+                                        <label class="d-flex align-items-center fs-6 fw-semibold required mb-2">
+                                            <span>Ada</span>
+                                        </label>
+                                        <select data-validate="required" data-title="Ada" name="TapuBeyanAda"
+                                                data-custom-value="adaNo"
+                                                data-custom-text="adaNo" class="form-select select-2">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 d-flex flex-column">
+                                        <label class="d-flex align-items-center fs-6 fw-semibold required mb-2">
+                                            <span>Parsel</span>
+                                        </label>
+                                        <select data-validate="required" data-title="Parsel" name="TapuBeyanParsel"
+                                                data-custom-value="parselNo"
+                                                data-custom-text="parselNo" class="form-select select-2">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-8">
+                                    <div class="col-md-6 d-flex flex-column">
+                                        <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                            <span>Taşınmaz Tipi</span>
+                                        </label>
+                                        <input data-validate="required"
+                                               data-title="Taşınmaz Tipi"
+                                               name="TapuTasinmazTipi"
+                                               type="text"
+                                               class="form-control form-control-solid"
+                                               autocomplete="off"
+                                               placeholder="Taşınmaz Tipi" />
+                                    </div>
+                                    <div class="col-md-6 d-flex flex-column">
+                                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                            <span>Bağımsız Bölüm Numarası</span>
+                                        </label>
+                                        <input name="TapuBeyanBagimsizBolumNo" type="text" class="form-control form-control-solid" autocomplete="off" placeholder="Bağımsız Bölüm Numarası" />
+                                    </div>
+                                </div>
+                                <div class="row mt-8">
+                                    <div class="col-md-6 d-flex flex-column">
+                                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                            <span>Kat</span>
+                                        </label>
+                                        <input name="TapuBeyanKat" type="text" class="form-control form-control-solid" autocomplete="off" placeholder="Kat" />
+                                    </div>
+                                    <div class="col-md-6 d-flex flex-column">
+                                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                            <span>Blok</span>
+                                        </label>
+                                        <input value="@Model?.TapuBlok" name="TapuBeyanBlok" type="text" class="form-control form-control-solid" autocomplete="off" placeholder="Blok" />
+                                    </div>
+                                </div>
+                                <div class="row mt-8">
+                                    <div class="col-md-6 d-flex flex-column">
+                                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                            <span>Giriş</span>
+                                        </label>
+                                        <input name="TapuBeyanGirisBilgisi" type="text" class="form-control form-control-solid" autocomplete="off" placeholder="Giriş" />
+                                    </div>
+                                    <div class="col-md-6 d-flex flex-column">
+                                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                            <span>Nitelik</span>
+                                        </label>
+                                        <input name="TapuBeyanNitelik" type="text" class="form-control form-control-solid" autocomplete="off" placeholder="Nitelik" />
+                                    </div>
+                                </div>
+                                <div class="row mt-8">
+                                    <div class="col-md-12 d-flex flex-column">
+                                        <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                            <span>Beyan Edilen Tapu Açıklaması</span>
+                                        </label>
+                                        <input data-validate="required" data-title="Beyan Edilen Tapu Açıklaması" value="@Model?.TapuBeyanAciklama" name="TapuBeyanAciklama" type="text" required class="form-control form-control-solid" autocomplete="off" placeholder="Beyan Edilen Tapu Açıklaması" />
+                                    </div>
+                                </div>
+                                <div class="row mt-8">
+                                    <div class="col-md-12 d-flex flex-column">
+                                        <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                            <span>Tapu Belgesi (.pdf, .png, .jpg)</span>
+                                        </label>
+                                        <input data-validate="required, maxsize=1, maxcount=1"
+                                               accept="image/png, image/jpeg, application/pdf"
+                                               data-title="Tapu Belgesi"
+                                               name="BasvuruTapuBelgesiListe"
+                                               type="file"
+                                               multiple
+                                               class="form-control form-control-solid" autocomplete="off" placeholder="Tapu Belgesi" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-8">
+                                <div class="col-md-12 text-right">
+                                    <button id="btDevamTab4" type="button" data-step="1" class="btn btn-primary">
+                                        Devam Et
+                                    </button>
+                                </div>
+                            </div>
+                            @*</form>*@
+                        </div>
+                        <div class="tab-pane fade" id="kt_vtab_pane_5" role="tabpanel">
+                            <h5>Başvuru ve Destek Türü Bilgileri</h5>
+                            <div class="row mt-8">
+                                <div class="col-md-6 d-flex flex-column">
+                                    <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                        <span>Başvuru Türü </span>
+                                    </label>
+                                    <select data-validate="required"
+                                            data-title="Başvuru Türü"
+                                            name="BasvuruTurId"
+                                            class="form-select select-2"
+                                            data-ajax-target="/admin/Select/GetirBasvuruTurListe"
+                                            data-custom-value="basvuruTurGuid" data-custom-text="ad"> </select>
+                                </div>
+                                <div class="col-md-6 d-flex flex-column">
+                                    <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                        <span>Destek Türü </span>
+                                    </label>
+                                    <select data-validate="required"
+                                            data-title="Destek Türü"
+                                            name="BasvuruDestekTurId" class="form-select select-2"
+                                            data-ajax-target="/admin/Select/GetirBasvuruDestekTurListe"
+                                            data-custom-value="basvuruDestekTurGuid"
+                                            data-custom-text="ad"></select>
+                                </div>
+                            </div>
+                            <hr class="mt-8 mb-8" />
+                            <h5>İletişim Bilgileri</h5>
+                            <div class="row mt-8">
+                                <div class="col-md-6 d-flex flex-column">
+                                    <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                        <span>Cep Telefon Numarası</span>
+                                    </label>
+
+                                    <input data-validate="required" data-title="Cep Telefon Numarası" type="text" required class="form-control form-control-solid phone-mask" autocomplete="off" placeholder="05XX XXX XX XX" name="CepTelefonu" />
+                                </div>
+                                <div class="col-md-6 d-flex flex-column">
+                                    <label class="required d-flex align-items-center fs-6 fw-semibold mb-2">
+                                        <span>E-Posta Adresi</span>
+                                    </label>
+                                    <input data-validate="required, email" type="text" required class="form-control form-control-solid email-mask" autocomplete="off" placeholder="E-posta Adresi" name="Eposta" />
+                                </div>
+                            </div>
+                            <div class="row mt-8">
+                                <div class="col-md-12 text-right">
+                                    <button type="button" data-step="1" class="btn btn-primary" data-confirm="true" data-confirm-function="BasvuruEkle" data-confirm-text="Başvuruyu tamamlamak istediğinize emin misiniz?">
+                                        Başvuruyu Tamamla
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        let BasvuruDosyaListe = false;
+        let BasvuruTapuBelgesiListe = false;
+        let BasvuruMuhtarBelge = false;
+        let BasvuruTuzelYetkiDosyaListe = false;
+        let BasvuruTapuBilgiListe = false;
+
+        $(document).ready(function () {
+            $(document).on('change', "#cbTuzelKisiBasvuru", function (e) {
+                let secilen = $(this).is(':checked');
+                if (secilen === true) {
+                    $("#divTuzelKisi").show();
+                }
+                else if (secilen === false) {
+                    $("#divTuzelKisi").hide();
+                    tuzelKisiTemizle();
+                }
+                //uavtBeyanMaksDegistir($("input:checkbox[id='cbTuzelKisiBasvuru']")[0].checked)
+            });
+            $(document).on('click', "#bt_kisiSorgula", function (e) {
+                gercekKisiTemizle();
+                tuzelKisiTemizle();
+                askiTemizle();
+                tapuTemizle();
+
+                const input = $("input[name='TcKimlikNo']");
+                if (!validateSingleInput(input)) {
+                    return;
+                }
+
+                startLoader("#container-basvuru");
+                Request("/admin/kps/GetirKisiAdSoyadTcDen", { tcKimlikNo: input.val() }, 'get')
+                    .done(function (response) {
+                        stopLoader("#container-basvuru");
+
+                        $("#lb_ad").html(response.ad);
+                        $("#lb_soyad").html(response.soyad);
+
+                        if (response.olumTarih != null) {
+                            $("#divKisiBilgiSartlariKabulEdiyorum, #divKisiBilgiBtnDevam").addClass("d-none");
+                            $("#divKisiBilgiHata").removeClass("d-none");
+                        } else {
+                            $("#divKisiBilgiSartlariKabulEdiyorum, #divKisiBilgiBtnDevam").removeClass("d-none");
+                            $("#divKisiBilgiHata").addClass("d-none");
+                        }
+
+                        $("#kisiBilgiDiv").fadeIn(400);
+                    })
+                    .fail(function (jqXHR, textStatus) {
+                        stopLoader("#container-basvuru");
+                        toastr.error(getAjaxErrorMessage(jqXHR));
+                    });
+            });
+
+            //$(document).on('click', "#bt_tuzelSorgula", function (e) {
+            //    tuzelKisiTemizle();
+            //    askiTemizle();
+            //    tapuTemizle();
+
+            //    const input = $("input[name='VergiNo']");
+            //    if (!validateSingleInput(input)) {
+            //        return;
+            //    }
+
+            //    $("#tuzelBilgiDiv").fadeIn(400);
+            //    return;
+
+            //    startLoader("#container-basvuru");
+            //    Request("", { vergiNo: input.val() }, 'get')
+            //        .done(function (response) {
+            //            stopLoader("#container-basvuru");
+
+            //            $("#tuzelBilgiDiv").fadeIn(400);
+            //        })
+            //        .fail(function (jqXHR, textStatus) {
+            //            stopLoader("#container-basvuru");
+            //            toastr.error(getAjaxErrorMessage(jqXHR));
+            //        });
+            //});
+
+            $(document).on('click', "#bt_askiSorgula", function (e) {
+                askiTemizle();
+                tapuTemizle();
+
+                const input = $("input[name='AskiKodu']");
+                if (!validateSingleInput(input)) {
+                    return;
+                }
+
+                startLoader("#container-basvuru");
+                Request("/admin/kds/GetirHasarTespitByAskiKodu", { askiKodu: input.val() }, 'get')
+                    .done(function (response) {
+                        stopLoader("#container-basvuru");
+
+                        $("input[name='HasarTespitUid']").val(response.detay?.uid);
+                        $("#lb_hasarTespitGuclendirmeMahkemeSonucu").html(response.detay?.guclendirmeMahkemeSonucu);
+                        $("#lb_hasarTespitItirazSonucu").html(response.detay?.itirazSonucu);
+                        $("#lb_hasarDurumu").html(response.detay?.hasarDurumu);
+                        $("#lb_hasarTespitIl").html(response.detay?.ilAd);
+                        $("#lb_hasarTespitIlce").html(response.detay?.ilceAd);
+                        $("#lb_hasarTespitMahalle").html(response.detay?.mahalleAd);
+                        $("#lb_hasarTespitCadde").html(response.detay?.sokak);
+                        $("#lb_hasarTespitBina").html(response.detay?.disKapiNo);
+                        $("#lb_hasarTespitAda").html(response.detay?.adaNo);
+                        $("#lb_hasarTespitParsel").html(response.detay?.parselNo);
+
+                        $("#lb_hasarTespitAdresi").html(response.detay?.mahalleAd +
+                            " mah. " +
+                            response.detay?.sokak +
+                            " cad. " +
+                            response.detay?.disKapiNo + " " +
+                            response.detay?.ilceAd + "/" + response.detay?.ilAd
+                        );
+
+                        if (response.basvuruYapabilirMi) {
+                            $("#div-aski-kodu-onay").removeClass("d-none");
+                            $("#div-aski-kodu-devam-et").removeClass("d-none");
+                            $("#div-aski-kodu-hata-mesaji").addClass("d-none").html("");
+                        } else {
+                            $("#div-aski-kodu-onay").addClass("d-none");
+                            $("#div-aski-kodu-devam-et").addClass("d-none");
+                            $("#div-aski-kodu-hata-mesaji").removeClass("d-none").html(response.bilgilendirmeMesaji);
+                        }
+
+                        $("#hasarTespitDiv").fadeIn(400);
+                    })
+                    .fail(function (jqXHR, textStatus) {
+                        stopLoader("#container-basvuru");
+                        toastr.error(getAjaxErrorMessage(jqXHR));
+                    });
+            });
+
+            function askiTemizle() {
+                $("#hasarTespitDiv").hide();
+
+                $("#lb_hasarTespitItirazSonucu").html("");
+                $("#lb_hasarTespitGuclendirmeMahkemeSonucu").html("");
+                $("#lb_hasarDurumu").html("");
+                $("#lb_hasarTespitIl").html("");
+                $("#lb_hasarTespitIlce").html("");
+                $("#lb_hasarTespitMahalle").html("");
+                $("#lb_hasarTespitCadde").html("");
+                $("#lb_hasarTespitBina").html("");
+                $("#lb_hasarTespitAda").html("");
+                $("#lb_hasarTespitParsel").html("");
+                $("#lb_hasarTespitAdresi").html("");
+
+                $('a[href="#kt_vtab_pane_3"]').removeAttr("data-bs-toggle");
+                $('a[href="#kt_vtab_pane_4"]').removeAttr("data-bs-toggle");
+                $('a[href="#kt_vtab_pane_5"]').removeAttr("data-bs-toggle");
+            }
+            function gercekKisiTemizle() {
+                //$("#lb_adSoyad").html("");
+                //$("#lb_dogumTarihi").html("");
+                $("#kisiBilgiDiv").hide();
+                $('a[href="#kt_vtab_pane_2"]').removeAttr("data-bs-toggle");
+                $('a[href="#kt_vtab_pane_3"]').removeAttr("data-bs-toggle");
+                $('a[href="#kt_vtab_pane_4"]').removeAttr("data-bs-toggle");
+                $('a[href="#kt_vtab_pane_5"]').removeAttr("data-bs-toggle");
+            }
+            function tapuTemizle() {
+                destroyTable("[data-name='tableTapuBilgileri']");
+                $("select[name='TapuBeyan']").val(0).trigger("change");
+            }
+
+            function tuzelKisiTemizle() {
+                //$("#lb_adSoyad").html("");
+                //$("#lb_dogumTarihi").html("");
+                $("input[name='TuzelKisiAdres']").val('');
+                $("select[name='TuzelKisiTipId']").val('').trigger("change");
+                $("select[name='TuzelKisiYetkiTuru']").val('').trigger("change");
+                $("input[name='TuzelKisiVergiNo']").val('');
+                $("input[name='TuzelKisiAdi']").val('');
+                $("input[name='BasvuruTuzelYetkiDosyaListe']").val('');
+                BasvuruTuzelYetkiDosyaListe == false;
+
+                $("#tuzelBilgiDiv").hide();
+                $('a[href="#kt_vtab_pane_2"]').removeAttr("data-bs-toggle");
+                $('a[href="#kt_vtab_pane_3"]').removeAttr("data-bs-toggle");
+                $('a[href="#kt_vtab_pane_4"]').removeAttr("data-bs-toggle");
+                $('a[href="#kt_vtab_pane_5"]').removeAttr("data-bs-toggle");
+            }
+
+            $(document).on('click', "#btDevamTab0", function (e) {
+                if (!validateForm("#basvuruForm")) {
+                    return;
+                }
+
+                let cb_onay = $("input[name='cb_onay0']").is(":checked");
+                if (!cb_onay) {
+                    toastr.error("Lütfen onay kutucuğunu işaretleyin.");
+                    return;
+                }
+
+                $('a[href="#kt_vtab_pane_2"]').attr("data-bs-toggle", "tab");
+                $('a[href="#kt_vtab_pane_2"]').tab("show");
+                // formu kaydet ve devam et:
+            });
+
+            $(document).on('click', "#btDevamTab1", function (e) {
+                if (!validateForm("#basvuruForm")) {
+                    return;
+                }
+
+                let cb_onay = $("input[name='cb_onay1']").is(":checked");
+                if (!cb_onay) {
+                    toastr.error("Lütfen onay kutucuğunu işaretleyin.");
+                    return;
+                }
+
+                $('a[href="#kt_vtab_pane_2"]').attr("data-bs-toggle", "tab");
+                $('a[href="#kt_vtab_pane_2"]').tab("show");
+                // formu kaydet ve devam et:
+            });
+
+            $(document).on('click', "#btDevamTab2", function (e) {
+                if (!validateForm("#basvuruForm")) {
+                    return;
+                }
+
+                let cb_onay = $("input[name='cb_onay2']").is(":checked");
+                if (!cb_onay) {
+                    toastr.error("Lütfen onay kutucuğunu işaretleyin.");
+                    return;
+                }
+
+                $('a[href="#kt_vtab_pane_3"]').attr("data-bs-toggle", "tab");
+                $('a[href="#kt_vtab_pane_3"]').tab("show");
+                // formu kaydet ve devam et:
+            });
+
+            $(document).on('click', "#btDevamTab3", function (e) {
+                if (!validateForm("#basvuruForm")) {
+                    return;
+                }
+
+                let il = $("input[name='UavtIlAdi']").val();
+                let ilce = $("input[name='UavtIlceAdi']").val();
+                let mahalle = $("input[name='UavtMahalleAdi']").val();
+                let cadde = $("select[name='UavtCaddeNo']").select2('data')[0].text.trim();
+                let disKapiNo = $("select[name='UavtMeskenBinaNo']").select2('data')[0].text.trim();
+                let icKapiNo = $("select[name='UavtAdresNo']").select2('data')[0].text.trim();
+
+                $("input[name='UavtCsbm']").val(cadde);
+                $("input[name='UavtDisKapiNo']").val(disKapiNo);
+                $("input[name='UavtIcKapiNo']").val(icKapiNo);
+
+                $("#lb_uavtAdresi").html(mahalle + " mah. " + cadde + " cad. Bina: " + disKapiNo + ", No: " + icKapiNo + ", " + ilce + "/" + il);
+
+                $('a[href="#kt_vtab_pane_4"]').attr("data-bs-toggle", "tab");
+                $('a[href="#kt_vtab_pane_4"]').tab("show");
+            });
+
+            // FileInput İçersindeki dosyaları alıp fileInput name' ini kullanarak obje oluşturur.
+            // Dosya yoksa false döner.
+
+            onFileChange("input[name='BasvuruTapuBelgesiListe']", function (returnObj) {
+                returnObj.basvuruTapuBelgesiListe.forEach((element) => {
+                    element.dosyaTurGuid = '@BasvuruDosyaTurGuidEnum.TapuFotografi';
+                });
+                BasvuruTapuBelgesiListe = returnObj;
+
+            });
+
+            onFileChange("input[name='BasvuruMuhtarBelge']", function (returnObj) {
+                returnObj.basvuruMuhtarBelge.forEach((element) => {
+                    element.dosyaTurGuid = '@BasvuruDosyaTurGuidEnum.HazineArazisiMuhtarBeyanBelgesi';
+                });
+                BasvuruMuhtarBelge = returnObj;
+            });
+            onFileChange("input[name='BasvuruDosyaListe']", function (returnObj) {
+                BasvuruDosyaListe = returnObj;
+            });
+            // FileInput İçersindeki dosyaları alıp fileInput name' ini kullanarak obje oluşturur.
+            // Dosya yoksa false döner.
+            onFileChange("input[name='BasvuruTuzelYetkiDosyaListe']", function (returnObj) {
+                BasvuruTuzelYetkiDosyaListe = returnObj;
+            });
+
+            $(document).on('click', "#btDevamTab4", function (e) {
+                if (!validateForm("#basvuruForm")) {
+                    return;
+                }
+
+                let selectedRows = getSelectedRows("[data-name='tableTapuBilgileri']");
+                if ($("select[name='TapuBeyan']").val() == 1) {
+                    if (!selectedRows) {
+                        return;
+                    }
+
+                    BasvuruTapuBilgiListe = { basvuruTapuBilgiListe: [] };
+
+                    for (let i = 0; i < selectedRows?.hisseListe?.length; i++) {
+                        let hisseRow = selectedRows.hisseListe[i];
+                        let obj = {
+                            pay: hisseRow?.pay,
+                            payda: hisseRow?.payda,
+                            hissePay: hisseRow?.pay,
+                            hissePayda: hisseRow?.payda,
+                            istirakNo: hisseRow?.istirakNo,
+                            yevmiyeNo: hisseRow?.yevmiyeNo,
+                            yevmiheTarihi: hisseRow?.yevmiyeTarihi,
+                            tapuMudurlugu: selectedRows.il,
+                            //hisseTuru: "str",
+                            //islemTanim: "str",
+                        };
+
+                        BasvuruTapuBilgiListe.basvuruTapuBilgiListe.push(obj);
+                    }
+
+                    $("input[name='TapuAnaTasinmazId']").val(selectedRows.altTasinmazId);
+                    $("input[name='TapuTasinmazId']").val(selectedRows.id);
+                    $("input[name='TapuIlAdi']").val(selectedRows.il);
+                    $("input[name='TapuIlceAdi']").val(selectedRows.ilce);
+                    $("input[name='TapuMahalleId']").val(selectedRows.mahalleId);
+                    $("input[name='TapuMahalleAdi']").val(selectedRows.mahalle);
+                    $("input[name='TapuAda']").val(selectedRows.ada);
+                    $("input[name='TapuParsel']").val(selectedRows.parsel);
+                    $("input[name='TapuBagimsizBolumNo']").val(selectedRows.bagimsizBolum?.no);
+                    $("input[name='TapuKat']").val(selectedRows.bagimsizBolum?.kat);
+                    $("input[name='TapuBlok']").val(selectedRows.bagimsizBolum?.blok);
+                    $("input[name='TapuGirisBilgisi']").val(selectedRows.bagimsizBolum?.giris);
+                    $("input[name='TapuNitelik']").val(selectedRows.nitelik);
+                }
+                else {
+                    BasvuruTapuBilgiListe = false;
+                }
+
+                $('a[href="#kt_vtab_pane_5"]').attr("data-bs-toggle", "tab");
+                $('a[href="#kt_vtab_pane_5"]').tab("show");
+            });
+
+            $(document).on('change', "select[name='BasvuruTipi']", function (e) {
+                let basvuruTipi = parseInt($(this).val() || 0);
+
+                gercekKisiTemizle();
+                tuzelKisiTemizle();
+                tapuTemizle();
+                $("input[name='VergiNo']").val("");
+                $("input[name='TcKimlikNo']").val("");
+
+                if (basvuruTipi > 1) {
+                    // tuzel kişi
+                    $("input[name='TuzelKisiTipId']").val(""); // todo: mehmet.sumer: val set edilecek.
+                    $("#li_tuzel").removeClass("d-none");
+                    $("#li_gercek").addClass("d-none");
+
+                    $('a[href="#kt_vtab_pane_0"]').attr("data-bs-toggle", "tab");
+                    $('a[href="#kt_vtab_pane_0"]').tab("show");
+                }
+                else {
+                    // gerçek kişi
+                    $("input[name='TuzelKisiTipId']").val("");
+                    $("#li_gercek").removeClass("d-none");
+                    $("#li_tuzel").addClass("d-none");
+                    $('a[href="#kt_vtab_pane_1"]').attr("data-bs-toggle", "tab");
+                    $('a[href="#kt_vtab_pane_1"]').tab("show");
+                }
+
+            });
+            // TAPU SELECTLER
+            $(document).on('change', "select[name='TapuBeyan']", function (e) {
+                let selected = parseInt($(this).val());
+                let disabled = false;
+                $("#tab3Option1Div").hide();
+                $("#tab3Option2Div").hide();
+
+                if (selected == 1) {
+                    disabled = false;
+
+                    $("#tab3Option1Div").fadeIn(400);
+
+                    if (!isDataTable("[data-name='tableTapuBilgileri']")) {
+                        let tcKimlikNo = $("input[name='TcKimlikNo']").val();
+                        loadTable("[data-name='tableTapuBilgileri']", "/admin/takbis/Tasinmaz/GetirListeTcDen?tcKimlikNo=" + tcKimlikNo);
+                    }
+                }
+                else if (selected == 2 || selected == 3) {
+                    disabled = true;
+                    $("#tab3Option2Div").fadeIn(400);
+                }
+
+                if (selected == 3) { //hazine arazisi beyanında ada parsel seçim zorunluluğu olmayacak
+                    $("select[name='TapuBeyanAda'], select[name='TapuBeyanParsel']").removeAttr("data-validate", "required").parent().find("label").removeClass("required");
+                } else { //hazine arazisi değilse ada parsel seçim zorunlu olacak
+                    $("select[name='TapuBeyanAda'], select[name='TapuBeyanParsel']").attr("data-validate", "required").parent().find("label").addClass("required");
+                }
+            });
+
+            $(document).on('change', "#tab3Option2Div select[name='TapuBeyanIlId']", function (e) {
+                let takbisIlId = parseInt($(this).val() || 0);
+
+                if (takbisIlId <= 0) {
+                    $("select[name='TapuBeyanIlceId']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                fillSelect("select[name='TapuBeyanIlceId']", "/admin/takbis/Ilce/GetirListeByTakbisIlId?takbisIlId=" + takbisIlId);
+            });
+            $(document).on('change', "select[name='TapuBeyanIlceId']", function (e) {
+                let takbisIlceId = parseInt($(this).val() || 0);
+
+                if (takbisIlceId <= 0) {
+                    $("select[name='TapuBeyanMahalleId']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                fillSelect("select[name='TapuBeyanMahalleId']", "/admin/takbis/Mahalle/GetirListeByTakbisIlceId?takbisIlceId=" + takbisIlceId);
+            });
+            $(document).on('change', "select[name='TapuBeyanMahalleId']", function (e) {
+                let takbisMahalleId = parseInt($(this).val() || 0);
+
+                if (takbisMahalleId <= 0) {
+                    $("select[name='TapuBeyanAda']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                fillSelect("select[name='TapuBeyanAda']", "/admin/takbis/Ada/GetirListeByMahalleId?takbisMahalleId=" + takbisMahalleId);
+            });
+            $(document).on('change', "select[name='TapuBeyanAda']", function (e) {
+                let takbisMahalleId = parseInt($("select[name='TapuBeyanMahalleId']").val() || 0);
+                let adaNo = parseInt($(this).val() || 0);
+
+                if (takbisMahalleId <= 0 || adaNo < 0) {
+                    $("select[name='TapuBeyanParsel']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                fillSelect("select[name='TapuBeyanParsel']", "/admin/takbis/Parsel/GetirListeByMahalleId?takbisMahalleId=" + takbisMahalleId + "&adaNo=" + adaNo);
+            });
+
+            // UAVT SELECTLER
+            $(document).on('change', "select[name='UavtIlNo']", function (e) {
+                let ilKod = parseInt($(this).val() || 0);
+
+                if (ilKod <= 0) {
+                    $("select[name='UavtIlceNo']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                $("input[name='UavtIlAdi']").val($(this).select2('data')[0]?.text?.trim());
+
+                startLoader("select[name='UavtIlceNo']");
+                fillSelect2("select[name='UavtIlceNo']", "/admin/uavt/GetirListeIlce?ilKod=" + ilKod, null, function () {
+                    stopLoader("select[name='UavtIlceNo']");
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("select[name='UavtIlceNo']");
+                });
+                uavtBeyanMaksDegistir($("input:checkbox[name='uavtBeyan']")[0].checked)
+            });
+            $(document).on('change', "select[name='UavtIlceNo']", function (e) {
+                let ilceKod = parseInt($(this).val() || 0);
+
+                if (ilceKod <= 0) {
+                    $("select[name='UavtMahalleNo']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                $("input[name='UavtIlceAdi']").val($(this).select2('data')[0]?.text?.trim());
+
+                startLoader("select[name='UavtMahalleNo']");
+                fillSelect2("select[name='UavtMahalleNo']", "/admin/uavt/GetirListeMahalle?ilceKod=" + ilceKod, ilceKod, function () {
+                    stopLoader("select[name='UavtMahalleNo']");
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("select[name='UavtMahalleNo']");
+                });
+            });
+            $(document).on('change', "select[name='UavtMahalleNo']", function (e) {
+                let mahalleKod = parseInt($(this).val() || 0);
+
+                if (mahalleKod <= 0) {
+                    $("select[name='UavtCaddeNo']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                $("input[name='UavtMahalleAdi']").val($(this).select2('data')[0]?.text?.trim());
+
+                startLoader("select[name='UavtCaddeNo']");
+                fillSelect2("select[name='UavtCaddeNo']", "/admin/uavt/GetirListeCsbm?mahalleKod=" + mahalleKod, null, function () {
+                    stopLoader("select[name='UavtCaddeNo']");
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("select[name='UavtCaddeNo']");
+                });
+            });
+            $(document).on('change', "select[name='UavtCaddeNo']", function (e) {
+                let csbmKod = parseInt($(this).val() || 0);
+
+                if (csbmKod <= 0) {
+                    $("select[name='UavtMeskenBinaNo']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                startLoader("select[name='UavtMeskenBinaNo']");
+                fillSelect2("select[name='UavtMeskenBinaNo']", "/admin/uavt/GetirListeDisKapi?csbmKod=" + csbmKod, null, function (e) {
+                    stopLoader("select[name='UavtMeskenBinaNo']");
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("select[name='UavtMeskenBinaNo']");
+                });
+            });
+            $(document).on('change', "select[name='UavtMeskenBinaNo']", function (e) {
+                let binaNoId = parseInt($(this).val() || 0);
+
+                if (binaNoId <= 0 || $("input:checkbox[name='uavtBeyan']")[0].checked) {
+                    $("select[name='UavtAdresNo']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                startLoader("select[name='UavtAdresNo']");
+                fillSelect2("select[name='UavtAdresNo']", "/admin/uavt/GetirListeIcKapi?binaNoId=" + binaNoId, null, function (e) {
+                    stopLoader("select[name='UavtAdresNo']");
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("select[name='UavtAdresNo']");
+                });
+            });
+
+            $("input:checkbox[name='uavtBeyan']").change(function () {
+                uavtBeyanMaksDegistir($(this)[0].checked);
+            });
+        });
+
+        function BasvuruEkle() {
+            if (!validateForm("#basvuruForm")) {
+                return;
+            }
+            debugger;
+            // Virgülle ayırarak sınırsız obje gönderebiliriz, formData ile bu objeleri assign eder, yani formData' ya ekler.
+            // örn: obj["basvuruDosyaListe"] = {};
+            // obj gönderirsem formData' ya basvuruDosyaListe keyini ekler.
+            let formData = serializeFormAsObject("#basvuruForm", BasvuruTapuBelgesiListe, BasvuruMuhtarBelge, BasvuruTapuBilgiListe, BasvuruTuzelYetkiDosyaListe);
+
+            if (formData.tapuBeyan == 2 || formData.tapuBeyan == 3) {
+                let tapuIlAdi = $("select[name='TapuBeyanIlId']").select2('data') ?? false;
+                let tapuIlceAdi = $("select[name='TapuBeyanIlId']").select2('data') ?? false;
+                let tapuMahalleAdi = $("select[name='TapuBeyanIlId']").select2('data') ?? false;
+                formData["tapuIlAdi"] = tapuIlAdi ? tapuIlAdi[0]?.text?.trim() : "";
+                formData["tapuIlceAdi"] = tapuIlceAdi ? tapuIlceAdi[0]?.text?.trim() : "";
+                formData["tapuMahalleAdi"] = tapuMahalleAdi ? tapuMahalleAdi[0]?.text?.trim() : "";
+
+                formData["tapuIlId"] = formData["tapuBeyanIlId"];
+                formData["tapuIlceId"] = formData["tapuBeyanIlceId"];
+                formData["tapuMahalleId"] = formData["tapuBeyanMahalleId"];
+
+                formData["tapuAda"] = formData["tapuBeyanAda"];
+                formData["tapuParsel"] = formData["tapuBeyanParsel"];
+                formData["tapuBagimsizBolumNo"] = formData["tapuBeyanBagimsizBolumNo"];
+                formData["tapuKat"] = formData["tapuBeyanKat"];
+                formData["tapuBlok"] = formData["tapuBeyanBlok"];
+                formData["tapuGirisBilgisi"] = formData["tapuBeyanGirisBilgisi"];
+                formData["tapuNitelik"] = formData["tapuBeyanNitelik"];
+
+                if (formData.tapuBeyan == 3) {
+                    formData["tapuHazineArazisiMi"] = "true";
+                }
+            }
+
+            if ($("input:checkbox[name='uavtBeyan']")[0].checked) {
+                formData["uavtBeyanMi"] = "true";
+                formData["uavtIcKapiNo"] = formData["uavtIcKapiNoBeyan"];
+                formData["uavtDisKapiNo"] = formData["uavtDisKapiNoBeyan"];
+                formData["uavtMeskenBinaNo"] = "";
+            } else {
+                formData["uavtBeyanMi"] = "false";
+                formData["uavtDisKapiNo"] = $("select[name=UavtMeskenBinaNo]").select2('data')[0].text;
+                formData["uavtIcKapiNo"] = $("select[name=UavtAdresNo]").select2('data')[0].text;
+                formData["uavtAdresNo"] = $("select[name=UavtAdresNo]").select2('data')[0].id;
+            }
+
+            formData["basvuruDosyaListe"] = [];
+            if (!IsNullOrEmpty(formData["basvuruTapuBelgesiListe"])) {
+                formData["basvuruTapuBelgesiListe"].forEach((element) =>
+                    formData["basvuruDosyaListe"].push(element)
+                );
+            }
+
+            if (!IsNullOrEmpty(formData["basvuruMuhtarBelge"])) {
+                formData["basvuruMuhtarBelge"].forEach((element) =>
+                    formData["basvuruDosyaListe"].push(element)
+                );
+            }
+
+            let basvuruTipi = $("#cbTuzelKisiBasvuru").is(':checked') === true ? 1 : 0;
+
+            startLoader("#container-basvuru");
+            Request("/admin/basvuru/" + (basvuruTipi == 1 ? "EkleTuzelKisiBasvuru" : "EkleGercekKisiBasvuru"), formData, 'post')
+                .done(function (response) {
+                    stopLoader("#container-basvuru");
+
+                    localStorage.setItem("sonBasvuruGuid", response.basvuruId);
+                    localStorage.setItem("sonBasvuruTc", formData.tcKimlikNo);
+
+                    toastr.success("Başvuru başarıyla alındı. Detay sayfasına yönlendiriliyorsunuz.");
+                    setTimeout(function () {
+                        window.location.href = "/admin/basvuru";
+                    }, 1500);
+                })
+                .fail(function (jqXHR, textStatus) {
+                    stopLoader("#container-basvuru");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+
+        function BasvuruGuncelle() {
+            if (!validateForm("#basvuruForm")) {
+                return;
+            }
+            debugger;
+            let formData = serializeFormAsObject("#basvuruForm", BasvuruMuhtarBelge);
+
+            if (formData.tapuBeyan == 3) {
+                formData["tapuHazineArazisiMi"] = "true";
+            } else if (formData.tapuBeyan == 2) {
+                formData["tapuHazineArazisiMi"] = "false";
+            }
+
+            if ($("input:checkbox[name='uavtBeyan']")[0].checked) {
+                formData["uavtBeyanMi"] = "true";
+                formData["uavtIcKapiNo"] = formData["uavtIcKapiNoBeyan"];
+                formData["uavtDisKapiNo"] = formData["uavtDisKapiNoBeyan"];
+                formData["uavtMeskenBinaNo"] = "";
+            } else {
+                formData["uavtBeyanMi"] = "false";
+                formData["uavtDisKapiNo"] = $("select[name=UavtMeskenBinaNo]").select2('data')[0].text;
+                formData["uavtIcKapiNo"] = $("select[name=UavtAdresNo]").select2('data')[0].text;
+                formData["uavtAdresNo"] = $("select[name=UavtAdresNo]").select2('data')[0].id;
+            }
+            formData["basvuruDosyaListe"] = formData["basvuruMuhtarBelge"];
+
+            startLoader("#container-basvuru");
+            Request("/admin/basvuru/GuncelleBasvuru", formData, 'post')
+                .done(function (response) {
+                    stopLoader("#container-basvuru");
+
+                    localStorage.setItem("sonBasvuruGuid", response.basvuruGuid);
+                    localStorage.setItem("sonBasvuruTc", formData.tcKimlikNo);
+
+                    toastr.success("Başvuru başarıyla güncellendi. Detay sayfasına yönlendiriliyorsunuz.");
+                    setTimeout(function () {
+                        window.location.href = "/admin/basvuru";
+                    }, 1500);
+                })
+                .fail(function (jqXHR, textStatus) {
+                    stopLoader("#container-basvuru");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+
+        function ajaxTableComplete(data, tableElem) {
+            let tableName = tableElem.attr("data-name");
+            if (tableName == "tableTapuBilgileri") {
+                $.each(data, function (index, row) {
+                    // Bağımsız Bölüm Numarası / Kat / Blok / Giriş
+                    row.bagimsizBolum = (row.bagimsizBolum?.no ?? "") + " / " + (row.bagimsizBolum?.kat ?? "") + (row.bagimsizBolum?.blok ?? "") + (row.bagimsizBolum?.giris ?? "");
+                    let hisseSonuc = "";
+                    for (let i = 0; i < row.hisseListe?.length; i++) {
+                        hisseSonuc += row.hisseListe[i].pay + " / " + row.hisseListe[i].payda + "\r\n";
+                    }
+                    row.hissePayPayda = hisseSonuc;
+                });
+            }
+            return data;
+        }
+        function uavtBeyanMaksDegistir(data) {
+            if (data) {
+                $("#binaNoBeyan").show();
+                $("#icNoBeyan").show();
+                $("#beyanMuhtarBelgeYukleme").show();
+                $("#binaNoMaks").hide();
+                $("#icNoMaks").hide();
+                $("#binaNoBeyan, #icNoBeyan, #beyanMuhtarBelgeYukleme").find("input").attr("data-validate", "required");
+                //$("#beyanMuhtarBelgeYukleme").find("file").attr("data-validate", "required");
+                $("#binaNoMaks, #icNoMaks").find("select").removeAttr("data-validate", "required");
+            }
+            else {
+                $("#binaNoBeyan").hide();
+                $("#icNoBeyan").hide();
+                $("#beyanMuhtarBelgeYukleme").hide();
+                $("#binaNoMaks").show();
+                $("#icNoMaks").show();
+                $("#binaNoMaks, #icNoMaks").find("select").attr("data-validate", "required")
+                $("#binaNoBeyan, #icNoBeyan, #beyanMuhtarBelgeYukleme").find("input").removeAttr("data-validate", "required")
+                //$("#beyanMuhtarBelgeYukleme").find("file").removeAttr("data-validate", "required")
+            }
+        }
+    </script>
+}

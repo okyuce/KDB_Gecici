@@ -1,0 +1,1125 @@
+﻿@using Csb.YerindeDonusum.Application.CustomAddons;
+@using Csb.YerindeDonusum.Application.Enums;
+@using Csb.YerindeDonusum.WebApp.Services;
+@inject IAuthService _authService
+@{
+    ViewBag.Title = "Ödeme Talepleri";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    string ControllerUrl = "/admin/binaodeme";
+    string BinaDegerlendirmeUrl = "/admin/binadegerlendirme";
+
+    var genelMudurlukMu = int.Parse(User.Claims.FirstOrDefault(x => x.Type == "BirimIlId")?.Value ?? "0") == 0;
+    var odemeTalebiOnayRoluVarMi = _authService.IsInRole(RoleEnum.OdemeTalebiOnay);
+}
+
+<div class="app-container container-fluid">
+    @if (genelMudurlukMu)
+    {
+        <div class="d-flex flex-column flex-column-fluid">
+            <div class="card mb-5 mb-xl-8">
+                <div class="card-header collapsible cursor-pointer rotate collapsed" data-bs-toggle="collapse" data-bs-target="#odeme_talepleri_collapsible">
+                    <h3 class="card-title">Filtrele</h3>
+                    <div class="card-toolbar rotate-180">
+                        <i class="ki-duotone ki-down fs-1"></i>
+                    </div>
+                </div>
+                <div id="odeme_talepleri_collapsible" class="collapse">
+                    <form id="tableOdemeTalepleriForm" data-name="tableOdemeTalepleriFilter" class="card-body py-2 px-6">
+                        <input type="hidden" name="BinaDegerlendirmeId" />
+                        <div class="row mt-4">
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Talep Numarası</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_talepleri_sorgula"
+                                       class="form-control" autocomplete="off" placeholder="Talep Numarası" name="TalepNumarasi" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Talep Durumu</span>
+                                </label>
+                                <select name="TalepDurumu" class="form-select select-2">
+                                    <option></option>
+                                    <option value="Açık">Açık</option>
+                                    <option value="Kapalı">Kapalı</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Bülten No ve İzin Belgesi</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_talepleri_sorgula"
+                                       class="form-control" autocomplete="off" placeholder="Bülten No ve İzin Belgesi" name="BultenNo" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>İl</span>
+                                </label>
+                                <select name="UavtIlNo"
+                                        class="form-select select-2"
+                                        data-ajax-target="/admin/uavt/GetirListeDepremIl" data-custom-value="id" data-custom-text="ad">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>İlçe</span>
+                                </label>
+                                <select name="UavtIlceNo" class="form-select select-2">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Mahalle</span>
+                                </label>
+                                <select name="UavtMahalleNo" class="form-select select-2">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Ada</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_talepleri_sorgula"
+                                       class="form-control" autocomplete="off"
+                                       placeholder="Ada" name="Ada" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Parsel</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_talepleri_sorgula"
+                                       class="form-control" autocomplete="off"
+                                       placeholder="Parsel" name="Parsel" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Dış Kapı No</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_talepleri_sorgula"
+                                       class="form-control" autocomplete="off"
+                                       placeholder="Dış Kapı No" name="BinaDisKapiNo" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Askı Kodu</span>
+                                </label>
+                                <input type="text"
+                                       data-onenter-submit="true"
+                                       data-onenter-click="#odeme_talepleri_sorgula"
+                                       class="form-control" autocomplete="off" placeholder="Askı Kodu" name="HasarTespitAskiKodu" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Ödeme Tutarı</span>
+                                </label>
+                                <input type="text"
+                                       data-onenter-submit="true"
+                                       data-onenter-click="#odeme_talepleri_sorgula"
+                                       class="form-control"
+                                       autocomplete="off"
+                                       placeholder="Ödeme Tutarı"
+                                       name="OdemeTutari" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Seviye</span>
+                                </label>
+                                <select name="Seviye" class="form-select select-2">
+                                    <option></option>
+                                    <option value="10">%10</option>
+                                    <option value="20">%20</option>
+                                    <option value="60">%60</option>
+                                    <option value="100">%100</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Oluşturma Tarihi</span>
+                                </label>
+                                <input type="date"
+                                       data-onenter-submit="true"
+                                       data-onenter-click="#odeme_talepleri_sorgula"
+                                       class="form-control"
+                                       autocomplete="off"
+                                       placeholder="Oluşturma Tarihi"
+                                       name="OlusturmaTarihi" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Ödeme Tarihi</span>
+                                </label>
+                                <input type="date"
+                                       data-onenter-submit="true"
+                                       data-onenter-click="#odeme_talepleri_sorgula"
+                                       class="form-control"
+                                       autocomplete="off"
+                                       placeholder="Ödeme Tarihi"
+                                       name="TalepKapatmaTarihi" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Ödenme Durumu</span>
+                                </label>
+                                <select name="BinaOdemeDurumId"
+                                        class="form-select select-2"
+                                        data-ajax-target="/admin/select/GetirBinaOdemeDurumListe"
+                                        data-custom-value="id"
+                                        data-custom-text="ad">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div>
+
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Vergi Kimlik No</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_talepleri_sorgula"
+                                       class="form-control vergino-mask" autocomplete="off"
+                                       placeholder="Vergi Kimlik No" name="VergiKimlikNo" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Yetki Belge No</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_talepleri_sorgula"
+                                       class="form-control" autocomplete="off"
+                                       placeholder="Yetki Belge No" name="YetkiBelgeNo" />
+                            </div>
+                            <div class="col-md-6 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>IBAN No</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_talepleri_sorgula"
+                                       class="form-control iban-mask" autocomplete="off"
+                                       placeholder="Iban No" name="IbanNo" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Oluşturan Kullanıcı</span>
+                                </label>
+                                <select name="OlusturanKullaniciId"
+                                        class="form-select select-2"
+                                        data-ajax-target="/admin/kullanici/getirListe"
+                                        data-custom-value="kullaniciId"
+                                        data-custom-text="adSoyad">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Güncelleyen Kullanıcı</span>
+                                </label>
+                                <select name="GuncelleyenKullaniciId"
+                                        class="form-select select-2"
+                                        data-ajax-target="/admin/kullanici/getirListe"
+                                        data-custom-value="kullaniciId"
+                                        data-custom-text="adSoyad">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-12 text-right">
+                                <button type="reset" id="odeme_talepleri_filtre_temizle" class="btn btn-dark mr-10">
+                                    <i class="ki-duotone ki-trash fs-1"><i class="path1"></i><i class="path2"></i><i class="path3"></i><i class="path4"></i><i class="path5"></i></i> Temizle
+                                </button>
+                                <button type="button" id="odeme_talepleri_sorgula" class="btn btn-primary">
+                                    <i class="ki-duotone ki-filter fs-1"><i class="path1"></i><i class="path2"></i></i> Sorgula
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header card-header-stretch">
+                <h3 class="card-title">Ödeme Talepleri</h3>
+                <div class="card-toolbar">
+                    <ul id="tabTabloRaporGruplu" class="nav nav-tabs nav-line-tabs nav-stretch fs-6 border-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_odeme_talepleri">Ödeme Talepleri</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_odeme_talepleri_gruplanmamis">Ödeme Talepleri İndir</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="kt_tab_odeme_talepleri" role="tabpanel">
+                        <div class="table-responsive" style="overflow:hidden" id="gruplanmis">
+                            <table class="table table-row-bordered table-striped table-row-gray-200 align-middle"
+                                   data-name="tableOdemeTalepleri"
+                                   data-responsive="true"
+                                   data-selectable="single"
+                                   data-rowid="binaOdemeId"
+                                   data-showdetails="start,dblclick"
+                                   data-server-side="true"
+                                   data-searching="true">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                                        <th data-name="uavtIlAdi" data-sort="false">İl</th>
+                                        <th data-name="uavtIlceAdi" data-sort="false">İlçe</th>
+                                        <th data-name="uavtMahalleAdi" data-sort="false">Mahalle</th>
+                                        <th data-name="tapuAda" data-sort="false">Ada</th>
+                                        <th data-name="tapuParsel" data-sort="false">Parsel</th>
+                                        <th data-name="binaOdemeDurumAd" data-sort="false">Ödenme Durumu</th>
+                                        <th data-name="Buttons" class="all" data-sort="false">İşlem</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="kt_tab_odeme_talepleri_gruplanmamis" role="tabpanel">
+                        <div class="table-responsive" style="overflow:hidden" id="gruplanmamis">
+                            <table class="table table-row-bordered table-striped table-row-gray-200 align-middle"
+                                   data-name="tableOdemelerGruplanmamis"
+                                   data-custom-filter-name="tableOdemeTalepleriFilter"
+                                   data-responsive="true"
+                                   data-server-side="true"
+                                   data-searching="false"
+                                   data-export-buttons="true">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                                        <th class="dt-center fs-8" data-name="talepNumarasi" data-sort="false">Talep Numarası</th>
+                                        <th class="dt-center fs-8" data-name="uavtIlAdi" data-sort="false">İl</th>
+                                        <th class="dt-center fs-8" data-name="uavtIlceAdi" data-sort="false">İlçe</th>
+                                        <th class="dt-center fs-8" data-name="uavtMahalleAdi" data-sort="false">Mahalle</th>
+                                        <th class="dt-center fs-8" data-name="hasarTespitAskiKodu" data-sort="false">Askı Kodu</th>
+                                        <th class="dt-center fs-8" data-name="binaDegerlendirmeId" data-sort="false">Yeni Yapı Id</th>
+                                        <th class="dt-center fs-8" data-name="seviyeText" data-sort="false">Seviye</th>
+                                        <th class="dt-center fs-8" data-name="hibeOdemeTutariText" data-sort="false">Hibe Tutarı</th>
+                                        <th class="dt-center fs-8" data-name="krediOdemeTutariText" data-sort="false">Kredi Tutarı</th>
+                                        <th class="dt-center fs-8" data-name="digerHibeOdemeTutariText" data-sort="false">Diğer Hibe Tutarı</th>
+                                        <th class="dt-center fs-8" data-name="odemeTutariText" data-sort="false">Toplam Tutar</th>
+                                        <th class="dt-center fs-8" data-name="olusturmaTarihiText" data-sort="false">Oluşturma Tarihi</th>
+                                        <th class="dt-center fs-8" data-name="talepKapatmaTarihiText" data-sort="false">Ödeme Tarihi</th>
+                                        <th class="dt-center fs-8" data-name="binaOdemeDurumAd" data-sort="false">Ödenme Durumu</th>
+                                        <th class="dt-center fs-8" data-name="talepDurumu" data-sort="false">Talep Durumu</th>
+                                        <th class="dt-center fs-8" data-name="olusturanKullaniciAdi" data-sort="false">Oluşturan</th>
+                                        <th class="dt-center fs-8" data-name="guncelleyenKullaniciAdi" data-sort="false">Güncelleyen</th>
+                                        <th class="dt-center fs-8" data-name="talepKapatmaTarihiText" data-sort="false">Talep Kapatma Tarihi</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex flex-column flex-column-fluid">
+            <div class="card mb-5 mb-xl-8">
+                <div class="card-header collapsible cursor-pointer rotate collapsed" data-bs-toggle="collapse" data-bs-target="#odemeler_collapsible">
+                    <h3 class="card-title">Filtrele</h3>
+                    <div class="card-toolbar rotate-180">
+                        <i class="ki-duotone ki-down fs-1"></i>
+                    </div>
+                </div>
+                <div id="odemeler_collapsible" class="collapse">
+                    <form id="odemeler-filter-form" data-name="tableOdemelerFilter" class="card-body py-2 px-6">
+                        <input type="hidden" name="BinaDegerlendirmeId" />
+                        <div class="row mt-4">
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Talep Numarası</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_sorgula"
+                                       class="form-control" autocomplete="off" placeholder="Talep Numarası" name="TalepNumarasi" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Talep Durumu</span>
+                                </label>
+                                <select name="TalepDurumu" class="form-select select-2">
+                                    <option></option>
+                                    <option value="Açık">Açık</option>
+                                    <option value="Kapalı">Kapalı</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Bülten No ve İzin Belgesi</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_sorgula"
+                                       class="form-control" autocomplete="off" placeholder="Bülten No ve İzin Belgesi" name="BultenNo" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>İl</span>
+                                </label>
+                                <select name="UavtIlNo"
+                                        class="form-select select-2"
+                                        data-ajax-target="/admin/uavt/GetirListeDepremIl" data-custom-value="id" data-custom-text="ad">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>İlçe</span>
+                                </label>
+                                <select name="UavtIlceNo" class="form-select select-2">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Mahalle</span>
+                                </label>
+                                <select name="UavtMahalleNo" class="form-select select-2">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Ada</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_sorgula"
+                                       class="form-control" autocomplete="off"
+                                       placeholder="Ada" name="Ada" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Parsel</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_sorgula"
+                                       class="form-control" autocomplete="off"
+                                       placeholder="Parsel" name="Parsel" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Dış Kapı No</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_sorgula"
+                                       class="form-control" autocomplete="off"
+                                       placeholder="Dış Kapı No" name="BinaDisKapiNo" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Askı Kodu</span>
+                                </label>
+                                <input type="text" data-onenter-submit="true"
+                                       data-onenter-click="#odeme_sorgula"
+                                       class="form-control" autocomplete="off" placeholder="Askı Kodu" name="HasarTespitAskiKodu" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Ödeme Tutarı</span>
+                                </label>
+                                <input type="text"
+                                       data-onenter-submit="true"
+                                       data-onenter-click="#odeme_sorgula"
+                                       class="form-control"
+                                       autocomplete="off"
+                                       placeholder="Ödeme Tutarı"
+                                       name="OdemeTutari" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Seviye</span>
+                                </label>
+                                <select name="Seviye" class="form-select select-2">
+                                    <option></option>
+                                    <option value="10">%10</option>
+                                    <option value="20">%20</option>
+                                    <option value="60">%60</option>
+                                    <option value="100">%100</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Oluşturma Tarihi</span>
+                                </label>
+                                <input type="date"
+                                       data-onenter-submit="true"
+                                       data-onenter-click="#odeme_sorgula"
+                                       class="form-control"
+                                       autocomplete="off"
+                                       placeholder="Oluşturma Tarihi"
+                                       name="OlusturmaTarihi" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Ödeme Tarihi</span>
+                                </label>
+                                <input type="date"
+                                       data-onenter-submit="true"
+                                       data-onenter-click="#odeme_sorgula"
+                                       class="form-control"
+                                       autocomplete="off"
+                                       placeholder="Ödeme Tarihi"
+                                       name="TalepKapatmaTarihi" />
+                            </div>
+                            <div class="col-md-3 d-flex flex-column mb-8">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span>Ödenme Durumu</span>
+                                </label>
+                                <select name="BinaOdemeDurumId"
+                                        class="form-select select-2"
+                                        data-ajax-target="/admin/select/GetirBinaOdemeDurumListe"
+                                        data-custom-value="id"
+                                        data-custom-text="ad">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-12 text-right">
+                                <button type="reset" id="odeme_filtre_temizle" class="btn btn-dark mr-10">
+                                    <i class="ki-duotone ki-trash fs-1"><i class="path1"></i><i class="path2"></i><i class="path3"></i><i class="path4"></i><i class="path5"></i></i> Temizle
+                                </button>
+                                <button type="button" id="odeme_sorgula" class="btn btn-primary">
+                                    <i class="ki-duotone ki-filter fs-1"><i class="path1"></i><i class="path2"></i></i> Sorgula
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Ödeme Listesi</h3>
+            </div>
+            <div class="card-body py-2 px-4">
+                <div class="table-responsive" style="overflow:hidden">
+                    <table class="table table-row-bordered table-striped table-row-gray-200 align-middle"
+                           data-name="tableOdemeler"
+                           data-responsive="false"
+                           data-server-side="true"
+                           data-searching="true"
+                           data-export-buttons="true">
+                        <thead>
+                            <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                                <th class="dt-center" data-name="talepNumarasi" data-sort="false">Talep Numarası</th>
+                                <th class="dt-center" data-name="uavtIlAdi" data-sort="false">İl</th>
+                                <th class="dt-center" data-name="uavtIlceAdi" data-sort="false">İlçe</th>
+                                <th class="dt-center" data-name="uavtMahalleAdi" data-sort="false">Mahalle</th>
+                                <th class="dt-center" data-name="hasarTespitAskiKodu" data-sort="false">Askı Kodu</th>
+                                <th class="dt-center" data-name="binaDegerlendirmeId" data-sort="false">Yeni Yapı Id</th>
+                                <th class="dt-center" data-name="seviyeText" data-sort="false">Seviye</th>
+                                <th class="dt-center" data-name="hibeOdemeTutariText" data-sort="false">Hibe Tutarı</th>
+                                <th class="dt-center" data-name="krediOdemeTutariText" data-sort="false">Kredi Tutarı</th>
+                                <th class="dt-center" data-name="digerHibeOdemeTutariText" data-sort="false">Diğer Hibe Tutarı</th>
+                                <th class="dt-center" data-name="odemeTutariText" data-sort="false">Toplam Tutar</th>
+                                <th class="dt-center" data-name="olusturmaTarihiText" data-sort="false">Oluşturma Tarihi</th>
+                                <th class="dt-center" data-name="talepKapatmaTarihiText" data-sort="false">Ödeme Tarihi</th>
+                                <th class="dt-center" data-name="binaOdemeDurumAd" data-sort="false">Ödenme Durumu</th>
+                                <th class="dt-center" data-name="talepDurumu" data-sort="false">Talep Durumu</th>
+                                <th class="dt-center" data-name="talepKapatmaTarihiText" data-sort="false">Talep Kapatma Tarihi</th>
+                                <th class="dt-center" data-name="olusturanKullaniciAdi" data-sort="false">Oluşturan</th>
+                                <th class="dt-center" data-name="guncelleyenKullaniciAdi" data-sort="false">Güncelleyen</th>
+                                <th class="dt-center all" data-name="Buttons" data-sort="false" data-width="60px">İşlem</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="modal fade" id="modal_odemeYapilan" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:1250px !important">
+        <div class="modal-content rounded">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+            </div>
+            <div id="malikfilter_collapsible" class="collapse">
+                <form data-name="tableOdemeYapilanFilter" class="card-body py-2 px-6">
+                    <input type="hidden" name="BinaOdemeId" />
+                </form>
+            </div>
+            <div class="modal-body scroll-y px-10 px-lg-10 pt-0 pb-10">
+                <form id="modal_odemeYapilan_form" onsubmit="return false;" novalidate="novalidate" class="form" action="#">
+                    <div class="mb-13 text-center">
+                        <h1 id="modal_odemeYapilan_title" class="mb-3">Ödeme Yapılan Kişi Bilgileri</h1>
+                    </div>
+                    <div class="card-body py-2 px-4">
+                        <div class="table-responsive" style="overflow:hidden">
+                            <table class="table table-row-bordered table-striped table-row-gray-200 align-middle"
+                                   data-name="tableOdemeYapilan"
+                                   data-responsive="true"
+                                   data-rowid="binaOdemeId"
+                                   data-server-side="true"
+                                   data-searching="false">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                                        <th class="dt-center" data-name="adi" data-sort="false">Adı</th>
+                                        <th class="dt-center" data-name="tipi" data-sort="false">Tipi</th>
+                                        <th class="dt-center" data-name="ibanNo" data-sort="false">Iban No</th>
+                                        <th class="dt-center" data-name="krediOdemeTutariText" data-sort="false">Kredi Ödeme Tutarı</th>
+                                        <th class="dt-center" data-name="hibeOdemeTutariText" data-sort="false">Hibe Ödeme Tutarı</th>
+                                        <th class="dt-center" data-name="digerOdemeTutariText" data-sort="false">Diğer Hibe Ödeme Tutarı</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/admin/metronic/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js"></script>
+    <script type="text/javascript">
+        //#region ...: Global Variables :...
+        const ControllerUrl = '@ControllerUrl';
+        const BinaDegerlendirmeUrl = '@BinaDegerlendirmeUrl';
+        const genelMudurlukMu = '@genelMudurlukMu' == "True";
+        //#endregion ...: Global Variables : ...
+
+        $(document).ready(function () {
+            const queryBinaDegerlendirmeId = getQueryStringValue("binaDegerlendirmeId");
+            if (queryBinaDegerlendirmeId)
+                $("input[name='BinaDegerlendirmeId']").val(queryBinaDegerlendirmeId);
+
+            if (genelMudurlukMu) {
+                loadTable("[data-name='tableOdemeTalepleri']", ControllerUrl + "/GetirListeOdemeTalepleriServerSide?bosTabloGetir=false");
+                loadTable("[data-name='tableOdemelerGruplanmamis']", ControllerUrl + "/GetirListeGruplanmamisOdemeServerSide?bosTabloGetir=true");
+            }
+            else {
+                loadTable("[data-name='tableOdemeler']", ControllerUrl + "/GetirListeBinaOdemeServerSide");
+            }
+
+            // bilerek form name ya da form id verilmedi, cunku iki adet var. boyle kalmasi lazim.
+            $(document).on('change', "select[name='UavtIlNo']", function (e) {
+                let ilKod = parseInt($(this).val() || 0);
+
+                if (ilKod <= 0) {
+                    $("select[name='UavtIlceNo']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                startLoader("select[name='UavtIlceNo']");
+                fillSelect("select[name='UavtIlceNo']", "/admin/uavt/GetirListeIlce?ilKod=" + ilKod, null, function () {
+                    stopLoader("select[name='UavtIlceNo']");
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("select[name='UavtIlceNo']");
+                });
+            });
+
+            $(document).on('change', "select[name='UavtIlceNo']", function (e) {
+                let ilceKod = parseInt($(this).val() || 0);
+
+                if (ilceKod <= 0) {
+                    $("select[name='UavtMahalleNo']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                startLoader("select[name='UavtMahalleNo']");
+                fillSelect("select[name='UavtMahalleNo']", "/admin/uavt/GetirListeMahalle?ilceKod=" + ilceKod, null, function () {
+                    stopLoader("select[name='UavtMahalleNo']");
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("select[name='UavtMahalleNo']");
+                });
+            });
+
+            $(document).on('click', "#odeme_filtre_temizle", function (e) {
+                resetForm($("form[data-name='tableOdemelerFilter']"));
+                reloadTable("[data-name='tableOdemeler']",true,[],true);
+            });
+
+            $(document).on('click', "#odeme_sorgula", function (e) {
+                reloadTable("[data-name='tableOdemeler']", true, [], true);
+            });
+
+            $(document).on('click', "#odeme_talepleri_filtre_temizle", function (e) {
+                resetForm($("form[data-name='tableOdemeTalepleriFilter']"));
+                genelMudurlukTablolariYukle();
+            });
+
+            $(document).on('click', "#odeme_talepleri_sorgula", function (e) {
+                genelMudurlukTablolariYukle();
+            });
+
+            $(document).on("click", ".btnSecilenleriAktar", function () {
+                const binaOdemeId = $(this).data("binaodemeid") ?? 0;
+                const binaDegerlendirmeId = $(this).data("binadegerlendirmeid") ?? 0;
+                let binaOdemeIds = $("[data-name='tableOdemeTalepleri'] .cbChild[data-parentid='" + binaOdemeId + "']:checked")
+                    .map(function () { return parseInt($(this).data("binaodemeid")); }).get() ?? [];
+
+                const selectedRow = getSelectedRows("[data-name='tableOdemeTalepleri']");
+                if (selectedRow && !(binaOdemeIds.length > 0)) {
+                    binaOdemeIds = selectedRow.binaOdemeList?.map((item) => item.binaOdemeId) ?? [];
+                }
+
+                fireConfirmSwal({
+                    param1: binaOdemeIds,
+                    param2: '@((int)BinaOdemeDurumEnum.HYSAktarildi)',
+                    param3: binaDegerlendirmeId,
+                    title: "Uyarı",
+                    onconfirm: "OdemeOnaylaReddet",
+                    text: "Seçilen ödemeler il müdürlüğü hesabına aktarılacak. Onaylıyor musunuz?",
+                });
+            });
+
+            $(document).on("click", "[data-name='tableOdemeTalepleri'] .cbSec", function () {
+                $(".btnSecilenleriAktar").hide();
+                $(".cbChild").prop('checked', false);
+
+                const button = $(this).parent().find(".btnSecilenleriAktar");
+                const binaOdemeId = button.data("binaodemeid") ?? 0;
+                const checkBoxes = $("[data-name='tableOdemeTalepleri'] .cbChild[data-parentid='" + binaOdemeId + "']");
+
+                const selectedRow = getSelectedRows("[data-name='tableOdemeTalepleri']");
+                if (!selectedRow) {
+                    checkBoxes.prop('checked', false).change();
+                    button.fadeOut(100);
+                    return;
+                }
+
+                button.fadeIn(300);
+                checkBoxes.prop('checked', true).change();
+            });
+
+            $(document).on("click", "[data-name='tableOdemeTalepleri'] .cbChild", function () {
+                const parentBinaOdemeId = $(this).data("parentid") ?? 0;
+                const checkboxLength = $("[data-name='tableOdemeTalepleri'] .cbChild[data-parentid='" + parentBinaOdemeId + "']:checked").length;
+                const button = $(".btnSecilenleriAktar[data-binaodemeid='" + parentBinaOdemeId + "']");
+
+                if (checkboxLength == 0) {
+                    button.fadeOut(100);
+                    return;
+                }
+
+                button.fadeIn(300);
+            });
+
+            if (genelMudurlukMu) {
+                $(document).on("click", "#tabTabloRaporGruplu li a", function () {
+                    $("[data-name='tableOdemeTalepleri'], [data-name='tableOdemelerGruplanmamis']").DataTable().columns.adjust();
+                });
+            }
+        });
+
+        function genelMudurlukTablolariYukle() {
+            if (genelMudurlukMu) {
+                if ($("#kt_tab_odeme_talepleri_gruplanmamis").hasClass("show")) {
+                    reloadTableNewAjaxUrl("[data-name='tableOdemelerGruplanmamis']", ControllerUrl + "/GetirListeGruplanmamisOdemeServerSide?bosTabloGetir=false");
+                    reloadTableNewAjaxUrl("[data-name='tableOdemeTalepleri']", ControllerUrl + "/GetirListeOdemeTalepleriServerSide?bosTabloGetir=true");
+                } else {
+                    reloadTableNewAjaxUrl("[data-name='tableOdemelerGruplanmamis']", ControllerUrl + "/GetirListeGruplanmamisOdemeServerSide?bosTabloGetir=true");
+                    reloadTableNewAjaxUrl("[data-name='tableOdemeTalepleri']", ControllerUrl + "/GetirListeOdemeTalepleriServerSide?bosTabloGetir=false");
+                }
+            }
+        }
+
+        function OdemeOnaylaReddetPreConfirm(binaOdemeIds, binaOdemeDurumId) {
+            if (binaOdemeDurumId == @((int)BinaOdemeDurumEnum.Reddedildi)) {
+                const sebep = $("#reddetmeSebebi");
+                if (!validateSingleInput(sebep)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function OdemeOnaylaReddet(binaOdemeIds, binaOdemeDurumId, binaDegerlendirmeId) {
+            if (binaOdemeIds?.length == 1)
+                binaOdemeIds = [binaOdemeIds];
+
+            let reddetmeSebebi = "";
+            if (binaOdemeDurumId == @((int)BinaOdemeDurumEnum.Reddedildi)) {
+                const sebep = $("#reddetmeSebebi");
+                if (!validateSingleInput(sebep)) {
+                    return;
+                }
+                reddetmeSebebi = sebep.val();
+            }
+            if (binaDegerlendirmeId == undefined || binaDegerlendirmeId == null || binaDegerlendirmeId < 1)
+                return;
+
+            Request("/admin/binaDegerlendirme/GetirBinaDegerlendirmeTasinmazAfadBasvuruDurumu", { binaDegerlendirmeId: binaDegerlendirmeId }, 'get')
+                .done(function (response) {
+                    if (response?.tasinmazAfadBasvuruDurumu == true) {
+                        Swal.fire({
+                            title: "Devam etmek istiyor musunuz?",
+                            text: "Aynı taşınmaz için AFAD hak sahipliği başvurusu bulunduğundan işleme devam edilememektedir! Devam etmek istiyor musunuz?",
+                            icon: "warning",
+                            showCancelButton: true,
+                            cancelButtonText: "Vazgeç",
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Evet",
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                odemeDurumGuncelle(binaOdemeIds, binaOdemeDurumId, reddetmeSebebi);
+                            }
+                            else {
+                                return false;
+                            }
+                        });
+                    }
+                    else {
+                        odemeDurumGuncelle(binaOdemeIds, binaOdemeDurumId, reddetmeSebebi);
+                    }
+                })
+                .fail(function (jqXHR, textStatus) {
+                    odemeDurumGuncelle(binaOdemeIds, binaOdemeDurumId, reddetmeSebebi);
+                });
+
+        }
+        function odemeDurumGuncelle(binaOdemeIds, binaOdemeDurumId, reddetmeSebebi) {
+            startLoader("#kt_app_content");
+            Request(ControllerUrl + "/BinaOdemeDurumGuncelle", { binaOdemeIds: binaOdemeIds, binaOdemeDurumId: binaOdemeDurumId, reddetmeSebebi: reddetmeSebebi }, 'post')
+                .done(function (response) {
+                    stopLoader("#kt_app_content");
+                    toastr.success(response.mesaj);
+
+                    if (genelMudurlukMu) {
+                        reloadTable("[data-name='tableOdemeTalepleri']", true, binaOdemeIds);
+                        reloadTable("[data-name='tableOdemelerGruplanmamis']");
+                    }
+                    else {
+                        reloadTable("[data-name='tableOdemeler']", true, binaOdemeIds);
+                    }
+                })
+                .fail(function (jqXHR, textStatus) {
+                    stopLoader("#kt_app_content");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+
+        function OdemeKisiBilgisi(binaOdemeId) {
+            $("#modal_odemeYapilan").modal("show");
+            $("[data-name='tableOdemeYapilanFilter'] input[name='BinaOdemeId']").val(binaOdemeId);
+
+            let tableOdemeYapilanAjaxUrl = ControllerUrl + "/GetirListeOdemeYapilanServerSide?binaOdemeId=" + binaOdemeId;
+            if (isDataTable("[data-name='tableOdemeYapilan']")) {
+                clearTable("[data-name='tableOdemeYapilan']")
+                reloadTableNewAjaxUrl("[data-name='tableOdemeYapilan']", tableOdemeYapilanAjaxUrl);
+            }
+            else {
+                loadTable("[data-name='tableOdemeYapilan']", tableOdemeYapilanAjaxUrl);
+            }
+        }
+
+        function showDetailsTable(rowData, tableElem) {
+            let htmlResult = "";
+            let tableName = tableElem.data("name");
+            if (tableName == "tableOdemeTalepleri") {
+                const isSelected = $("#" + rowData?.binaOdemeId).hasClass('selected');
+
+                htmlResult = `<table class="table table-row-bordered table-striped table-row-gray-200 align-middle dataTable no-footer dtr-inline">
+                                                                                    <thead>
+                                                                                        <tr class="fw-semibold fs-7 text-gray-800 border-bottom border-gray-200">
+                                                                                            <th></th>
+                                                                                            <th class="dt-center fs-7">Talep Numarası</th>
+                                                                                            <th class="dt-center fs-7">İl</th>
+                                                                                            <th class="dt-center fs-7">İlçe</th>
+                                                                                            <th class="dt-center fs-7">Mahalle</th>
+                                                                                            <th class="dt-center fs-7">Askı Kodu</th>
+                                                                                            <th class="dt-center fs-7">Yeni Yapı Id</th>
+                                                                                            <th class="dt-center fs-7">Seviye</th>
+                                                                                            <th class="dt-center fs-7">Hibe Tutarı</th>
+                                                                                            <th class="dt-center fs-7">Kredi Tutarı</th>
+                                                                                            <th class="dt-center fs-7">Diğer Hibe Tutarı</th>
+                                                                                            <th class="dt-center fs-7">Toplam Tutar</th>
+                                                                                            <th class="dt-center fs-7">Oluşturma Tarihi</th>
+                                                                                            <th class="dt-center fs-7">Ödeme Tarihi</th>
+                                                                                            <th class="dt-center fs-7">Ödenme Durumu</th>
+                                                                                            <th class="dt-center fs-7">Talep Durumu</th>
+                                                                                            <th class="dt-center fs-7">Talep Kapatma Tarihi</th>
+                                                                                            <th class="dt-center fs-7">Oluşturan</th>
+                                                                                            <th class="dt-center fs-7">Güncelleyen</th>
+                                                                                            <th class="dt-center fs-7">İşlem</th>
+                                                                                        </tr>
+                                                                                    </thead><tbody>`;
+                for (let i = 0; i < rowData?.binaOdemeList?.length; i++) {
+                    let detailData = rowData.binaOdemeList[i];
+
+                    if (detailData.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.Onaylandi)') {
+                        detailData.binaOdemeDurumAdText = '<label class="badge badge-primary">' + detailData.binaOdemeDurumAd + '</label>';
+                    }
+                    else if (detailData.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.HYSAktarildi)') {
+                        detailData.binaOdemeDurumAdText = '<label class="badge badge-light-warning">' + detailData.binaOdemeDurumAd + '</label>';
+                    }
+                    else if (detailData.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.MuteahhiteAktarildi)') {
+                        detailData.binaOdemeDurumAdText = '<label class="badge badge-success">' + detailData.binaOdemeDurumAd + '</label>';
+                    }
+                    else if (detailData.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.Reddedildi)') {
+                        detailData.binaOdemeDurumAdText = '<label class="badge badge-danger">' + detailData.binaOdemeDurumAd + '</label>';
+                    }
+                    else {
+                        detailData.binaOdemeDurumAdText = '<label class="badge badge-secondary">' + detailData.binaOdemeDurumAd + '</label>';
+                    }
+
+                    htmlResult += `<tr data-parentid="${rowData.binaOdemeId}"
+                                                                                       data-id="${detailData.binaOdemeId}" class="${(i % 2 == 0 ? 'odd' : 'even')}">
+                                                                                        ${detailData.odemeIslemleriButonGoster ?
+                            `<td class="dt-center" style="width:20px;">
+                                                                                                <label style="display:inline-block;" class="form-check form-check-custom form-check-solid">
+                                                                                                    <input class="cbChild form-check-input h-20px w-20px" type="checkbox"
+                                                                                                        data-parentid="${rowData.binaOdemeId}"
+                                                                                                        data-binaodemeid="${detailData.binaOdemeId}"
+                                                                                                        value="true" ${isSelected ? 'checked' : ''}>
+                                                                                                </label>
+                                                                                            </td>` : '<td class="dt-center" style="width:5px;"></td>'
+                        }
+                                                                                        <td class="dt-center fs-7">${detailData.talepNumarasi ?? ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.uavtIlAdi ?? ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.uavtIlceAdi ?? ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.uavtMahalleAdi ?? ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.hasarTespitAskiKodu ?? ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.binaDegerlendirmeId ?? ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.seviye > 0 ? toPercentage(detailData.seviye) : ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.hibeOdemeTutari ? toTurkishLira(detailData.hibeOdemeTutari) : ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.krediOdemeTutari ? toTurkishLira(detailData.krediOdemeTutari) : ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.digerHibeOdemeTutari ? toTurkishLira(detailData.digerHibeOdemeTutari) : ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.odemeTutari ? toTurkishLira(detailData.odemeTutari) : ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.olusturmaTarihi ? dateToDate(detailData.olusturmaTarihi) : ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.talepKapatmaTarihi ? dateToDate(detailData.talepKapatmaTarihi) : ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.binaOdemeDurumAdText ?? ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.talepDurumu ?? ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.talepKapatmaTarihi ? dateToDate(detailData.talepKapatmaTarihi) : ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.olusturanKullaniciAdi ?? ""}</td>
+                                                                                        <td class="dt-center fs-7">${detailData.guncelleyenKullaniciAdi ?? ""}</td>
+                                                                                        <td class="dt-center fs-7">
+                                                                                            <div class="d-flex flex-center">
+                                                                                                <a target="_blank" href="/admin/basvuruDegerlendirme?askiKodu=${detailData.hasarTespitAskiKodu}&uavtMahalleNo=${detailData.uavtMahalleNo}" data-toggle="tooltip"
+                                                                                                                    title="Başvuru Değerlendirmeleri" class="btn btn-sm btn-icon btn-light-warning me-2">
+                                                                                                    <i class="fa fa-list"></i>
+                                                                                                </a>
+                                                                                                <button type="button" data-placement="top"
+                                                                                                            class="btn btn-sm btn-icon btn-light-primary me-2"
+                                                                                                            onclick="OdemeKisiBilgisi(${detailData.binaOdemeId})"
+                                                                                                            data-toggle="tooltip"
+                                                                                                            title="Ödeme Kişi Bilgisi">
+                                                                                                            <i class="fa fa-users"></i>
+                                                                                                </button>
+                                                                                            ${detailData.odemeIslemleriButonGoster ?
+                            `<button type="button" data-confirm="true"
+                                                                                                        data-confirm-param="${detailData.binaOdemeId}"
+                                                                                                                data-confirm-param2="${'@((int)BinaOdemeDurumEnum.HYSAktarildi)'}"
+                                                                                                        data-confirm-param3="${detailData.binaDegerlendirmeId}"
+                                                                                                        data-confirm-function="OdemeOnaylaReddet"
+                                                                                                        data-confirm-text="HYS’den ödeme talep edildi'ya aktarılacak'."
+                                                                                                        class="btn btn-sm btn-icon btn-light-success me-2"
+                                                                                                        data-placement="top"
+                                                                                                        data-toggle="tooltip" title="HYS’den ödeme talep edildi">
+                                                                                                    <i class="fa fa-check"></i>
+                                                                                                </button>
+                                                                                                <button type="button" data-confirm="true"
+                                                                                                        data-confirm-param="${detailData.binaOdemeId}"
+                                                                                                        data-confirm-param2="${'@((int)BinaOdemeDurumEnum.Reddedildi)'}"
+                                                                                                        data-confirm-param3="${detailData.binaDegerlendirmeId}"
+                                                                                                        data-confirm-function="OdemeOnaylaReddet"
+                                                                                                        data-preconfirm-function="OdemeOnaylaReddetPreConfirm"
+                                                                                                        data-html="<span>Lütfen ödemeyi reddetme sebebinizi giriniz.</span><form class='form'><textarea id='reddetmeSebebi' data-title='Reddetme Sebebi' data-validate='required' class='form-control mt-3' style='resize: none;'></textarea></form>"
+                                                                                                        class="btn btn-sm btn-icon btn-light-danger me-2"
+                                                                                                        data-placement="top"
+                                                                                                        data-toggle="tooltip" title="Reddet">
+                                                                                                    <i class="fa fa-times"></i>
+                                                                                                </button>` : ''
+                        }
+                                                                                            ${detailData.binaOdemeDurumId == @((int)BinaOdemeDurumEnum.Reddedildi) ?
+                            `<button type="button" data-confirm="true"
+                                                                                                        data-confirm-param="${detailData.binaOdemeId}"
+                                                                                                        data-confirm-param2="${@((int)BinaOdemeDurumEnum.Bekleniyor)}"
+                                                                                                        data-confirm-param3="${detailData.binaDegerlendirmeId}"
+                                                                                                        data-confirm-function="OdemeOnaylaReddet"
+                                                                                                        data-confirm-text="Ödeme Bekleniyor durumuna alınacak."
+                                                                                                        class="btn btn-sm btn-icon btn-secondary me-2"
+                                                                                                        data-placement="top"
+                                                                                                        data-toggle="tooltip" title="Ödeme Bekleniyor">
+                                                                                                    <i class="fa fa-check"></i>
+                                                                                                </button>` : ''
+                        }
+                                                                                            </div>
+                                                                                        </td>
+                                                                                    </tr>`;
+                }
+                htmlResult += `</tbody></table>`;
+            }
+            return htmlResult;
+        }
+
+        function ajaxTableComplete(data, tableElem) {
+            var tableName = tableElem.attr("data-name");
+            if (tableName == "tableOdemeler") {
+                $.each(data, function (index, row) {
+                    row.hibeOdemeTutariText = toTurkishLira(row.hibeOdemeTutari);
+                    row.krediOdemeTutariText = toTurkishLira(row.krediOdemeTutari);
+                    row.odemeTutariText = toTurkishLira(row.odemeTutari);
+                    row.digerHibeOdemeTutariText = toTurkishLira(row.digerHibeOdemeTutari);
+                    row.olusturmaTarihiText = dateToDate(row.olusturmaTarihi);
+                    row.talepKapatmaTarihiText = dateToDate(row.talepKapatmaTarihi);
+                    row.seviyeText = row.seviye != 0 ? toPercentage(row.seviye) : "";
+                    if (row.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.Onaylandi)') {
+                        row.binaOdemeDurumAd = '<label class="badge badge-primary">' + row.binaOdemeDurumAd + '</label>';
+                    }
+                    else if (row.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.HYSAktarildi)') {
+                        row.binaOdemeDurumAd = '<label class="badge badge-light-warning">' + row.binaOdemeDurumAd + '</label>';
+                    }
+                    else if (row.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.MuteahhiteAktarildi)') {
+                        row.binaOdemeDurumAd = '<label class="badge badge-success">' + row.binaOdemeDurumAd + '</label>';
+                    }
+                    else if (row.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.Reddedildi)') {
+                        row.binaOdemeDurumAd = '<label class="badge badge-danger">' + row.binaOdemeDurumAd + '</label>';
+                    }
+                    else {
+                        row.binaOdemeDurumAd = '<label class="badge badge-secondary">' + row.binaOdemeDurumAd + '</label>';
+                    }
+
+                    row.Buttons = `<div class="d-flex flex-center">
+                                                                                            <a target="_blank" href="/admin/basvuruDegerlendirme?askiKodu=${row.hasarTespitAskiKodu}&uavtMahalleNo=${row.uavtMahalleNo}" data-toggle="tooltip"
+                                                                                                                                        title="Başvuru Değerlendirmeleri" class="btn btn-sm btn-icon btn-light-warning me-2">
+                                                                                                                <i class="fa fa-list"></i>
+                                                                                                            </a>
+                                                                                       <button type="button" data-placement="top"
+                                                                                               class="btn btn-sm btn-icon btn-light-primary me-2"
+                                                                                               onclick="OdemeKisiBilgisi(${row.binaOdemeId})"
+                                                                                               data-toggle="tooltip"
+                                                                                               title="Ödeme Kişi Bilgisi">
+                                                                                              <i class="fa fa-users"></i>
+                                                                                       </button>`;
+                    if (row.odemeIslemleriButonGoster && '@odemeTalebiOnayRoluVarMi' == 'True') {
+                        row.Buttons += `
+                                                                                       <button type="button" data-confirm="true"
+                                                                                                       data-confirm-param="${row.binaOdemeId}"
+                                                                                                       data-confirm-param2="${'@((int)BinaOdemeDurumEnum.MuteahhiteAktarildi)'}"
+                                                                                                       data-confirm-param3="${row.binaDegerlendirmeId}"
+                                                                                                       data-confirm-function="OdemeOnaylaReddet"
+                                                                                                       data-confirm-text="Ödeme durumu 'Müteahhite Aktarıldı' olarak değiştirilecek."
+                                                                                                       class="btn btn-sm btn-icon btn-light-success me-2"
+                                                                                                       data-placement="top"
+                                                                                                       data-toggle="tooltip" title="Müteahhit'e Aktar">
+                                                                                           <i class="fa fa-check"></i>
+                                                                                       </button>`;
+                    }
+                    if (row.ilMudurluguneAktarButonGoster && '@odemeTalebiOnayRoluVarMi' == 'True') {
+                        row.Buttons += `                                                                    
+                            <button type="button" data-confirm="true"
+                                                                                        data-confirm-param="${row.binaOdemeId}"
+                                                                                                data-confirm-param2="${'@((int)BinaOdemeDurumEnum.HYSAktarildi)'}"
+                                                                                        data-confirm-param3="${row.binaDegerlendirmeId}"
+                                                                                        data-confirm-function="OdemeOnaylaReddet"
+                                                                                        data-confirm-text="HYS’den ödeme talep edildi'ya aktarılacak."
+                                                                                        class="btn btn-sm btn-icon btn-light-success me-2"
+                                                                                        data-placement="top"
+                                                                                        data-toggle="tooltip" title="HYS’den ödeme talep edildi">
+                                                                                    <i class="fa fa-check"></i>
+                                                                                </button>`;
+                           
+                    }
+                    row.Buttons += `</div>`;
+                });
+            }
+            else if (tableName == "tableOdemeTalepleri") {
+                $.each(data, function (index, row) {
+                    // if (row.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.Onaylandi)') {
+                    //     row.binaOdemeDurumAdText = '<label class="badge badge-primary">' + row.binaOdemeDurumAd + '</label>';
+                    // }
+                    // else if (row.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.HYSAktarildi)') {
+                    //     row.binaOdemeDurumAdText = '<label class="badge badge-info">' + row.binaOdemeDurumAd + '</label>';
+                    // }
+                    // else if (row.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.MuteahhiteAktarildi)') {
+                    //     row.binaOdemeDurumAdText = '<label class="badge badge-success">' + row.binaOdemeDurumAd + '</label>';
+                    // }
+                    // else if (row.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.Reddedildi)') {
+                    //     row.binaOdemeDurumAdText = '<label class="badge badge-danger">' + row.binaOdemeDurumAd + '</label>';
+                    // }
+                    // else {
+                    //     row.binaOdemeDurumAdText = '<label class="badge badge-secondary">' + row.binaOdemeDurumAd + '</label>';
+                    // }
+                    row.Buttons = `<div class="d-flex flex-center">`;
+                    row.Buttons += `<button type="button"
+                                                                                             data-binaOdemeId="${row.binaOdemeId}"
+                                                                                             data-binadegerlendirmeid="${row.binaDegerlendirmeId}"
+                                                                                             class="btnSecilenleriAktar btn btn-sm btn-icon btn-success me-2"
+                                                                                             style="display:none;"
+                                                                                             data-placement="top"
+                                                                                             data-toggle="tooltip" title="Seçilenleri HYS’den ödeme talep edildi'ya Aktar">
+                                                                                         <i class="fa fa-check"></i>
+                                                                                     </button>`;
+                    row.Buttons += `</div>`;
+                });
+            } else if (tableName == "tableOdemeYapilan") {
+                $.each(data, function (index, row) {
+                    row.hibeOdemeTutariText = toTurkishLira(row.hibeOdemeTutari);
+                    row.krediOdemeTutariText = toTurkishLira(row.krediOdemeTutari);
+                    row.digerOdemeTutariText = toTurkishLira(row.digerOdemeTutari);
+                });
+            } else if (tableName == "tableOdemelerGruplanmamis") {
+                $.each(data, function (index, row) {
+                    row.hibeOdemeTutariText = toTurkishLira(row.hibeOdemeTutari);
+                    row.krediOdemeTutariText = toTurkishLira(row.krediOdemeTutari);
+                    row.odemeTutariText = toTurkishLira(row.odemeTutari);
+                    row.digerHibeOdemeTutariText = toTurkishLira(row.digerHibeOdemeTutari);
+                    row.olusturmaTarihiText = dateToDate(row.olusturmaTarihi);
+                    row.talepKapatmaTarihiText = dateToDate(row.talepKapatmaTarihi);
+                    row.seviyeText = row.seviye != 0 ? toPercentage(row.seviye) : "";
+
+                    if (row.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.Onaylandi)') {
+                        row.binaOdemeDurumAd = '<label class="badge badge-primary">' + row.binaOdemeDurumAd + '</label>';
+                    }
+                    else if (row.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.HYSAktarildi)') {
+                        row.binaOdemeDurumAd = '<label class="badge badge-light-warning">' + row.binaOdemeDurumAd + '</label>';
+                    }
+                    else if (row.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.MuteahhiteAktarildi)') {
+                        row.binaOdemeDurumAd = '<label class="badge badge-success">' + row.binaOdemeDurumAd + '</label>';
+                    }
+                    else if (row.binaOdemeDurumId == '@((int)BinaOdemeDurumEnum.Reddedildi)') {
+                        row.binaOdemeDurumAd = '<label class="badge badge-danger">' + row.binaOdemeDurumAd + '</label>';
+                    }
+                    else {
+                        row.binaOdemeDurumAd = '<label class="badge badge-secondary">' + row.binaOdemeDurumAd + '</label>';
+                    }
+                    row.Buttons += `</div>`;
+                });
+            }
+            return data;
+        }
+
+        //function initCompleteTable(tableElem) {
+        //    var tableName = tableElem.attr("data-name");
+        //    if (tableName == "tableOdemeTalepleri") {
+        //        let binaDegerlendirmeId = getQueryStringValue("binaDegerlendirmeId");
+        //        if (binaDegerlendirmeId) {
+        //            // todo: mehmet.sumer: odeme sorgulama icin default gelmesi lazim.
+        //            //$("#btn_" + binaDegerlendirmeId).click();
+        //        }
+        //    }
+        //    else if (tableName == "tableOdemeler") {
+        //        let binaDegerlendirmeId = getQueryStringValue("binaDegerlendirmeId");
+        //        if (binaDegerlendirmeId) {
+        //            // todo: mehmet.sumer: odeme sorgulama icin default gelmesi lazim.
+        //            //$("#btn_" + binaDegerlendirmeId).click();
+        //        }
+        //    }
+        //}
+
+
+        //#endregion ...: General Methods :...
+    </script>
+}

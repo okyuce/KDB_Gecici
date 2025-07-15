@@ -1,0 +1,181 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = Csb.YerindeDonusum.WebApp
+build_property.RootNamespace = Csb.YerindeDonusum.WebApp
+build_property.ProjectDir = C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Presentation\Csb.YerindeDonusum.WebApp\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = true
+build_property.MSBuildProjectDirectory = C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Presentation\Csb.YerindeDonusum.WebApp
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 7.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/AfadBasvuru/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQWZhZEJhc3Z1cnVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/BasvuruDegerlendirme/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmFzdnVydURlZ2VybGVuZGlybWVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/BasvuruImzaVeren/HibeTaahhutnameSozlesme.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmFzdnVydUltemFWZXJlblxIaWJlVGFhaGh1dG5hbWVTb3psZXNtZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/BasvuruImzaVeren/SozlesmeGeriOdemeBilgileri.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmFzdnVydUltemFWZXJlblxTb3psZXNtZUdlcmlPZGVtZUJpbGdpbGVyaS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/BasvuruImzaVeren/YerindeYapimKrediSozlesme.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmFzdnVydUltemFWZXJlblxZZXJpbmRlWWFwaW1LcmVkaVNvemxlc21lLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Basvuru/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmFzdnVydVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Basvuru/Islem.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmFzdnVydVxJc2xlbS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Basvuru/_BasvuruDetayPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmFzdnVydVxfQmFzdnVydURldGF5UGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Belediye/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmVsZWRpeWVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/BinaDegerlendirme/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmluYURlZ2VybGVuZGlybWVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/BinaOdeme/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmluYU9kZW1lXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Home/ErisimYetkisiYok.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcSG9tZVxFcmlzaW1ZZXRraXNpWW9rLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Home/Giris.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcSG9tZVxHaXJpcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Kullanici/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcS3VsbGFuaWNpXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/NatamamYapiIslemleri/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcTmF0YW1hbVlhcGlJc2xlbWxlcmlcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/OfisKonum/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcT2Zpc0tvbnVtXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Rapor/BinaBazliOran.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUmFwb3JcQmluYUJhemxpT3Jhbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Rapor/BinaOdeme.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUmFwb3JcQmluYU9kZW1lLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Rapor/YapiRuhsat.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUmFwb3JcWWFwaVJ1aHNhdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Shared/_Header.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9IZWFkZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/SSS/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU1NTXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Tebligat/AnahtarTeslimTebligatTaslakSozlesme.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcVGVibGlnYXRcQW5haHRhclRlc2xpbVRlYmxpZ2F0VGFzbGFrU296bGVzbWUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Tebligat/AnlasmayaIstirakTebligatTaslakSozlesme.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcVGVibGlnYXRcQW5sYXNtYXlhSXN0aXJha1RlYmxpZ2F0VGFzbGFrU296bGVzbWUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Tebligat/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcVGVibGlnYXRcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Views/Home/NasilBasvurulur.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxOYXNpbEJhc3Z1cnVsdXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Views/Home/SSS.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTU1MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Shared/_EmptyLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9FbXB0eUxheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = b-lj6fpcddpw
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Shared/_Foot.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9Gb290LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = b-52ioqfac39
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Shared/_Footer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9Gb290ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-c3d3ze6kxm
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Shared/_Head.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9IZWFkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = b-abkc7q25re
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-sc6fblibh7
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Areas/Admin/Views/Shared/_Sidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9TaWRlYmFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = b-qzf53zz0rq
+
+[C:/Users/oguzkaan.yuce/source/repos/yerindedonusum/src/Presentation/Csb.YerindeDonusum.WebApp/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-gr5wixmd2x

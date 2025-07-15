@@ -1,0 +1,202 @@
+﻿@model IEnumerable<Csb.YerindeDonusum.WebApp.Models.NatamamYapiIslemViewModel>
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_SidebarLayout.cshtml";
+    ViewData["Title"] = "Natamam Yapı İşlemleri";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">@ViewData["Title"]</h4>
+    <button id="btnAdd" class="btn btn-primary">
+        <i class="fas fa-plus me-1"></i>Natamam Askı Kodu Ekle
+    </button>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between mb-3">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown">
+                    <i class="fas fa-download me-1"></i>Dışarı Aktar
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                    <li><a class="dropdown-item" href="#" id="exportExcel">Excel</a></li>
+                    <li><a class="dropdown-item" href="#" id="exportPdf">PDF</a></li>
+                </ul>
+            </div>
+            <input type="text" id="tableSearch" class="form-control w-auto" placeholder="Ara…" />
+        </div>
+
+        <div class="table-responsive">
+            <table id="tblNatamam" class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>ASKI Kodu</th>
+                        <th>Resmi Yazı</th>
+                        <th>Diğer Yazı</th>
+                        <th>Oluşturan Kullanıcı</th>
+                        <th>Güncelleyen Kullanıcı</th>
+                        <th>Durum</th>
+                        <th class="text-center">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.AskiKodu</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.ResmiYaziDosyaAdi))
+                                {
+                                    <a asp-area="Admin"
+                                       asp-controller="NatamamYapiIslemleri"
+                                       asp-action="DownloadResmi"
+                                       asp-route-id="@item.Id">
+                                        @item.ResmiYaziDosyaAdi
+                                    </a>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.DigerYaziDosyaAdi))
+                                {
+                                    <a asp-area="Admin"
+                                       asp-controller="NatamamYapiIslemleri"
+                                       asp-action="DownloadDiger"
+                                       asp-route-id="@item.Id">
+                                        @item.DigerYaziDosyaAdi
+                                    </a>
+                                }
+                            </td>
+                            <td>@item.OlusturanKullaniciAd</td>
+                            <td>@item.GuncelleyenKullaniciAd</td>
+                            <td>
+                                <span class="badge @(item.AktifMi ? "bg-success" : "bg-secondary")">
+                                    @(item.AktifMi ? "Aktif" : "Pasif")
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <a asp-area="Admin"
+                                   asp-controller="NatamamYapiIslemleri"
+                                   asp-action="Edit"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-sm btn-outline-primary me-1">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button"
+                                        data-id="@item.Id"
+                                        class="btn btn-sm btn-outline-danger btn-delete">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@* ——— Create Modal ——— *@
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="createForm" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Natamam Yapı Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="AskiKodu" class="form-label">ASKI Kodu</label>
+                        <input type="text" class="form-control" id="AskiKodu" name="AskiKodu" placeholder="ASKI Kodu" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="ResmiYaziDosya" class="form-label">Resmi Yazı (.pdf)</label>
+                        <input type="file" class="form-control" id="ResmiYaziDosya" name="ResmiYaziDosya" accept=".pdf" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="DigerYaziDosya" class="form-label">Diğer Belge (.pdf)</label>
+                        <input type="file" class="form-control" id="DigerYaziDosya" name="DigerYaziDosya" accept=".pdf" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="AktifMi" class="form-label">Aktif Mi?</label>
+                        <select class="form-select" id="AktifMi" name="AktifMi" required>
+                            <option value="true" selected>Aktif</option>
+                            <option value="false">Pasif</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            var table = $('#tblNatamam').DataTable({
+                ordering: false,
+                lengthMenu: [10, 25, 50],
+                language: {
+                    url: '/lib/datatables/i18n/Turkish.json'
+                },
+                dom:
+                    "<'d-flex justify-content-between mb-2'l>" +
+                    "<'d-flex justify-content-between mb-3'f>" +
+                    "<'table-responsive't>" +
+                    "<'d-flex justify-content-between mt-3'ip>"
+            });
+
+            $('#tableSearch').on('keyup', function () {
+                table.search(this.value).draw();
+            });
+
+            $('#exportExcel').on('click', function (e) {
+                e.preventDefault();
+                table.button('.buttons-excel').trigger();
+            });
+            $('#exportPdf').on('click', function (e) {
+                e.preventDefault();
+                table.button('.buttons-pdf').trigger();
+            });
+
+            // Create modal
+            $('#btnAdd').on('click', function () {
+                $('#createModal').modal('show');
+            });
+
+            // Create form submit
+            $('#createForm').on('submit', function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    url: '@Url.Action("Create", "NatamamYapiIslemleri", new { area = "Admin" })',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false
+                }).done(function () {
+                    $('#createModal').modal('hide');
+                    table.ajax.reload();
+                }).fail(function (xhr) {
+                    console.error(xhr.responseText);
+                });
+            });
+
+            // Delete action
+            $('#tblNatamam').on('click', '.btn-delete', function () {
+                var id = $(this).data('id');
+                if (confirm('Silmek istediğinize emin misiniz?')) {
+                    $.post('@Url.Action("Delete", "NatamamYapiIslemleri", new { area = "Admin" })', { id: id })
+                        .done(function () {
+                            table.row($('[data-id="' + id + '"]').closest('tr')).remove().draw();
+                        });
+                }
+            });
+        });
+    </script>
+}

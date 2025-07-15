@@ -1,0 +1,17 @@
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\bin\Debug\net7.0\Csb.YerindeDonusum.NVIYapiBelge.deps.json
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\bin\Debug\net7.0\Csb.YerindeDonusum.NVIYapiBelge.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\bin\Debug\net7.0\Csb.YerindeDonusum.NVIYapiBelge.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\bin\Debug\net7.0\Csb.YerindeDonusum.Application.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\bin\Debug\net7.0\Csb.YerindeDonusum.Application.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\obj\Debug\net7.0\Csb.YerindeDonusum.NVIYapiBelge.csproj.AssemblyReference.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\obj\Debug\net7.0\Csb.YerindeDonusum.NVIYapiBelge.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\obj\Debug\net7.0\Csb.YerindeDonusum.NVIYapiBelge.AssemblyInfoInputs.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\obj\Debug\net7.0\Csb.YerindeDonusum.NVIYapiBelge.AssemblyInfo.cs
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\obj\Debug\net7.0\Csb.YerindeDonusum.NVIYapiBelge.csproj.CoreCompileInputs.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\obj\Debug\net7.0\Csb.Yeri.988772A4.Up2Date
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\obj\Debug\net7.0\Csb.YerindeDonusum.NVIYapiBelge.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\obj\Debug\net7.0\refint\Csb.YerindeDonusum.NVIYapiBelge.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\obj\Debug\net7.0\Csb.YerindeDonusum.NVIYapiBelge.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\obj\Debug\net7.0\ref\Csb.YerindeDonusum.NVIYapiBelge.dll

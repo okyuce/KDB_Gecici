@@ -1,0 +1,301 @@
+﻿@using Csb.YerindeDonusum.Application.CustomAddons;
+
+@{
+    ViewBag.Title = "Kullanıcılar";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="modal fade" id="modal_kullanici" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+            </div>
+            <div class="modal-body scroll-y px-10 px-lg-10 pt-0 pb-10">
+                <form id="modal_kullanici_form" onsubmit="return false;" novalidate="novalidate" class="form">
+                    <input type="hidden" name="KullaniciId" />
+                    <div class="mb-13 text-center">
+                        <h1 class="mb-3 modal-title">Kullanıcı</h1>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex flex-column mb-8 fv-row">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span class="required">Kullanıcı Adı</span>
+                                </label>
+                                <input type="text" data-validate="required" data-title="Kullanıcı Adı" class="form-control form-control-solid" placeholder="Kullanıcı Adı" name="KullaniciAdi" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex flex-column mb-8 fv-row">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span class="required">TC Kimlik No</span>
+                                </label>
+                                <input type="text" data-validate="required" data-title="TC Kimlik No" class="form-control form-control-solid identity-mask" autocomplete="off" placeholder="TC Kimlik No" name="TCKimlikNo" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex flex-column mb-8 fv-row">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span class="">Adı</span>
+                                </label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Adı" name="Ad" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex flex-column mb-8 fv-row">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span class="">Soyadı</span>
+                                </label>
+                                <input type="text" class="form-control form-control-solid" placeholder="Soyadı" name="Soyad" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span id="spEposta" class="">E-Posta</span>
+                        </label>
+                        <input type="text" class="form-control form-control-solid email-mask" placeholder="E-posta" name="EPosta" />
+                    </div>
+                    <div class="col-md-6 d-flex flex-column">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Cep Telefon Numarası</span>
+                        </label>
+                        <input data-validate="required" data-title="Cep Telefon Numarası" type="text" required class="form-control form-control-solid phone-mask" autocomplete="off" placeholder="05XX XXX XX XX" name="CepTelefonu" />
+                    </div>
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Birim</span>
+                        </label>
+                        <select class="form-select select-2" 
+                                data-validate="required"
+                                data-title="Birim"
+                                name="BirimId" 
+                                data-ajax-target="/admin/kullanici/getirlisteBirim" 
+                                data-custom-value="birimId" data-custom-text="ad">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="d-flex flex-column mb-8 fv-row">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span class="required">Roller</span>
+                        </label>
+                        <select data-validate="required"
+                                data-title="Roller"
+                                class="form-select select-2" 
+                                multiple="multiple" 
+                                name="SecilenRolIdList" 
+                                data-ajax-target="/admin/kullanici/getirlisteRol" 
+                                data-custom-value="rolId" data-custom-text="ad">
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex flex-column mb-8 fv-row">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span class="required">Kullanıcı Hesap Tipi</span>
+                                </label>
+                                <select data-validate="required"
+                                        data-title="Kullanıcı Hesap Tipi" class="form-select select-2" name="KullaniciHesapTipId" data-ajax-target="/admin/kullanici/getirlisteKullaniciHesapTip" data-custom-value="kullaniciHesapTipId" data-custom-text="ad">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex flex-column mb-8 fv-row">
+                                <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                    <span class="required">Aktif Mi?</span>
+                                </label>
+                                <select data-validate="required"
+                                        data-title="Aktif Mi" 
+                                        class="form-select select-2" 
+                                        name="AktifMi">
+                                    <option></option>
+                                    <option value="true">Aktif</option>
+                                    <option value="false">Pasif</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="reset" id="modal_kullanici_iptal" class="btn btn-light me-3">İptal</button>
+                        <button type="submit" id="modal_kullanici_kaydet" class="btn btn-primary">Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="kt_app_content_container" class="app-container container-fluid">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div class="card mb-5 mb-xl-8">
+            <div class="card-body py-2 px-6">
+                <div class="table-responsive">
+                    <table class="table table-row-bordered table-striped table-row-gray-200 align-middle dataTable"
+                           data-name="tableList"
+                           data-ajax-target="/admin/kullanici/getirListe"
+                           data-responsive="true"
+                           data-export-buttons="true"
+                           data-custom-button="Kullanıcı Ekle"
+                           data-custom-button-function="KullaniciEkleGuncelleModal"
+                           data-custom-button-param="0">
+                        <thead>
+                            <tr>
+                                <th data-name="tcKimlikNo" data-sort="false" data-width="100px">TC Kimlik No</th>
+                                <th data-name="ad" data-sort="false">Adı</th>
+                                <th data-name="soyad" data-sort="false">Soyadı</th>
+                                <th data-name="kullaniciAdi" data-sort="false">Kullanıcı Adı</th>
+                                <th data-name="kullaniciHesapTipAdi" data-sort="false">Hesap Tipi</th>
+                                <th data-name="birimAdi" data-sort="false">Birimi</th>
+                                <th data-name="eposta" data-sort="false">E-Posta</th>
+                                <th data-name="cepTelefonu" data-sort="false">Cep Telefonu</th>
+                                <th data-name="kullaniciRolAdlari" data-sort="false">Yetkiler</th>
+                                <th data-name="aktifMi" data-sort="false" data-width="70px">Durum</th>
+                                <th data-name="Buttons" class="all" data-sort="false" data-export="false" data-width="70px"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/admin/metronic/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#modal_kullanici').on('hidden.bs.modal', function (event) {
+                $("input[name='KullaniciId']").val("");
+                $("input[name='TCKimlikNo']").val("");
+                $("input[name='Ad']").val("");
+                $("input[name='Soyad']").val("");
+                $("input[name='KullaniciAdi']").val("");
+                $("input[name='EPosta']").val("").trigger('change');
+                $("input[name='CepTelefonu']").val("").trigger('change');
+                $("select[name='BirimId']").val("").trigger('change');
+                $("select[name='SecilenRolIdList']").val("").trigger('change');
+                $("select[name='KullaniciHesapTipId']").val("1").trigger('change');
+                $("input[name='Sifre']").val("");
+                $("select[name='AktifMi']").val("true").trigger('change');
+            });
+
+            $(document).on('click', "#modal_kullanici_iptal", function (e) {
+                $("#modal_kullanici").modal("hide");
+            });
+
+            $(document).on('click', "#modal_kullanici_kaydet", function (e) {
+                e.preventDefault();
+
+                if (!validateForm("#modal_kullanici_form")) {
+                    return;
+                }
+
+                let formData = serializeFormAsObject("#modal_kullanici_form");
+
+                let isUpdate = parseInt(formData.kullaniciId || 0) > 0;
+
+                startLoader($("#modal_kullanici"));
+                Request("/admin/kullanici/" + (isUpdate ? "guncelle" : "ekle"), formData, 'post')
+                    .done(function (response) {
+                        stopLoader($("#modal_kullanici"));
+
+                        toastr.success(response.mesaj);
+
+                        $("#modal_kullanici").modal("hide");
+
+                        reloadTable("[data-name='tableList']");
+                    })
+                    .fail(function (jqXHR, textStatus) {
+                        stopLoader($("#modal_kullanici"));
+                        toastr.error(getAjaxErrorMessage(jqXHR));
+                    });
+            });
+        });
+
+        function KullaniciEkleGuncelleModal(id) {
+            if (id == 0) {
+                $("select[name='AktifMi']").val("true").trigger('change');
+                $("#modal_kullanici .modal-title").html("Kullanıcı Ekle");
+                $("#modal_kullanici").modal("show");
+                return;
+            }
+            
+            startLoader("[data-name='tableList']");
+            Request("/admin/kullanici/getiridile", { kullaniciId: id }, 'get')
+                .done(function (response) {
+                    stopLoader("[data-name='tableList']");
+
+                    $("input[name='KullaniciId']").val(response.kullaniciId);
+                    $("input[name='TCKimlikNo']").val(response.tcKimlikNo);
+                    $("input[name='Ad']").val(response.ad);
+                    $("input[name='Soyad']").val(response.soyad);
+                    $("input[name='KullaniciAdi']").val(response.kullaniciAdi);
+                    $("input[name='EPosta']").val(response.eposta);
+                    $("input[name='CepTelefonu']").val(response.cepTelefonu);
+                    $("select[name='BirimId']").val(response.birimId).trigger('change');
+                    $("select[name='KullaniciHesapTipId']").val(response.kullaniciHesapTipId).trigger('change');
+                    $("select[name='SecilenRolIdList']").val(response.secilenRolIdList).trigger('change');
+                    $("select[name='AktifMi']").val(response.aktifMi == 1 ? "true" : "false").trigger('change');
+
+                    $("#modal_kullanici .modal-title").html("Kullanıcı Düzenle");
+                    $("#modal_kullanici").modal("show");
+                })
+                .fail(function (jqXHR, textStatus) {
+                    stopLoader("[data-name='tableList']");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+
+        function KullaniciSil(id) {
+            startLoader("[data-name='tableList']");
+            Request("/admin/kullanici/sil", { kullaniciId: id }, 'post')
+                .done(function (response) {
+                    stopLoader("[data-name='tableList']");
+
+                    toastr.success("Kullanıcı başarıyla silindi.");
+
+                    reloadTable("[data-name='tableList']");
+                })
+                .fail(function (jqXHR, textStatus) {
+                    stopLoader("[data-name='tableList']");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+
+        function ajaxTableComplete(data, tableElem) {
+            let tableName = tableElem.attr("data-name");
+            if (tableName == "tableList") {
+                $.each(data, function (index, row) {
+                    row.kullaniciRolAdlari = "";
+
+                    $.each(row.kullaniciRolAdListe, function (rolIndex, rowRow) {
+                        row.kullaniciRolAdlari += '<label class="badge badge-secondary">' + rowRow + '</label> ';
+                    });
+
+                    row.aktifMi = `<label class="badge badge-${(row.aktifMi == 1 ? "success" : "danger")}">${(row.aktifMi == 1 ? "Aktif" : "Pasif")}</label>`;
+
+                    row.Buttons = `<div class="d-flex justify-content-end">
+                                        <button type="button" data-placement="top" data-toggle="tooltip" data-bs-original-title="Güncelle" class="btn btn-sm btn-icon btn-light-primary me-2" onclick="KullaniciEkleGuncelleModal(${row.kullaniciId})">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                                <button type="button" class="btn btn-sm btn-icon btn-light-danger" data-placement="top" data-bs-original-title="Sil" data-toggle="tooltip" data-confirm="true" data-confirm-function="KullaniciSil" data-confirm-param="${row.kullaniciId}" data-confirm-text="Kullanıcıyı silmek istediğinize emin misiniz?">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>`;
+                });
+            }
+            return data;
+        }
+
+    </script>
+}

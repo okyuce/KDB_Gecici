@@ -1,0 +1,491 @@
+﻿@using System.Security.Claims
+@using Csb.YerindeDonusum.Application.CustomAddons;
+@using Csb.YerindeDonusum.Application.Enums
+@using Csb.YerindeDonusum.WebApp.Utilities.Helpers
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@{
+    ViewBag.Title = "Tebligat Ekranı";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    var uiBaseUrl = Configuration.GetValue<string>("Options:UiUrl")?.TrimEnd('/');
+}
+
+<div class="modal fade" id="modal_tebligat_detay" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content rounded">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+            </div>
+            <div class="modal-body scroll-y py-0 px-6">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn btn-light-dark mr-auto mr-auto" onclick="tebligatDetayYazdir()">
+                    <i class="ki-duotone ki-printer fs-1"><i class="path1"></i><i class="path2"></i><i class="path3"></i><i class="path4"></i><i class="path5"></i></i> Yazdır
+                </button>
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="kt_app_content_container" class="app-container container-fluid">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div class="card mb-5 mb-xl-8">
+            <div class="card-header collapsible cursor-pointer rotate collapsed" data-bs-toggle="collapse" data-bs-target="#kt_docs_card_collapsible">
+                <h3 class="card-title">Tebligat Filtrele</h3>
+                <div class="card-toolbar rotate-180">
+                    <i class="ki-duotone ki-down fs-1"></i>
+                </div>
+            </div>
+            <div id="kt_docs_card_collapsible" class="collapse">
+                <form id="tableListFilterForm" data-name="tableListFilter" class="card-body py-2 px-6">
+                    <div class="row mt-4">
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Askı Kodu</span>
+                            </label>
+                            <input type="text" data-onenter-submit="true"
+                                   data-onenter-click="#tebligat_sorgula" class="form-control" autocomplete="off" placeholder="Askı Kodu" name="HasarTespitAskiKodu" />
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12 text-right">
+                            <button type="reset" id="tebligat_filtre_temizle" class="btn btn-dark mr-10">
+                                <i class="ki-duotone ki-trash fs-1"><i class="path1"></i><i class="path2"></i><i class="path3"></i><i class="path4"></i><i class="path5"></i></i> Temizle
+                            </button>
+                            <button type="button" id="tebligat_sorgula" class="btn btn-primary">
+                                <i class="ki-duotone ki-filter fs-1"><i class="path1"></i><i class="path2"></i></i> Sorgula
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-5 mb-xl-8">
+        <div class="card-header">
+            <h3 class="card-title">Tebligat Listesi</h3>
+        </div>
+        <div class="card-body py-2 px-6">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="kt_tab_yapi_listesi" role="tabpanel">
+                    <div class="table-responsive" style="overflow:hidden" id="gruplanmis">
+                        <!-- data-showdetails: start, end, dblclick -->
+                        <table class="table table-row-bordered table-striped table-row-gray-200 align-middle "
+                               data-name="tableMalikler"
+                               data-responsive="true"
+                               data-selectable="multiple"
+                               data-searching="true">
+                            <thead>
+                                <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                                    <th data-name="tcKimlikNo" data-sort="false">T.C. Kimlik No</th>
+                                    <th data-name="ad" data-sort="false">Ad</th>
+                                    <th data-name="soyad" data-sort="false">Soyad</th>
+                                    <th data-name="cepTelefonu" data-sort="false">Cep Telefonu</th>
+                                    <th data-name="eposta" data-sort="false">E-Posta</th>
+                                    <th data-name="tapuBlok" data-sort="false">Blok</th>
+                                    <th data-name="Buttons" class="all text-center" data-sort="false" data-export="false" data-width="45px">İşlem</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_tebligat_taslak" style="z-index:9000;" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-mg modal-dialog-centered">
+        <div class="modal-content rounded">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+            </div>
+            <div class="modal-body scroll-y px-10 px-lg-10 pt-0 pb-10">
+                <form id="form_tebligat_taslak" onsubmit="return false;" novalidate="novalidate" class="form">
+                    <div class="mb-13 text-center">
+                        <h1 class="mb-3 modal-title" id="tebligat_taslak_baslik">Tebligat Tutanağı Taslak</h1>
+                    </div>
+					<div class="row mt-8">
+                        <div class="col-md-12 text-center mb-4">
+                            <a class="fs-4 fw-semibold" id="btn-anlasmaya-istirak-tebligat-taslak" target="_blank">Taslak Anlaşmaya İştirak Tutanağını İndir</a>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <a class="fs-4 fw-semibold" id="btn-anahtar-teslim-tebligat-taslak" target="_blank">Taslak Anahtar Teslim Tutanağını İndir</a>
+                        </div>
+                    </div>
+                    <div class="text-center mt-8">
+                        <button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">Kapat</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_tebligat_sozlesme" style="z-index:9000;" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+            </div>
+            <div class="modal-body scroll-y px-10 px-lg-10 pt-0 pb-10">
+                <form id="form_tebligat_sozlesme" onsubmit="return false;" novalidate="novalidate" class="form">
+                    <div class="mb-13 text-center">
+                        <h1 class="mb-3 modal-title" id="tebligat_sozlesme_baslik"></h1>
+                    </div>
+                    <div class="row mt-8">
+                        <div class="col-md-12">
+                            <label class="d-flex align-items-center fs-6 fw-semibold required-optional mb-2">
+                                <span>Tebligat Tutanağı (.pdf, .png, .jpg)</span>
+                            </label>
+                            <div class="input-group mb-5">
+                                <input accept="image/png, image/jpeg, application/pdf"
+                                       data-title="Tutanak"
+                                       name="TebligatSozlesmesi"
+                                       type="file"
+                                       class="form-control form-control-solid" autocomplete="off"
+                                       placeholder="Tutanak" />
+                                <a href="#" id="btn-tebligat-sozlesmesi-indir" class="input-group-text bg-primary" target="_blank">
+                                    <i class="fas fa-download text-light"></i>
+                                </a>
+                                <label class="col-12 d-flex align-items-center fs-6 fw-semibold mb-2" id="TebligatSozlesmesiDosyaAdi"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-8">
+                        <button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">İptal</button>
+                        <button type="submit" id="modal_tebligat_sozlesme_kaydet" class="btn btn-primary">Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/admin/metronic/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js"></script>
+
+    <script type="text/javascript">
+        let filterAskiKodu = getQueryStringValue("askiKodu");
+        let filterIlNo = getQueryStringValue("ilNo");
+        let filterIlceNo = getQueryStringValue("ilceNo");
+        let filterMahalleNo = getQueryStringValue("mahalleNo");
+        let SozlesmeDosya = false;
+
+        $(document).ready(function () {
+
+            $(document).on('click', "#tebligat_filtre_temizle", function (e) {
+                resetForm($("form[data-name='tableListFilter']"));
+                reloadTable("data-name='tableMalikler']");
+            });
+
+            $(document).on('click', "#tebligat_sorgula", function (e) {
+                if (isDataTable("[data-name='tableMalikler']")) {
+                    clearTable("[data-name='tableMalikler']");
+                    reloadTableNewAjaxUrl("[data-name='tableMalikler']", "/admin/tebligat/GetirListeTebligatMalikler" + serializeFormToQueryString("[data-name='tableListFilter']"));
+                }
+                else {
+                    loadTable("[data-name='tableMalikler']", "/admin/tebligat/GetirListeTebligatMalikler" + serializeFormToQueryString("[data-name='tableListFilter']"));
+                }
+            });
+
+            $(document).on("click", ".btnTebligatIstirak", function (e) {
+                let selectedRows = getSelectedRows("[data-name='tableMalikler']");
+                if (!selectedRows) {
+                    toastr.error("Lütfen en az bir adet malik seçiniz.");
+                    return;
+                }
+                if (selectedRows.length > 1000) {
+                    toastr.error("Tebligat Göderim Sınırı 1000 Kişi İle Sınırlıdır.Bu Sebeple Tebligatlar Gönderilememektedir.");
+                    return;
+                }
+                tuzelRowData = selectedRows.find(x => x.tuzelKisiVergiNo != null);
+                if (tuzelRowData) {
+                    toastr.error("Tüzel Kişiye Tebligat Gönderilememektedir.");
+                    return;
+                } else {
+                    fireConfirmSwal({
+                        icon: "info",
+                        onconfirm: "GonderTebligatIstirak",
+                        param1: selectedRows,
+                        text: selectedRows.length + " adet maliğe Anlaşmaya İştirak Tebligatı Gönderilecek, devam etmek istiyor musunuz?"
+                    });
+                }
+            });
+
+            $(document).on("click", "#btnTopluIstirak", function () {
+                let selectedRows = getSelectedRows("[data-name='tableMalikler']");
+                if (!selectedRows) {
+                    toastr.error("Lütfen en az bir adet malik seçiniz.");
+                    return;
+                }
+                if (selectedRows.length > 1000) {
+                    toastr.error("Tebligat Göderim Sınırı 1000 Kişi İle Sınırlıdır.Bu Sebeple Tebligatlar Gönderilememektedir.");
+                    return;
+                }
+                tuzelRowData = selectedRows.find(x => x.tuzelKisiVergiNo != null);
+                if (tuzelRowData) {
+                    toastr.error("Tüzel Kişiye Tebligat Gönderilememektedir.");
+                    return;
+                } else {
+                    fireConfirmSwal({
+                        icon: "info",
+                        onconfirm: "GonderTebligatIstirak",
+                        param1: selectedRows,
+                        text: selectedRows.length + " adet maliğe Anlaşmaya İştirak Tebligatı Gönderilecek, devam etmek istiyor musunuz?"
+                    });
+                }
+            });
+
+            $(document).on("click", "#btnTopluTeslim", function () {
+
+                let selectedRows = getSelectedRows("[data-name='tableMalikler']");
+                if (!selectedRows) {
+                    toastr.error("Lütfen en az bir adet malik seçiniz.");
+                    return;
+                }
+                if (selectedRows.length > 1000) {
+                    toastr.error("Tebligat Göderim Sınırı 1000 Kişi İle Sınırlıdır.Bu Sebeple Tebligatlar Gönderilememektedir.");
+                    return;
+                }
+                tuzelRowData = selectedRows.find(x => x.tuzelKisiVergiNo != null);
+                if (tuzelRowData) {
+                    toastr.error("Tüzel Kişiye Tebligat Gönderilememektedir.");
+                    return;
+                } else {
+                    fireConfirmSwal({
+                        icon: "info",
+                        onconfirm: "GonderTebligatAnahtarTeslim",
+                        param1: selectedRows,
+                        text: selectedRows.length + " adet maliğe Anahtar Teslim Tebligatı Gönderilecek, devam etmek istiyor musunuz?"
+                    });
+                }
+            });
+
+            $(document).on("click", "[data-name='tableMalikler'] .cbSec", function () {
+                const $this = $(this);
+
+            });
+            
+            $(document).on("click", ".btnTebligatSozlesmeTaslak", function (e) {
+                let selectedRow = selectRowByElem({ tableSelector: "[data-name='tableMalikler']", elem: $(this) });
+                if (!selectedRow) return;
+                $('#btn-anlasmaya-istirak-tebligat-taslak').attr("href", "/admin/Tebligat/AnlasmayaIstirakTebligatTaslakSozlesme?tapuIlAdi=" + selectedRow.tapuIlAdi + "&tapuIlceAdi=" + selectedRow.tapuIlceAdi + "&tapuMahalleAdi=" + selectedRow.tapuMahalleAdi  + "&tapuAda=" + selectedRow.tapuAda + "&tapuParsel=" + selectedRow.tapuParsel  + "&tapuTasinmazId=" + selectedRow.tapuTasinmazId+ "&hasarTespitAskiKodu=" + selectedRow.askiKodu + "&hasarTespitHasarDurumu=" + selectedRow.hasarTespitHasarDurumu);
+                $('#btn-anahtar-teslim-tebligat-taslak').attr("href", "/admin/Tebligat/AnahtarTeslimTebligatTaslakSozlesme?tapuIlAdi=" + selectedRow.tapuIlAdi + "&tapuIlceAdi=" + selectedRow.tapuIlceAdi + "&tapuMahalleAdi=" + selectedRow.tapuMahalleAdi  + "&tapuAda=" + selectedRow.tapuAda + "&tapuParsel=" + selectedRow.tapuParsel  + "&tapuTasinmazId=" + selectedRow.tapuTasinmazId+ "&hasarTespitAskiKodu=" + selectedRow.askiKodu + "&hasarTespitHasarDurumu=" + selectedRow.hasarTespitHasarDurumu);
+
+                $("#modal_tebligat_taslak").modal("show");
+            });
+
+            $(document).on("click", ".btnTebligatIstirakSozlesme", function (e) {
+                let selectedRow = selectRowByElem({ tableSelector: "[data-name='tableMalikler']", elem: $(this) });
+                if (!selectedRow) return;
+                startLoader("[data-name='tableMalikler']");
+
+                $('#tebligat_sozlesme_baslik').text("Anlaşmaya İştirak Tebligat Tutanağı");
+                // $('#btn-tebligat-sozlesme-taslak').text("Taslak Anlaşmaya İştirak Tutanağını İndir").attr("href", "/admin/Tebligat/AnlasmayaIstirakTebligatTaslakSozlesme/" + selectedRow.istirakTebligatGonderimDetayId + "/").attr("target", "_blank");
+
+                resetForm($("#form_tebligat_sozlesme"));
+
+                tebligatGonderimDetayId = selectedRow.istirakTebligatGonderimDetayId;
+                const formData = {
+                    TebligatGonderimDetayId: tebligatGonderimDetayId
+                };
+
+                Request("/admin/tebligat/GetirTebligatGonderimDetayDosyaByDetayId", formData, 'get')
+                    .done(function (response) {
+                        tebligatGonderimDetayDosya = response;
+                        tebligatSozlesmeGorunurlukAyarla(tebligatGonderimDetayDosya);
+                        stopLoader("[data-name='tableMalikler']");
+                    })
+                    .fail(function (jqXHR, textStatus) {
+                        deselectRows("[data-name='tableMalikler']");
+                        stopLoader("[data-name='tableMalikler']");
+                        toastr.error(getAjaxErrorMessage(jqXHR));
+                    });
+                $("#modal_tebligat_sozlesme").modal("show");
+            });
+
+            $(document).on("click", ".btnTebligatTeslimSozlesme", function (e) {
+                let selectedRow = selectRowByElem({ tableSelector: "[data-name='tableMalikler']", elem: $(this) });
+                if (!selectedRow) return;
+                startLoader("[data-name='tableMalikler']");
+
+                $('#tebligat_sozlesme_baslik').text("Anahtar Teslim Tebligat Tutanağı");
+                // $('#btn-tebligat-sozlesme-taslak').text("Taslak Anahtar Teslim Tutanağını İndir").attr("href", "/admin/Tebligat/AnahtarTeslimTebligatTaslakSozlesme/" + selectedRow.teslimTebligatGonderimDetayId + "/").attr("target", "_blank");
+
+                resetForm($("#form_tebligat_sozlesme"));
+
+                tebligatGonderimDetayId = selectedRow.teslimTebligatGonderimDetayId;
+                const formData = {
+                    TebligatGonderimDetayId: tebligatGonderimDetayId
+                };
+
+                Request("/admin/tebligat/GetirTebligatGonderimDetayDosyaByDetayId", formData, 'get')
+                    .done(function (response) {
+                        tebligatGonderimDetayDosya = response;
+                        tebligatSozlesmeGorunurlukAyarla(tebligatGonderimDetayDosya);
+                        stopLoader("[data-name='tableMalikler']");
+                    })
+                    .fail(function (jqXHR, textStatus) {
+                        deselectRows("[data-name='tableMalikler']");
+                        stopLoader("[data-name='tableMalikler']");
+                        toastr.error(getAjaxErrorMessage(jqXHR));
+                    });
+                $("#modal_tebligat_sozlesme").modal("show");
+            });
+
+            onFileChange("input[name='TebligatSozlesmesi']", function (returnObj) {
+                SozlesmeDosya = returnObj;
+            }, false);
+
+            $("#modal_tebligat_sozlesme_kaydet").on("click", function (e) {
+                e.preventDefault();
+
+                if (!validateForm("#form_tebligat_sozlesme")) {
+                    return;
+                }
+
+                let formData = serializeFormAsObject("#form_tebligat_sozlesme", SozlesmeDosya);
+                formData.tebligatGonderimDetayId = tebligatGonderimDetayId;
+
+                startLoader("#modal_tebligat_sozlesme");
+                Request("/admin/Tebligat/KaydetTebligatGonderimDetayDosya", formData, 'POST')
+                    .done(function (response) {
+                        toastr.success("İştirak tutanak bilgileri başarıyla kaydedildi.");
+                        tebligatGonderimDetayDosya = response;
+                        tebligatSozlesmeGorunurlukAyarla(tebligatGonderimDetayDosya);
+                        stopLoader("#modal_tebligat_sozlesme");
+                    })
+                    .fail(function (jqXHR, textStatus) {
+                        stopLoader("#modal_tebligat_sozlesme");
+                        toastr.error(getAjaxErrorMessage(jqXHR));
+                    });
+            });
+
+            function tebligatSozlesmeGorunurlukAyarla(tebligatGonderimDetayDosya) {
+                $("#btn-tebligat-sozlesmesi-indir").addClass("d-none");
+                $("#TebligatSozlesmesiDosyaAdi").text('');
+                if (tebligatGonderimDetayDosya) {
+                    $("#btn-tebligat-sozlesmesi-indir").attr("href", "/admin/Tebligat/BelgeIndirTebligatGonderimDetayDosya/" + tebligatGonderimDetayDosya.tebligatGonderimDetayDosyaGuid + "/").removeClass("d-none");
+                    $("#TebligatSozlesmesiDosyaAdi").text(tebligatGonderimDetayDosya.dosyaAdi);
+                }
+            }
+        });
+
+
+        function ajaxTableComplete(data, tableElem) {
+            let tableName = tableElem.attr("data-name");
+            if (tableName == "tableMalikler") {
+                $.each(data, function (index, row) {
+
+                    row.Buttons = `<div class="d-flex flex-center">`;
+                    if (!row.tuzelKisiVergiNo) {
+                        row.Buttons += `<button type="button" class="btnTebligatSozlesmeTaslak btn btn-sm btn-icon btn-light-warning me-2" data-toggle="tooltip" title="Taslak Dosya İndir" ><i class="fas fa-file-download"></i></button>`;
+
+                        if(row.istirakTebligatGonderimDetayId > 0){
+                            row.Buttons += `<button type="button" class="btnTebligatIstirakSozlesme btn btn-sm btn-icon btn-light-dark me-2"  data-toggle="tooltip" title="İştirak Tebligat Görüntüle"><i class="fa fa-eye"></i></button>`;
+                        }
+                        else{
+                            row.Buttons += `<button type="button"  class="btnTebligatIstirak me-2 btn btn-sm btn-icon btn-light-primary" data-placement="top" data-toggle="tooltip" title="Anlaşmaya İştirak"><i class="fa fa-sign-in"></i></button>`;
+                        }
+                        if (!row.pasifMalikMi) {
+                            if(row.teslimTebligatGonderimDetayId){
+                                row.Buttons += `<button type="button" class="btnTebligatTeslimSozlesme btn btn-sm btn-icon btn-light-dark me-2" data-placement="top" data-toggle="tooltip" title="Teslim Tebligat Görüntüle"><i class="fa fa-eye"></i></button>`;
+                            }
+                            else{
+                                row.Buttons += `<button type="button" class="btntebligatTeslim me-2 btn btn-sm btn-icon btn-light-success" onclick="TebligatTeslim()" data-placement="top" data-toggle="tooltip" title="Anahtar Teslim"><i class="fa fa-check-square"></i></button>`;
+                            }
+                        }
+                    }
+                    row.Buttons += `</div>`;
+
+                });
+            }
+            return data;
+        }
+
+        function TebligatTeslim() {
+            let selectedRows = getSelectedRows("[data-name='tableMalikler']");
+            if (!selectedRows) {
+                toastr.error("Lütfen en az bir adet malik seçiniz.");
+                return;
+            }
+            if (selectedRows.length>1000) {
+                toastr.error("Tebligat Göderim Sınırı 1000 Kişi İle Sınırlıdır.Bu Sebeple Tebligatlar Gönderilememektedir.");
+                return;
+            }
+            tuzelRowData = selectedRows.find(x => x.tuzelKisiVergiNo != null);
+            if (tuzelRowData) {
+                toastr.error("Tüzel Kişiye Tebligat Gönderilememektedir.");
+                return;
+            } else {
+                fireConfirmSwal({
+                    icon: "info",
+                    onconfirm: "GonderTebligatAnahtarTeslim",
+                    param1: selectedRows,
+                    text: selectedRows.length + " adet maliğe Anahtar Teslim Tebligatı Gönderilecek, devam etmek istiyor musunuz?"
+                });
+            }
+        }
+
+        function GonderTebligatIstirak() {
+            let selectedRows = getSelectedRows("[data-name='tableMalikler']");
+            if (!selectedRows) {
+                toastr.error("Lütfen en az bir adet malik seçiniz.");
+                return;
+            }
+            const formData = {
+                tebligatYapilacaklar: selectedRows,
+                TebligatTipi: 2
+            };
+
+            Request("/admin/tebligat/TebligatGonder/", formData, 'post')
+                .done(function (response) {
+                    toastr.success("İşlem başarıyla tamamlandı.");
+                    reloadTable("[data-name='tableMalikler']");
+                })
+                .fail(function (jqXHR, textStatus) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+        
+        function GonderTebligatAnahtarTeslim() {
+            let selectedRows = getSelectedRows("[data-name='tableMalikler']");
+            if (!selectedRows) {
+                toastr.error("Lütfen en az bir adet malik seçiniz.");
+                return;
+            }
+            const formData = {
+                tebligatYapilacaklar: selectedRows,
+                TebligatTipi: 1
+            };
+
+            startLoader("#modal_pasif_malikler");
+            Request("/admin/tebligat/TebligatGonder/", formData, 'post')
+                .done(function (response) {
+                    toastr.success("İşlem başarıyla tamamlandı.");
+                    reloadTable("[data-name='tableMalikler']");
+                })
+                .fail(function (jqXHR, textStatus) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+    </script>
+}

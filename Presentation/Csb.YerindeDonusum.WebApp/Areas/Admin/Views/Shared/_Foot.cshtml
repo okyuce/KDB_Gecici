@@ -1,0 +1,27 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration configuration
+@{
+    var matomoSiteId = configuration.GetValue<int>("Options:MatomoSiteId");
+}
+<script>var hostUrl = "~/admin/metronic/assets/";</script>
+<script src="~/admin/metronic/assets/plugins/global/plugins.bundle.js"></script>
+<script src="~/admin/metronic/assets/js/scripts.bundle.js"></script>
+<script src="~/admin/metronic/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
+<script src="~/admin/metronic/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+<script src="~/admin/metronic/assets/plugins/custom/inputmask/jquery.inputmask.min.js"></script>
+<script src="~/admin/metronic/assets/js/widgets.bundle.js"></script>
+<script src="~/admin/metronic/assets/js/custom/widgets.js"></script>
+<script src="~/admin/main.js?ver=@System.DateTime.Now.ToString("yyyyMMddHH")"></script>
+
+<script>
+    var _paq = window._paq = window._paq || [];
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function () {
+        var u = "https://analitik.csb.gov.tr/";
+        _paq.push(['setTrackerUrl', u + 'matomo.php']);
+        _paq.push(['setSiteId', '@matomoSiteId']);
+        var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+        g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+    })();
+</script>

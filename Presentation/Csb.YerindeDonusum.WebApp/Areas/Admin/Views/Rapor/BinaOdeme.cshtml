@@ -1,0 +1,184 @@
+﻿@using Csb.YerindeDonusum.Application.Extensions
+@using Csb.YerindeDonusum.Application.CQRS.BinaOdemeCQRS.Queries.GetirBinaOdemeRapor;
+@model List<GetirListeBinaOdemeRaporQueryResponseModel>
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{
+    ViewBag.Title = "Ödeme Raporu";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    var uiBaseUrl = Configuration.GetValue<string>("Options:UiUrl")?.TrimEnd('/');
+}
+
+<div class="app-container container-fluid">
+    <div class="card mb-5 mb-xl-8">
+        <div class="card-header">
+            <h3 class="card-title">Ödeme Raporu</h3>
+            <div class="card-toolbar">
+                @if (Model?.Any() == true)
+                {
+                    <button type="button" class="btn btn-sm btn-dark" onclick="odemeRaporYazdir()">Yazdır</button>
+                }
+            </div>
+        </div>
+        <div class="card-body py-2 px-6">
+            @if (Model == null)
+            {
+                <div class="alert alert-danger">Veri alınamadı!</div>
+            }
+            else if (!Model.Any())
+            {
+                <div class="alert alert-info">Henüz bir ödeme olmadığı için rapor oluşturulmadı!</div>
+            }
+            else
+            {
+                <div id="div-odeme-rapor">
+                    <img class="m-auto w-150px h-50px mb-10 raporda-gorunecek-element d-none" src="~/img/logo2.png" />
+                    <h3 class="text-center raporda-gorunecek-element d-none">Ödeme Raporu</h3>
+                    <h4 class="text-right raporda-gorunecek-element d-none me-3">@DateTime.Now.ToString("dd/MM/yyyy")</h4>
+                    <table class="table align-middle table-bordered border mt-4 gy-2 gs-2">
+                        <thead>
+                            <tr class="fw-bold">
+                                <th>İl / İlçe</th>
+                                <th>Hibe Tutarı</th>
+                                <th>Kredi Tutarı</th>
+                                <th>Diğer Hibe Tutarı</th>
+                                <th>Toplam Tutar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="fs-6 fw-semibold text-gray-600">
+                            @{
+                                foreach (var item in Model.OrderBy(o => o.UavtIlNo).GroupBy(g => g.UavtIlNo))
+                                {
+                                    <tr>
+                                        <td>@item.FirstOrDefault()?.UavtIlAdi</td>
+                                        <td>@item.Sum(x => x.HibeOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                        <td>@item.Sum(x => x.KrediOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                        <td>@item.Sum(x => x.DigerHibeOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                        <td>@item.Sum(x => x.OdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                    </tr> 
+                                }
+                                <tr class="bg-light-dark fw-bold">
+                                    <td>TOPLAM</td>
+                                    <td>@Model.Sum(x => x.HibeOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                    <td>@Model.Sum(x => x.KrediOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                    <td>@Model.Sum(x => x.DigerHibeOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                    <td>@Model.Sum(x => x.OdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <table style="margin-top:800px;" class="table align-middle table-bordered border gy-2 gs-2 raporda-gorunecek-element d-none">
+                        <thead>
+                            <tr class="fw-bold">
+                                <th style="width:48%">İl / İlçe</th>
+                                <th style="width:13%">Hibe Tutarı</th>
+                                <th style ="width:13%">Kredi Tutarı</th>
+                                <th style="width:13%">Diğer Hibe Tutarı</th>
+                                <th style="width:13%">Toplam Tutar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="fs-6 fw-semibold text-gray-600">
+                            @{
+                                foreach (var groupIl in Model.OrderBy(o => o.UavtIlNo).GroupBy(g => g.UavtIlNo))
+                                {
+                                    <tr>
+                                        <td><strong>@groupIl.FirstOrDefault()?.UavtIlAdi</strong></td>
+                                        <td>@groupIl.Sum(x=> x.HibeOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                        <td>@groupIl.Sum(x=> x.KrediOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                        <td>@groupIl.Sum(x=> x.DigerHibeOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                        <td>@groupIl.Sum(x=> x.OdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                    </tr>
+                                    foreach (var groupIlce in groupIl.OrderBy(o => o.UavtIlceAdi).GroupBy(g => g.UavtIlceNo))
+                                    {
+                                        <tr>
+                                            <td style="padding-left:1em;"><strong>- @groupIlce.FirstOrDefault()?.UavtIlceAdi</strong></td>
+                                            <td>@groupIlce.Sum(x=> x.HibeOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                            <td>@groupIlce.Sum(x=> x.KrediOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                            <td>@groupIlce.Sum(x=> x.DigerHibeOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                            <td>@groupIlce.Sum(x=> x.OdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                        </tr>
+                                        foreach (var groupMahalle in groupIlce.OrderBy(o => o.UavtMahalleAdi).GroupBy(g => g.UavtMahalleNo))
+                                        {
+                                            <tr>
+                                                <td style="padding-left:2em;"><strong>- @groupMahalle.FirstOrDefault()?.UavtMahalleAdi</strong></td>
+                                                <td>@groupMahalle.Sum(x=> x.HibeOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                                <td>@groupMahalle.Sum(x=> x.KrediOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                                <td>@groupMahalle.Sum(x=> x.DigerHibeOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                                <td>@groupMahalle.Sum(x=> x.OdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                            </tr>
+                                            foreach (var binaOdeme in groupMahalle.OrderBy(o => o.HasarTespitAskiKodu))
+                                            {
+                                                <tr>
+                                                    <td style="padding-left:3em;">
+                                                        <p><strong>Aski Kodu: </strong>@binaOdeme.HasarTespitAskiKodu</p>
+                                                        @if (binaOdeme.BultenNo > 0)
+                                                        {
+                                                            <p><strong>Bülten No: </strong>@binaOdeme.BultenNo</p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p><strong>İzin Belgesi No / Tarih: </strong>@binaOdeme.IzinBelgesiSayi / @binaOdeme.IzinBelgesiTarih.ToDateString()</p>
+                                                        }
+                                                        <p><strong>Yapı Kimlik No: </strong>@binaOdeme.YapiKimlikNo</p>                                       
+                                                    </td>
+                                                    <td>@binaOdeme.HibeOdemeTutari.ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                                    <td>@binaOdeme.KrediOdemeTutari.ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                                    <td>@binaOdeme.DigerHibeOdemeTutari.ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                                    <td>@binaOdeme.OdemeTutari.ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                                </tr>
+                                                foreach (var odemeYapilan in binaOdeme.OdemeKimeYapildi)
+                                                {
+                                                    <tr>
+                                                        <td style="padding-left:4em;">
+                                                            <p><strong>Adi: </strong>@odemeYapilan.Adi</p>
+                                                            <p><strong>Tipi: </strong>@odemeYapilan.Tipi</p>
+                                                            <p><strong>Iban No: </strong>@odemeYapilan.IbanNo</p>
+                                                        </td>
+                                                        <td>@odemeYapilan.HibeOdemeTutari.ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                                        <td>@odemeYapilan.KrediOdemeTutari.ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                                        <td>@odemeYapilan.DigerOdemeTutari.ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                                        <td>@odemeYapilan.OdemeTutari.ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                                    </tr>
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                <tr class="bg-light-dark fw-bold">
+                                    <td>TOPLAM</td>
+                                    <td>@Model.Sum(x => x.HibeOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                    <td>@Model.Sum(x => x.KrediOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                    <td>@Model.Sum(x => x.DigerHibeOdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                    <td>@Model.Sum(x => x.OdemeTutari).ToTurkishLira(decimalNumber: 0, hideIsZeroOrThanLess: true)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        function odemeRaporYazdir() {
+            $(".raporda-gorunecek-element").removeClass("d-none");
+            let html = '<html><head><link href="@uiBaseUrl/admin/metronic/assets/css/style.bundle.css" rel="stylesheet" type="text/css" /><link href="@uiBaseUrl/admin/metronic/assets/css/custom.css" rel="stylesheet" type="text/css" /><link href="@uiBaseUrl/admin/metronic/assets/css/print.css" rel="stylesheet" type="text/css" /></head><body>' + $("#div-odeme-rapor").html();
+            $(".raporda-gorunecek-element").addClass("d-none");
+            let printWin = window.open("", "odemeRaporYazdir");
+            printWin.document.open();
+            printWin.document.write(html);
+            printWin.document.close();
+            setTimeout(function () {
+                printWin.print();
+                setTimeout(function () {
+                    printWin.close();
+                }, 250);
+            }, 750);
+        }
+    </script>
+}

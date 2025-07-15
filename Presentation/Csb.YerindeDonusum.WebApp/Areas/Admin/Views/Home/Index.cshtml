@@ -1,0 +1,396 @@
+﻿@using Csb.YerindeDonusum.WebApp.Services;
+@using Csb.YerindeDonusum.Application.Enums
+@using System.Security.Claims
+@using System.Globalization
+@inject IAuthService _authService
+@{
+    ViewBag.Title = "Anasayfa";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    string kullaniciHesapTipi = User.Claims.FirstOrDefault(x => x.Type == "KullaniciHesapTipId")?.Value ?? "?";
+
+    DateTime.TryParseExact(
+        User.Claims.FirstOrDefault(x => x.Type == "SonSifreDegisimTarihi")?.Value ?? DateTime.Today.ToString("yyyy-MM-dd"),
+        "yyyy-MM-dd",
+        CultureInfo.InvariantCulture,
+        DateTimeStyles.None,
+        out DateTime sonSifreDegisimTarihi
+    );
+}
+@if ( _authService.IsInRole(RoleEnum.Admin) || !_authService.IsInRole(RoleEnum.BelediyeKullanicisi))
+{
+    <div id="kt_app_content_container" class="app-container container-fluid">
+        <div class="d-flex flex-column flex-column-fluid">
+            <div class="row gx-5 gx-xl-10">
+                <div class="col-md-4 mb-5 mb-xl-10">
+                    <div class="card h-lg-100">
+                        <div class="card-body d-flex justify-content-between align-items-center flex-column">
+                            <div class="d-flex flex-column text-center">
+                                <span id="aktifBasvuruSayisi" class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">0</span>
+                                <div class="m-0">
+                                    <span class="fw-semibold fs-6 text-gray-400">Aktif Başvuru Sayısı</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-5 mb-xl-10">
+                    <div class="card h-lg-100">
+                        <div class="card-body d-flex justify-content-between align-items-center flex-column">
+                            <div class="d-flex flex-column text-center">
+                                <span id="iptalBasvuruSayisi" class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">0</span>
+                                <div class="m-0">
+                                    <span class="fw-semibold fs-6 text-gray-400">İptal Edilen Başvuru Sayısı</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-5 mb-xl-10">
+                    <div class="card h-lg-100">
+                        <div class="card-body d-flex justify-content-between align-items-center flex-column">
+                            <div class="d-flex flex-column text-center">
+                                <span id="toplamBasvuruSayisi" class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">0</span>
+                                <div class="m-0">
+                                    <span class="fw-semibold fs-6 text-gray-400">Toplam Başvuru Sayısı</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row gx-5 gx-xl-10">
+                <div class="col-xxl-4 mb-5 mb-xl-10">
+                    <div class="card card-flush h-xl-100">
+                        <div class="card-header py-7">
+                            <div class="m-0">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="fs-6 fw-semibold">Başvuru Destek Türleri</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0 pb-1">
+                            <div id="chart_basvuru_destek_tur" class="h-300px w-100 min-h-auto"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-8 mb-5 mb-xl-10">
+                    <div class="card card-flush h-xl-100">
+                        <div class="card-header py-7">
+                            <div class="m-0">
+                                <span class="fs-6 fw-semibold">Başvuru Sayıları</span>
+                            </div>
+                        </div>
+                        <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
+                            <div id="chart_basvuru_15_gunluk" class="h-300px w-100 min-h-auto"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            startLoader("#kt_app_main");
+
+            Request("/admin/basvuru/GetirGostergePaneliVeri", null, 'GET')
+                .done(function (response) {
+                    stopLoader("#kt_app_main");
+
+                    $("#aktifBasvuruSayisi").html(wNumb({ thousand: "." }).to(response.aktifBasvuruSayisi));
+                    $("#iptalBasvuruSayisi").html(wNumb({ thousand: "." }).to(response.toplamBasvuruSayisi - response.aktifBasvuruSayisi));
+                    $("#toplamBasvuruSayisi").html(wNumb({ thousand: "." }).to(response.toplamBasvuruSayisi));
+
+                    renderChartBasvuruDestekTur(response.hibeBasvuruSayisi, response.krediBasvuruSayisi, response.hibeKrediBasvuruSayisi);
+
+                    renderChartBasvuru15Gunluk(response.basvuruSayiListe.map(i => i.basvuruSayisi), response.basvuruSayiListe.map(i => dateToFormat(i.tarih, "DD MMM")));
+                })
+                .fail(function (jqXHR, textStatus) {
+                    stopLoader("#kt_app_main");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        });
+
+        function renderChartBasvuruDestekTur(hibeBasvuruSayisi, krediBasvuruSayisi, hibeKrediBasvuruSayisi) {
+            var element = document.getElementById('chart_basvuru_destek_tur');
+
+            var height = parseInt(KTUtil.css(element, 'height'));
+            var labelColor = KTUtil.getCssVariableValue('--kt-gray-500');
+            var borderColor = KTUtil.getCssVariableValue('--kt-gray-200');
+            var baseColor = KTUtil.getCssVariableValue('--kt-warning');
+            var secondaryColor = KTUtil.getCssVariableValue('--kt-gray-300');
+
+            if (!element) {
+                return;
+            }
+
+            var options = {
+                series: [{
+                    name: "Başvuru Sayısı",
+                    data: [hibeBasvuruSayisi, krediBasvuruSayisi, hibeKrediBasvuruSayisi]
+                }],
+                chart: {
+                    fontFamily: "inherit",
+                    type: "bar",
+                    height: height,
+                    toolbar: {
+                        show: false
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 8,
+                        horizontal: true,
+                        distributed: true,
+                        barHeight: 50,
+                        dataLabels: {
+                            position: "bottom"
+                        }
+                    }
+                },
+                dataLabels: {
+                    enabled: false,
+                    textAnchor: "start",
+                    offsetX: 0,
+                    formatter: function (e, t) {
+                        return wNumb({
+                            thousand: "."
+                        }).to(e)
+                    },
+                    style: {
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        align: "left"
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                colors: ["#3E97FF", "#F1416C", "#50CD89", "#FFC700", "#7239EA"],
+                xaxis: {
+                    categories: ["Hibe", "Kredi", "Hibe ve Kredi"],
+                    labels: {
+                        formatter: function (e) {
+                            return wNumb({
+                                thousand: "."
+                            }).to(e)
+                        }
+                    },
+                    axisBorder: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            colors: labelColor,
+                            fontSize: "14px",
+                            fontWeight: "600"
+                        },
+                        offsetY: 2,
+                        align: "left"
+                    }
+                },
+                grid: {
+                    borderColor: borderColor,
+                    xaxis: {
+                        lines: {
+                            show: true
+                        }
+                    },
+                    yaxis: {
+                        lines: {
+                            show: false
+                        }
+                    },
+                    strokeDashArray: 4
+                },
+                tooltip: {
+                    style: {
+                        fontSize: "12px"
+                    },
+                    y: {
+                        formatter: function (e) {
+                            return wNumb({
+                                thousand: "."
+                            }).to(e)
+                        },
+                    }
+                }
+            };
+
+            var chart = new ApexCharts(element, options);
+            chart.render();
+        }
+
+        function renderChartBasvuru15Gunluk(data, categories) {
+            var element = document.getElementById('chart_basvuru_15_gunluk');
+
+            if (!element) {
+                return;
+            }
+
+            var height = parseInt(KTUtil.css(element, 'height'));
+            var labelColor = "#ccc";
+            var borderColor = "#ccc";
+            var baseColor = "#006ff1";
+            var lightColor = "#006ff1";
+
+            var chart = new ApexCharts(element, {
+                series: [{
+                    name: 'Başvuru',
+                    data: data
+                }],
+                chart: {
+                    fontFamily: 'inherit',
+                    type: 'area',
+                    height: height,
+                    toolbar: {
+                        show: false
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: .6,
+                        opacityTo: 0,
+                        stops: [0, 80, 100]
+                    }
+                },
+                stroke: {
+                    curve: 'smooth',
+                    show: true,
+                    width: 3,
+                    colors: [baseColor]
+                },
+                xaxis: {
+                    categories: categories,
+                    axisBorder: {
+                        show: false,
+                    },
+                    offsetX: 20,
+                    axisTicks: {
+                        show: false
+                    },
+                    tickAmount: 3,
+                    labels: {
+                        rotate: 0,
+                        rotateAlways: false,
+                        style: {
+                            colors: labelColor,
+                            fontSize: '12px'
+                        }
+                    },
+                    crosshairs: {
+                        position: 'front',
+                        stroke: {
+                            color: baseColor,
+                            width: 1,
+                            dashArray: 3
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        formatter: undefined,
+                        offsetY: 0,
+                        style: {
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                yaxis: {
+                    tickAmount: 5,
+                    labels: {
+                        formatter: function (e) {
+                            return wNumb({
+                                thousand: "."
+                            }).to(e)
+                        },
+                        style: {
+                            colors: labelColor,
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                states: {
+                    normal: {
+                        filter: {
+                            type: 'none',
+                            value: 0
+                        }
+                    },
+                    hover: {
+                        filter: {
+                            type: 'none',
+                            value: 0
+                        }
+                    },
+                    active: {
+                        allowMultipleDataPointsSelection: false,
+                        filter: {
+                            type: 'none',
+                            value: 0
+                        }
+                    }
+                },
+                tooltip: {
+                    style: {
+                        fontSize: '12px'
+                    },
+                    y: {
+                        formatter: function (e) {
+                            return wNumb({
+                                thousand: "."
+                            }).to(e)
+                        },
+                    }
+                },
+                grid: {
+                    borderColor: borderColor,
+                    strokeDashArray: 4,
+                    yaxis: {
+                        lines: {
+                            show: true
+                        }
+                    }
+                },
+                markers: {
+                    strokeColor: baseColor,
+                    strokeWidth: 3
+                }
+            });
+            chart.render();
+        }
+    </script>
+    }
+}
+else
+{
+    <div id="kt_app_content_container" class="app-container container-fluid">
+        <div class="d-flex flex-column flex-column-fluid">
+            <div class="text-left">
+                <h1>Yerinde Dönüşüm yönetim paneline hoşgeldiniz.</h1>
+            </div>
+        </div>
+    </div>
+}
+
+@if (kullaniciHesapTipi == KullaniciHesapTipEnum.Local.GetHashCode().ToString() && sonSifreDegisimTarihi < DateTime.Today.AddMonths(-3))
+{
+    @section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            SifreDegistirModal(true);
+        });
+    </script>
+    }
+}

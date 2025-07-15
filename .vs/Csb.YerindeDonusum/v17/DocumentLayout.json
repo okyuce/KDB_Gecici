@@ -1,0 +1,161 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4B860A96-30A6-4AF1-ABCF-383F3248599F}|Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj|c:\\users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\presentation\\csb.yerindedonusum.webapp\\services\\natamamyapiappservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B860A96-30A6-4AF1-ABCF-383F3248599F}|Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj|solutionrelative:presentation\\csb.yerindedonusum.webapp\\services\\natamamyapiappservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B860A96-30A6-4AF1-ABCF-383F3248599F}|Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj|c:\\users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\presentation\\csb.yerindedonusum.webapp\\areas\\admin\\views\\shared\\_sidebar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4B860A96-30A6-4AF1-ABCF-383F3248599F}|Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj|solutionrelative:presentation\\csb.yerindedonusum.webapp\\areas\\admin\\views\\shared\\_sidebar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B860A96-30A6-4AF1-ABCF-383F3248599F}|Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj|c:\\users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\presentation\\csb.yerindedonusum.webapp\\areas\\admin\\views\\natamamyapiislemleri\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4B860A96-30A6-4AF1-ABCF-383F3248599F}|Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj|solutionrelative:presentation\\csb.yerindedonusum.webapp\\areas\\admin\\views\\natamamyapiislemleri\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B860A96-30A6-4AF1-ABCF-383F3248599F}|Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj|c:\\users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\presentation\\csb.yerindedonusum.webapp\\areas\\admin\\controllers\\istisnaaskikoducontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B860A96-30A6-4AF1-ABCF-383F3248599F}|Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj|solutionrelative:presentation\\csb.yerindedonusum.webapp\\areas\\admin\\controllers\\istisnaaskikoducontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8CD84612-05D2-4564-BAEC-81D70AE4AED3}|Presentation\\Csb.YerindeDonusum.WebApi\\Csb.YerindeDonusum.WebApi.csproj|c:\\users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\presentation\\csb.yerindedonusum.webapi\\controllers\\istisnaaskikoducontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8CD84612-05D2-4564-BAEC-81D70AE4AED3}|Presentation\\Csb.YerindeDonusum.WebApi\\Csb.YerindeDonusum.WebApi.csproj|solutionrelative:presentation\\csb.yerindedonusum.webapi\\controllers\\istisnaaskikoducontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B860A96-30A6-4AF1-ABCF-383F3248599F}|Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj|c:\\users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\presentation\\csb.yerindedonusum.webapp\\areas\\admin\\controllers\\natamamyapiislemlericontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B860A96-30A6-4AF1-ABCF-383F3248599F}|Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj|solutionrelative:presentation\\csb.yerindedonusum.webapp\\areas\\admin\\controllers\\natamamyapiislemlericontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B860A96-30A6-4AF1-ABCF-383F3248599F}|Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj|c:\\users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\presentation\\csb.yerindedonusum.webapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B860A96-30A6-4AF1-ABCF-383F3248599F}|Presentation\\Csb.YerindeDonusum.WebApp\\Csb.YerindeDonusum.WebApp.csproj|solutionrelative:presentation\\csb.yerindedonusum.webapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 300,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IstisnaAskiKoduController.cs",
+              "DocumentMoniker": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApi\\Controllers\\IstisnaAskiKoduController.cs",
+              "RelativeDocumentMoniker": "Presentation\\Csb.YerindeDonusum.WebApi\\Controllers\\IstisnaAskiKoduController.cs",
+              "ToolTip": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApi\\Controllers\\IstisnaAskiKoduController.cs",
+              "RelativeToolTip": "Presentation\\Csb.YerindeDonusum.WebApi\\Controllers\\IstisnaAskiKoduController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-15T19:02:48.726Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApp\\Program.cs",
+              "RelativeDocumentMoniker": "Presentation\\Csb.YerindeDonusum.WebApp\\Program.cs",
+              "ToolTip": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApp\\Program.cs",
+              "RelativeToolTip": "Presentation\\Csb.YerindeDonusum.WebApp\\Program.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAcwCoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-15T08:59:07.796Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "NatamamYapiIslemleriController.cs",
+              "DocumentMoniker": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Controllers\\NatamamYapiIslemleriController.cs",
+              "RelativeDocumentMoniker": "Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Controllers\\NatamamYapiIslemleriController.cs",
+              "ToolTip": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Controllers\\NatamamYapiIslemleriController.cs",
+              "RelativeToolTip": "Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Controllers\\NatamamYapiIslemleriController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-15T08:20:04.439Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "NatamamYapiAppService.cs",
+              "DocumentMoniker": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApp\\Services\\NatamamYapiAppService.cs",
+              "RelativeDocumentMoniker": "Presentation\\Csb.YerindeDonusum.WebApp\\Services\\NatamamYapiAppService.cs",
+              "ToolTip": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApp\\Services\\NatamamYapiAppService.cs",
+              "RelativeToolTip": "Presentation\\Csb.YerindeDonusum.WebApp\\Services\\NatamamYapiAppService.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAUwBkAAABVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-15T08:17:23.307Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Views\\NatamamYapiIslemleri\\Index.cshtml",
+              "RelativeDocumentMoniker": "Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Views\\NatamamYapiIslemleri\\Index.cshtml",
+              "ToolTip": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Views\\NatamamYapiIslemleri\\Index.cshtml",
+              "RelativeToolTip": "Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Views\\NatamamYapiIslemleri\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMEAAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-15T07:34:06.81Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IstisnaAskiKoduController.cs",
+              "DocumentMoniker": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Controllers\\IstisnaAskiKoduController.cs",
+              "RelativeDocumentMoniker": "Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Controllers\\IstisnaAskiKoduController.cs",
+              "ToolTip": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Controllers\\IstisnaAskiKoduController.cs",
+              "RelativeToolTip": "Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Controllers\\IstisnaAskiKoduController.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAUwDQAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-14T18:43:03.137Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "_Sidebar.cshtml",
+              "DocumentMoniker": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Views\\Shared\\_Sidebar.cshtml",
+              "RelativeDocumentMoniker": "Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Views\\Shared\\_Sidebar.cshtml",
+              "ToolTip": "C:\\Users\\oguzkaan.yuce\\source\\repos\\yerindedonusum\\src\\Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Views\\Shared\\_Sidebar.cshtml",
+              "RelativeToolTip": "Presentation\\Csb.YerindeDonusum.WebApp\\Areas\\Admin\\Views\\Shared\\_Sidebar.cshtml",
+              "ViewState": "AgIAANMAAAAAAAAAAAAIwOYAAABsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-15T07:04:05.468Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 74,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

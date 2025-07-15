@@ -1,0 +1,21 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    string title = "Yerinde Dönüşüm Yönetim Paneli";
+    title = ViewBag.Title != null ? (ViewBag.Title + " - " + title) : title;
+}
+<!DOCTYPE html>
+<html lang="tr" data-bs-theme-mode="light">
+<head>
+    <title>@title</title>
+    @await Html.PartialAsync("_Head.cshtml")
+    @RenderSection("Head", required: false)
+</head>
+<body id="kt_app_body" data-kt-app-layout="light-sidebar" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
+    <script>var defaultThemeMode = "light"; var themeMode; if (document.documentElement) { if (document.documentElement.hasAttribute("data-bs-theme-mode")) { themeMode = document.documentElement.getAttribute("data-bs-theme-mode"); } else { if (localStorage.getItem("data-bs-theme") !== null) { themeMode = localStorage.getItem("data-bs-theme"); } else { themeMode = defaultThemeMode; } } if (themeMode === "system") { themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } document.documentElement.setAttribute("data-bs-theme", themeMode); }</script>
+
+    @RenderBody()
+
+    @await Html.PartialAsync("_Foot.cshtml")
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

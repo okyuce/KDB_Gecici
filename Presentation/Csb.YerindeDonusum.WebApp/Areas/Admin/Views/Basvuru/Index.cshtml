@@ -1,0 +1,609 @@
+﻿@using System.Security.Claims
+@using Csb.YerindeDonusum.Application.CustomAddons;
+@using Csb.YerindeDonusum.Application.Enums
+@using Csb.YerindeDonusum.WebApp.Utilities.Helpers
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@{
+    var basvuruDuzenleyebilir = User.Claims.Where(x => x.Type == ClaimTypes.Role && (x.Value == RoleEnum.Admin || x.Value == RoleEnum.BasvuruDuzenle || x.Value == RoleEnum.BasvuruYoneticisi)).Any();
+    var basvuruIptalEdebilir = User.Claims.Where(x => x.Type == ClaimTypes.Role && (x.Value == RoleEnum.Admin || x.Value == RoleEnum.BasvuruIptal || x.Value == RoleEnum.BasvuruYoneticisi)).Any();
+
+    ViewBag.Title = "Başvuru Listesi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    var uiBaseUrl = Configuration.GetValue<string>("Options:UiUrl")?.TrimEnd('/');
+}
+<div class="modal fade" id="modal_basvuru_iptal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content rounded">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary text-right" data-bs-dismiss="modal">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+            </div>
+            <div class="modal-body scroll-y py-0 px-6">
+                <div class="mb-4 text-center">
+                    <h1 class="modal-title">Başvuru İptal Formu</h1>
+                </div>
+                <div class="row mt-8">
+                    <div class="col-md-12 d-flex flex-column mb-8">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                            <span>İptal Türü</span>
+                        </label>
+                        <input type="hidden" name="BasvuruGuidId" id="secilenBasvuruGuidId" />
+                        <select name="BasvuruIptalTurId" class="form-select select-2"
+                                data-ajax-target="/admin/Select/GetirBasvuruIptalTurListe"
+                                data-custom-value="id"
+                                data-custom-text="ad">
+                            <option></option>
+                        </select>
+                    </div>
+@*                     <div class="col-md-12">
+                        <div class="d-flex flex-column fv-row">
+                            <label class="required d-flex align-items-center fs-6 fw-semibold mb-2 mt-2">
+                                <span>Başvuru İptal Açıklaması</span>
+                            </label>
+                            <textarea class="form-control form-control-solid" placeholder="Başvuru İptal Açıklaması" name="BasvuruIptalAciklama" id="secilenBasvuruIptalAciklama"></textarea>
+                        </div>
+                    </div> *@
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnBasvuruIptalConfirm" class="text-left btn btn-light-danger me-2" data-confirm="true" data-confirm-function="BasvuruIptalEt" data-confirm-param="${row.basvuruGuid}" data-confirm-param2="${row.tcKimlikNo}" data-confirm-text="Başvuruyu iptal etmek istediğinize emin misiniz?" data-placement="top" data-toggle="tooltip" title="İptal Et"><i style="font-size:12pt;" class="fa fa-times-circle"></i>Başvuruyu İptal Et</button>
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_basvuru_detay" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content rounded">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                </div>
+            </div>
+            <div class="modal-body scroll-y py-0 px-6">
+            </div>
+            <div class="modal-footer">
+                @if (basvuruDuzenleyebilir)
+                {
+                    <a href="#" id="basvuru_guncelle_href" class="btn btn-light-primary">
+                        <i class="ki-duotone ki-pencil fs-1"><i class="path1"></i><i class="path2"></i></i> Güncelle
+                    </a>
+                }
+                <button type="button" class="btn btn btn-light-dark mr-auto mr-auto" onclick="basvuruDetayYazdir()">
+                    <i class="ki-duotone ki-printer fs-1"><i class="path1"></i><i class="path2"></i><i class="path3"></i><i class="path4"></i><i class="path5"></i></i> Yazdır
+                </button>
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="kt_app_content_container" class="app-container container-fluid">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div class="card mb-5 mb-xl-8">
+            <div class="card-header collapsible cursor-pointer rotate collapsed" data-bs-toggle="collapse" data-bs-target="#kt_docs_card_collapsible">
+                <h3 class="card-title">Başvuru Filtrele</h3>
+                <div class="card-toolbar rotate-180">
+                    <i class="ki-duotone ki-down fs-1"></i>
+                </div>
+            </div>
+            <div id="kt_docs_card_collapsible" class="collapse">
+                <form id="tableListFilterForm" data-name="tableListFilter" class="card-body py-2 px-6">
+                    <input type="hidden" name="IptalEdilenGelmesin" />
+                    <div class="row mt-4">
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>T.C. Kimlik No</span>
+                            </label>
+                            <input type="text" data-onenter-submit="true"
+                                   data-onenter-click="#basvuru_sorgula" class="form-control identity-mask" placeholder="T.C. Kimlik No" name="TcKimlikNo" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Ad/Soyad/Tüzel Kişi Adı</span>
+                            </label>
+                            <input type="text" data-onenter-submit="true"
+                                   data-onenter-click="#basvuru_sorgula" class="form-control" placeholder="Ad/Soyad/Tüzel Kişi Adı" name="Ad" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>E-Posta</span>
+                            </label>
+                            <input type="text" data-onenter-submit="true"
+                                   data-onenter-click="#basvuru_sorgula" class="form-control" placeholder="E-Posta" name="EPosta" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Cep Telefonu</span>
+                            </label>
+                            <input type="text" data-onenter-submit="true"
+                                   data-onenter-click="#basvuru_sorgula" class="form-control" placeholder="Cep Telefonu" name="CepTelefonu" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Tüzel Kişi Vergi No</span>
+                            </label>
+                            <input type="text" data-onenter-submit="true"
+                                   data-onenter-click="#basvuru_sorgula" class="form-control" placeholder="Tüzel Kişi Vergi No" name="TuzelKisiVergiNo" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Tüzel Kişi Mersis No</span>
+                            </label>
+                            <input type="text" data-onenter-submit="true"
+                                   data-onenter-click="#basvuru_sorgula" class="form-control" placeholder="Tüzel Kişi Mersis No" name="TuzelKisiMersisNo" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>İl</span>
+                            </label>
+                            <select name="UavtIlNo"
+                                    class="form-select select-2"
+                                    data-ajax-target="/admin/uavt/GetirListeDepremIl"
+                                    data-custom-value="id"
+                                    data-ajax-complete="CompleteUavtIlNo"
+                                    data-custom-text="ad">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>İlçe</span>
+                            </label>
+                            <select name="UavtIlceNo" class="form-select select-2">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Mahalle</span>
+                            </label>
+                            <select name="UavtMahalleNo"
+                                    class="form-select select-2">
+                                <option></option>
+                            </select>
+                        </div>
+                        @*                         <div class="col-md-3 d-flex flex-column mb-8">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                        <span>Ada No</span>
+                        </label>
+                        <input type="text"
+                        class="form-control integer-mask"
+                        data-onenter-submit="true"
+                        data-onenter-click="#basvuru_sorgula"
+                        autocomplete="off"
+                        placeholder="Ada No"
+                        name="UavtBinaAda" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                        <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                        <span>Parsel No</span>
+                        </label>
+                        <input type="text"
+                        class="form-control integer-mask"
+                        data-onenter-submit="true"
+                        data-onenter-click="#basvuru_sorgula"
+                        autocomplete="off"
+                        placeholder="Parsel No"
+                        name="UavtBinaParsel" />
+                        </div> *@
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Tapu Ada No</span>
+                            </label>
+                            <input type="text"
+                                   class="form-control integer-mask"
+                                   data-onenter-submit="true"
+                                   data-onenter-click="#basvuru_sorgula"
+                                   autocomplete="off"
+                                   placeholder="Tapu Ada No"
+                                   name="TapuAda" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Tapu Parsel No</span>
+                            </label>
+                            <input type="text"
+                                   class="form-control integer-mask"
+                                   data-onenter-submit="true"
+                                   data-onenter-click="#basvuru_sorgula"
+                                   autocomplete="off"
+                                   placeholder="Tapu Parsel No"
+                                   name="TapuParsel" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Askı Kodu</span>
+                            </label>
+                            <input type="text" data-onenter-submit="true"
+                                   data-onenter-click="#basvuru_sorgula" class="form-control" autocomplete="off" placeholder="Askı Kodu" name="HasarTespitAskiKodu" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Başvuru Kanalı</span>
+                            </label>
+                            <select name="BasvuruKanalId" class="form-select select-2"
+                                    data-ajax-target="/admin/Select/GetirBasvuruKanalListe"
+                                    data-custom-value="basvuruKanalId"
+                                    data-custom-text="ad">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Başvuru Tarihi</span>
+                            </label>
+                            <input type="date" data-onenter-submit="true"
+                                   data-onenter-click="#basvuru_sorgula" class="form-control" autocomplete="off" placeholder="Başvuru Tarihi" name="OlusturmaTarihi" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Başvuru Numarası</span>
+                            </label>
+                            <input type="text"
+                                   data-onenter-submit="true"
+                                   data-onenter-click="#basvuru_sorgula"
+                                   class="form-control" autocomplete="off" placeholder="Başvuru Numarası" name="BasvuruKodu" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Başvuru Türü</span>
+                            </label>
+                            <select name="BasvuruTurId" class="form-select select-2"
+                                    data-ajax-target="/admin/Select/GetirBasvuruTurListe"
+                                    data-custom-value="basvuruTurId" data-custom-text="ad">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Destek Türü</span>
+                            </label>
+                            <select name="BasvuruDestekTurId" class="form-select select-2"
+                                    data-ajax-target="/admin/Select/GetirBasvuruDestekTurListe"
+                                    data-custom-value="basvuruDestekTurId"
+                                    data-custom-text="ad">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Başvuru Durumu</span>
+                            </label>
+                            <select name="BasvuruDurumId" class="form-select select-2"
+                                    data-ajax-target="/admin/Select/GetirBasvuruDurumListe"
+                                    data-custom-value="basvuruDurumId"
+                                    data-custom-text="ad">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Başvuru Afad Durumu</span>
+                            </label>
+                            <select name="BasvuruAfadDurumId" class="form-select select-2"
+                                    data-ajax-target="/admin/Select/GetirBasvuruAfadDurumListe"
+                                    data-custom-value="basvuruDurumId"
+                                    data-custom-text="ad">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div>
+
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Oluşturan Kullanıcı</span>
+                            </label>
+                            <select name="OlusturanKullaniciId"
+                                    class="form-select select-2"
+                                    data-ajax-target="/admin/kullanici/getirListe"
+                                    data-custom-value="kullaniciId"
+                                    data-custom-text="adSoyad">
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Güncelleyen Kullanıcı</span>
+                            </label>
+                            <select name="GuncelleyenKullaniciId"
+                                    class="form-select select-2"
+                                    data-ajax-target="/admin/kullanici/getirListe"
+                                    data-custom-value="kullaniciId"
+                                    data-custom-text="adSoyad">
+                            </select>
+                         </div>
+
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12 text-right">
+                            <button type="reset" id="basvuru_filtre_temizle" class="btn btn-dark mr-10">
+                                <i class="ki-duotone ki-trash fs-1"><i class="path1"></i><i class="path2"></i><i class="path3"></i><i class="path4"></i><i class="path5"></i></i> Temizle
+                            </button>
+                            <button type="button" id="basvuru_sorgula" class="btn btn-primary">
+                                <i class="ki-duotone ki-filter fs-1"><i class="path1"></i><i class="path2"></i></i> Sorgula
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-5 mb-xl-8">
+        <div class="card-header">
+            <h3 class="card-title">Başvuru Listesi</h3>
+        </div>
+        <div class="card-body py-2 px-6">
+            <div class="table-responsive">
+                <table class="table table-row-bordered table-striped table-row-gray-200 align-middle"
+                       data-name="tableList"
+                       data-export-buttons="true"
+                @*data-ajax-target="/admin/basvuru/GetirBasvuruListeServerSide"*@
+                       data-server-side="true"
+                       data-responsive="true"
+                @*data-selectable="multiple"*@
+                       data-searching="false">
+                    <thead>
+                        <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                            <th data-name="tcKimlikNoMasked" data-export="false" data-sort="false">T.C. Kimlik Numarası</th>
+                            <th data-name="tuzelKisiVergiNo" data-export="false" data-sort="false">Vergi No</th>
+                            <th data-name="tuzelKisiMersisNo" data-export="false" data-sort="false">Mersis No</th>
+                            <th data-name="listeAd" data-sort="false">Ad</th>
+                            <th class="none" data-name="cepTelefonu" data-export="false" data-sort="false">Cep Telefonu</th>
+                            <th class="none" data-name="eposta" data-export="false" data-sort="false">E-Posta</th>
+                            <th data-name="olusturmaTarihiText" data-sort="false">Başvuru Tarihi</th>
+                            <th data-name="basvuruKodu" data-sort="false">Başvuru Numarası</th>
+                            <th data-name="basvuruKanalAd" data-sort="false">Başvuru Kanalı</th>
+                            <th data-name="hasarTespitAskiKodu" data-sort="false">Askı Kodu</th>
+                            <th data-name="adaParsel" data-sort="false">Tapu Ada/Parsel</th>
+                            <th data-name="basvuruTurAd" data-sort="false">Başvuru Türü</th>
+                            <th data-name="basvuruDestekTurAd" data-sort="false">Destek Türü</th>
+                            <th data-name="uavtIlAdi" data-sort="false">İl</th>
+                            <th data-name="uavtIlceAdi" data-sort="false">İlçe</th>
+                            <th data-name="uavtMahalleAdi" data-sort="false">Mahalle</th>
+                            <th data-name="hasarTespitHasarDurumu" data-sort="false">Hasar Durumu</th>
+                            <th data-name="hasarTespitItirazSonucu" data-sort="false">İtiraz Durumu</th>
+                            <th data-name="olusturanKullaniciAdi" data-sort="false">Oluşturan</th>
+                            <th data-name="guncelleyenKullaniciAdi" data-sort="false">Güncelleyen</th>
+                            <th data-name="hasarTespitGuclendirmeMahkemeSonucu" data-sort="false">Güçlendirme Mahkeme Sonucu</th>
+                            <th data-name="basvuruDurumAd" data-sort="false">Başvuru Durumu</th>
+                            <th data-name="basvuruIptalAciklamasi" data-sort="false">Başvuru İptal Açıklaması</th>
+                            <th data-name="sonuclandirmaAciklamasi" data-sort="false">Değerlendirme Sonucu</th>
+                            <th data-name="basvuruAfadDurumAd" data-sort="false">Afad Durumu</th>
+                            <th data-name="Buttons" class="all text-center" data-sort="false" data-export="false" data-width="80px">İşlem</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script src="~/admin/metronic/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js"></script>
+
+    <script type="text/javascript">
+        let filterAskiKodu = getQueryStringValue("askiKodu");
+        let filterIlNo = getQueryStringValue("ilNo");
+        let filterIlceNo = getQueryStringValue("ilceNo");
+        let filterMahalleNo = getQueryStringValue("mahalleNo");
+
+        let cevapEditor = false;
+        let basvuruDuzenleyebilir = @(basvuruDuzenleyebilir ? "true" : "false");
+        let basvuruIptalEdebilir = @(basvuruIptalEdebilir ? "true" : "false");
+
+        $(document).ready(function () {
+
+            $(document).on('click', "#basvuru_filtre_temizle", function (e) {
+                resetForm($("form[data-name='tableListFilter']"));
+                reloadTable("data-name='tableList']");
+            });
+
+            $(document).on('click', "#basvuru_sorgula", function (e) {
+                reloadTable("[data-name='tableList']");
+            });
+
+            if (filterAskiKodu) {
+                $("input[name='HasarTespitAskiKodu']").val(filterAskiKodu);
+                $("input[name='IptalEdilenGelmesin']").val("true");
+            }
+            else {
+                loadTable("[data-name='tableList']", "/admin/basvuru/GetirBasvuruListeServerSide");
+            }
+
+            let sonBasvuruId = localStorage.getItem("sonBasvuruGuid");
+            let sonBasvuruTc = localStorage.getItem("sonBasvuruTc");
+            if (sonBasvuruId && sonBasvuruTc) {
+                BasvuruDetayModal(sonBasvuruId, sonBasvuruTc);
+                localStorage.removeItem("sonBasvuruGuid");
+                localStorage.removeItem("sonBasvuruTc");
+            }
+
+            $(document).on('change', "select[name='UavtIlNo']", function (e) {
+                let ilKod = parseInt($(this).val() || 0);
+
+                if (ilKod <= 0) {
+                    $("select[name='UavtIlceNo']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                startLoader("select[name='UavtIlceNo']");
+                fillSelect("select[name='UavtIlceNo']", "/admin/uavt/GetirListeIlce?ilKod=" + ilKod, null, function () {
+                    stopLoader("select[name='UavtIlceNo']");
+                    if (filterIlceNo) {
+                        $("select[name='UavtIlceNo']").val(filterIlceNo).change();
+                    }
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("select[name='UavtIlceNo']");
+                });
+            });
+            $(document).on('change', "select[name='UavtIlceNo']", function (e) {
+                let ilceKod = parseInt($(this).val() || 0);
+
+                if (ilceKod <= 0) {
+                    $("select[name='UavtMahalleNo']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                $("input[name='UavtIlceAdi']").val($(this).select2('data')[0]?.text?.trim());
+
+                startLoader("select[name='UavtMahalleNo']");
+                fillSelect("select[name='UavtMahalleNo']", "/admin/uavt/GetirListeMahalle?ilceKod=" + ilceKod, null, function () {
+                    stopLoader("select[name='UavtMahalleNo']");
+                    if (filterMahalleNo) {
+                        $("select[name='UavtMahalleNo']").val(filterMahalleNo).change();
+                        //$("#basvuru_sorgula").click();
+                        loadTable("[data-name='tableList']", "/admin/basvuru/GetirBasvuruListeServerSide");
+                        //filterTable("[data-name='tableList']");
+                    }
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("select[name='UavtMahalleNo']");
+                });
+            });
+        });
+
+        function BasvuruDosyaIndir(basvuruDosyaId, tcKimlikNo) {
+            if (!basvuruDosyaId || tcKimlikNo?.length != 11) {
+                return;
+            }
+
+            //startLoader("[data-name='tableList']");
+            Request("/admin/basvurudosya/basvurudosyaindir", { basvuruDosyaId: basvuruDosyaId, tcKimlikNo: tcKimlikNo }, 'post')
+                .done(function (response) {
+                    let a = document.createElement("a");
+                    a.href = "data:image/png;base64," + response?.base64;
+                    a.download = response?.dosyaAdi;
+                    a.click();
+                })
+                .fail(function (jqXHR, textStatus) {
+                    //stopLoader("[data-name='tableList']");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+        $('#modal_basvuru_iptal').on('hidden.bs.modal', function () {
+            $("select[name='BasvuruIptalTurId']").val('').change();
+            // $('#secilenBasvuruIptalAciklama').val('');
+        })
+        function BasvuruDetayModal(basvuruGuid, tcKimlikNo) {
+            if (!basvuruGuid || tcKimlikNo?.length != 11) {
+                return;
+            }
+
+            startLoader("[data-name='tableList']");
+
+            $("#basvuru_guncelle_href").attr("href", "/admin/basvuru/duzenle/" + basvuruGuid + "/" + tcKimlikNo + "/");
+
+            RequestText("/admin/basvuru/GetirBasvuruDetayPartial", { basvuruId: basvuruGuid, tcKimlikNo: tcKimlikNo }, 'get')
+                .done(function (response) {
+                    stopLoader("[data-name='tableList']");
+
+                    $("#modal_basvuru_detay .modal-body").html(response);
+
+                    $("#modal_basvuru_detay").modal("show");
+                })
+                .fail(function (jqXHR, textStatus) {
+                    stopLoader("[data-name='tableList']");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+
+        function BasvuruIptalEtModal(basvuruGuid, tcKimlikNo) {
+            $('#btnBasvuruIptalConfirm').attr("data-confirm-param",basvuruGuid);
+            $('#btnBasvuruIptalConfirm').attr("data-confirm-param2", tcKimlikNo);
+            $('#modal_basvuru_iptal').modal("show");
+        }
+        function BasvuruIptalEt(basvuruGuid, tcKimlikNo) {
+            if (!basvuruGuid || tcKimlikNo?.length != 11 ) {
+                toastr.error("Başvuru seçilemedi! ");
+                return;
+            }
+            // if ($('#secilenBasvuruIptalAciklama').val() == null || $('#secilenBasvuruIptalAciklama').val().length < 25 || $('#secilenBasvuruIptalAciklama').val() > 2000) {
+            //     toastr.error("Başvuru İptal Açıklaması Giriniz! En az 25, en fazla 2000 karakter olarak açıklama giriniz! ");
+            //     return;
+            // }
+            if ($("select[name='BasvuruIptalTurId']").val() == null || $("select[name='BasvuruIptalTurId']").val() == '') {
+                 toastr.error("Başvuru İptal Türü Seçiniz !");
+                 return;
+             }
+            var params = { 
+                basvuruId: basvuruGuid,
+                tcKimlikNo: tcKimlikNo,
+                basvuruIptalTurId: $("select[name='BasvuruIptalTurId']").val()
+            }
+            RequestText("/admin/basvuru/IptalBasvuru", params, 'post')
+                .done(function (response) {
+                    //stopLoader("[data-name='tableList']");
+                    $("select[name='BasvuruIptalTurId']").val('').change();
+                    // $('#secilenBasvuruIptalAciklama').val('');
+                    $('#modal_basvuru_iptal').modal("hide"); 
+                    toastr.success(response);
+                    reloadTable("[data-name='tableList']");
+                })
+                .fail(function (jqXHR, textStatus) {
+                    //stopLoader("[data-name='tableList']");
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                });
+        }
+
+        function CompleteUavtIlNo(response, elem) {
+            if (filterIlNo) {
+                $(elem).val(filterIlNo).change();
+            }
+        }
+
+        function ajaxTableComplete(data, tableElem) {
+            let tableName = tableElem.attr("data-name");
+            if (tableName == "tableList") {
+                $.each(data, function (index, row) {
+                    row.olusturmaTarihiText = dateToDate(row.olusturmaTarihi);
+                    row.hasarTespitHasarDurumu = `<label>${row.hasarTespitHasarDurumu ?? ""}</label>`;
+                    row.adaParsel = (row.tapuAda ?? "-") + "/" + (row.tapuParsel ?? "-");
+
+                    let buttonsHtmlCode = `<button type="button" class="btn btn-sm btn-icon btn-light-dark me-2" data-placement="top" data-toggle="tooltip" title="Görüntüle" onclick="BasvuruDetayModal('${row.basvuruGuid}','${row.tcKimlikNo}')"><i class="fa fa-eye"></i></button>`;
+
+                    if (basvuruDuzenleyebilir && row.iptalEdilebilirMi) {
+                        buttonsHtmlCode += `<a href="/admin/basvuru/duzenle/${row.basvuruGuid}/${row.tcKimlikNo}/" class="btn btn-sm btn-icon btn-light-primary me-2" title="Düzenle" data-placement="top" data-toggle="tooltip"><i class="fa fa-edit"></i></a>`;
+                    }
+
+                    //if (row.sonuclandirilabilirMi) {
+                    //    buttonsHtmlCode += `<button type="button" class="btn btn-sm btn-icon btn-light-info me-2" data-placement="top" data-toggle="tooltip" title="Sonuçlandır" onclick="BasvuruSonuclandirModal('${row.basvuruGuid}','${row.tcKimlikNo}')"><i class="fa-solid fa-tasks-alt"></i></button>`;
+                    //}
+
+                    if (basvuruIptalEdebilir && row.iptalEdilebilirMi) {
+                        //buttonsHtmlCode += `<button type="button" class="btn btn-sm btn-icon btn-light-danger me-2" data-confirm="true" data-confirm-function="BasvuruIptalEt" data-confirm-param="${row.basvuruGuid}" data-confirm-param2="${row.tcKimlikNo}" data-confirm-text="Başvuruyu iptal etmek istediğinize emin misiniz?" data-placement="top" data-toggle="tooltip" title="İptal Et"><i style="font-size:12pt;" class="fa fa-times-circle"></i></button>`;
+                        buttonsHtmlCode += `<button type="button" class="btn btn-sm btn-icon btn-light-danger me-2" data-placement="top" data-toggle="tooltip" title="İptal Et" onclick="BasvuruIptalEtModal('${row.basvuruGuid}','${row.tcKimlikNo}')"><i style="font-size:12pt;" class="fa fa-times-circle"></i></button>`;
+                    }
+
+                    row.Buttons = `<div class="d-flex">${buttonsHtmlCode}</div>`;
+                });
+            }
+            return data;
+        }
+
+        function basvuruDetayYazdir() {
+            let html = '<html><head><link href="@uiBaseUrl/admin/metronic/assets/css/style.bundle.css" rel="stylesheet" type="text/css" /><link href="@uiBaseUrl/admin/metronic/assets/css/custom.css" rel="stylesheet" type="text/css" /><link href="@uiBaseUrl/admin/metronic/assets/css/print.css" rel="stylesheet" type="text/css" /></head><body>' + $(".div-basvuru-detay-yazdir").html();
+            let printWin = window.open("", "basvuruYazdir");
+            printWin.document.open();
+            printWin.document.write(html);
+            printWin.document.close();
+            setTimeout(function () {
+                printWin.print();
+                setTimeout(function () {
+                    printWin.close();
+                }, 250);
+            }, 750);
+        }
+    </script>
+}

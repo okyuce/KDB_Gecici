@@ -1,0 +1,100 @@
+﻿@using System.Security.Claims
+@using Csb.YerindeDonusum.Application.CustomAddons;
+@using Csb.YerindeDonusum.Application.Enums
+@using Csb.YerindeDonusum.WebApp.Utilities.Helpers
+@{
+    ViewBag.Title = "Başvurular";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div id="kt_app_content_container" class="app-container container-fluid">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div class="card mb-5 mb-xl-8">
+            <div class="card-header collapsible cursor-pointer rotate collapsed" data-bs-toggle="collapse" data-bs-target="#kt_docs_card_collapsible">
+                <h3 class="card-title">Başvuru Filtrele</h3>
+                <div class="card-toolbar rotate-180">
+                    <i class="ki-duotone ki-down fs-1"></i>
+                </div>
+            </div>
+            <div id="kt_docs_card_collapsible" class="collapse">
+                <form id="tableListFilterForm" data-name="tableListFilter" class="card-body py-2 px-6">
+                    <div class="row mt-4">
+                        <div class="col-md-12 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Askı Kodu</span>
+                            </label>
+                            <input type="text" data-onenter-submit="true"
+                                   data-onenter-click="#basvuru_sorgula" class="form-control" autocomplete="off" placeholder="Askı Kodu" name="HasarTespitAskiKodu" />
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12 text-right">
+                            <button type="reset" id="basvuru_filtre_temizle" class="btn btn-dark mr-10">
+                                <i class="ki-duotone ki-trash fs-1"><i class="path1"></i><i class="path2"></i><i class="path3"></i><i class="path4"></i><i class="path5"></i></i> Temizle
+                            </button>
+                            <button type="button" id="basvuru_sorgula" class="btn btn-primary">
+                                <i class="ki-duotone ki-filter fs-1"><i class="path1"></i><i class="path2"></i></i> Sorgula
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-5 mb-xl-8">
+        <div class="card-header">
+            <h3 class="card-title">Başvuru Listesi</h3>
+        </div>
+        <div class="card-body py-2 px-6">
+            <div class="table-responsive">
+                <table class="table table-row-bordered table-striped table-row-gray-200 align-middle"
+                       data-name="tableList"
+                       data-export-buttons="true"
+                       data-responsive="true"
+                       data-server-side="true"
+                       data-searching="false">
+                    <thead>
+                        <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                            <th data-name="tcKimlikNo" data-export="false" data-sort="false">T.C. Kimlik Numarası</th>
+                            <th data-name="adSoyad" data-sort="false">Adı Soyadı</th>
+                            <th data-name="hasarTespitAskiKodu" data-sort="false">Askı Kodu</th>
+                            <th data-name="uavtIlAdi" data-sort="false">İl</th>
+                            <th data-name="uavtIlceAdi" data-sort="false">İlçe</th>
+                            <th data-name="uavtMahalleAdi" data-sort="false">Mahalle</th>
+                            <th data-name="adaParsel" data-sort="false">Tapu Ada/Parsel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="odd">
+                            <td valign="top" colspan="7" class="dataTables_empty text-center">Tabloda herhangi bir veri mevcut değil</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(document).on('click', "#basvuru_filtre_temizle", function (e) {
+                resetForm($("form[data-name='tableListFilter']"));
+                reloadTable("data-name='tableList']");
+            });
+
+            $(document).on('click', "#basvuru_sorgula", function (e) {
+                loadTable("[data-name='tableList']", "/admin/belediye/GetirBelediyeBasvuruListeServerSide");
+            });
+        });
+
+        function ajaxTableComplete(data, tableElem) {
+            let tableName = tableElem.attr("data-name");
+            if (tableName == "tableList") {
+                $.each(data, function (index, row) {
+                    row.adaParsel = (row.tapuAda ?? "-") + "/" + (row.tapuParsel ?? "-");
+                });
+            }
+            return data;
+        }
+    </script>
+}

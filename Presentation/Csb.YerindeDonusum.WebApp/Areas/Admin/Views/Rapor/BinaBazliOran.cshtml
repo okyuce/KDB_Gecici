@@ -1,0 +1,161 @@
+﻿@using System.Security.Claims
+@using Csb.YerindeDonusum.Application.CustomAddons;
+@using Csb.YerindeDonusum.WebApp.Utilities.Helpers
+@{
+    ViewBag.Title = "Bina Bazlı Oran Raporu";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-container container-fluid">
+    <div class="d-flex flex-column flex-column-fluid">
+        <div class="card mb-5 mb-xl-8">
+            <div class="card-header collapsible cursor-pointer rotate collapsed" data-bs-toggle="collapse" data-bs-target="#kt_docs_card_collapsible">
+                <h3 class="card-title">Filtrele</h3>
+                <div class="card-toolbar rotate-180">
+                    <i class="ki-duotone ki-down fs-1"></i>
+                </div>
+            </div>
+            <div id="kt_docs_card_collapsible" class="collapse">
+                <form id="rapor-filter-form" data-name="tableListFilter" class="card-body py-2 px-6">
+                    <div class="row mt-4">
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>İl</span>
+                            </label>
+                            <select name="UavtIlNo"
+                                class="form-select select-2" 
+                                data-ajax-target="/admin/uavt/GetirListeDepremIl" 
+                                data-custom-value="id" 
+                                data-custom-text="ad">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>İlçe</span>
+                            </label>
+                            <select name="UavtIlceNo" class="form-select select-2">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Askı Kodu</span>
+                            </label>
+                            <input type="text" data-onenter-submit="true"
+                                   data-onenter-click="#rapor_sorgula" class="form-control" autocomplete="off" placeholder="Askı Kodu" name="HasarTespitAskiKodu" />
+                        </div>
+                        <div class="col-md-3 d-flex flex-column mb-8">
+                            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                                <span>Oran</span>
+                            </label>
+                            <select name="Oran" class="form-select select-2">
+                                <option></option>
+                                <option value="10">Oran > %10</option>
+                                <option value="20">Oran > %20</option>
+                                <option value="30">Oran > %30</option>
+                                <option value="40">Oran > %40</option>
+                                <option value="50">Oran > %50</option>
+                                <option value="60">Oran > %60</option>
+                                <option value="70">Oran > %70</option>
+                                <option value="80">Oran > %80</option>
+                                <option value="90">Oran > %90</option>
+                                <option value="100">Oran = %100</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12 text-right">
+                            <button type="reset" id="rapor_filtre_temizle" class="btn btn-dark mr-10">
+                                <i class="ki-duotone ki-trash fs-1"><i class="path1"></i><i class="path2"></i><i class="path3"></i><i class="path4"></i><i class="path5"></i></i> Temizle
+                            </button>
+                            <button type="button" id="rapor_sorgula" class="btn btn-primary">
+                                <i class="ki-duotone ki-filter fs-1"><i class="path1"></i><i class="path2"></i></i> Sorgula
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-5 mb-xl-8">
+        <div class="card-header">
+            <h3 class="card-title">Bina Bazlı Oran Raporu</h3>
+        </div>
+        <div class="card-body py-2 px-6">
+            <div class="table-responsive">
+                <table class="table table-row-bordered table-striped table-row-gray-200 align-middle dataTable"
+                       data-name="tableList"
+                       data-ajax-target="/admin/rapor/GetirListeBinabazliOranServerSide"
+                       data-server-side="true"
+                       data-responsive="true"
+                       data-searching="false">
+                    <thead>
+                        <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
+                            <th data-name="hasarTespitIlAdi" data-sort="false">İl</th>
+                            <th data-name="hasarTespitIlceAdi" data-sort="false">İlçe</th>
+                            <th data-name="hasarTespitMahalleAdi" data-sort="false">Mahalle</th>
+                            <th data-name="hasarTespitAskiKodu" data-sort="false">Askı Kodu</th>
+                            <th data-name="katAdedi" data-sort="false">Kat Adeti</th>
+                            <th data-name="basvuruSay" data-sort="false">Başvuru Sayısı</th>
+                            <th data-name="sonHasarDurumu" data-sort="false">Son Hasar Durumu</th>
+                            <th data-name="oran" class="all" data-sort="false" data-width="70px">Oran</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script src="~/admin/metronic/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(document).on('click', "#rapor_filtre_temizle", function (e) {
+                resetForm("#rapor-filter-form");
+            });
+
+            $(document).on('click', "#rapor_sorgula", function (e) {
+                reloadTable("[data-name='tableList']");
+            });
+
+            $(document).on('change', "select[name='UavtIlNo']", function (e) {
+                let ilKod = parseInt($(this).val() || 0);
+
+                if (ilKod <= 0) {
+                    $("select[name='UavtIlceNo']").html("<option></option>").trigger("change");
+                    return;
+                }
+
+                startLoader("select[name='UavtIlceNo']");
+                fillSelect("select[name='UavtIlceNo']", "/admin/uavt/GetirListeIlce?ilKod=" + ilKod, null, function () {
+                    stopLoader("select[name='UavtIlceNo']");
+                }, function (jqXHR) {
+                    toastr.error(getAjaxErrorMessage(jqXHR));
+                    stopLoader("select[name='UavtIlceNo']");
+                });
+            });
+        });
+
+        function ajaxTableComplete(data, tableElem) {
+            let tableName = tableElem.attr("data-name");
+            if (tableName == "tableList") {
+                $.each(data, function (index, row) {
+                    let oranTut = row.oran;
+                    row.oran = `<label class="badge badge-${(row.oran > 50 ? "success" : "danger")}">%${row.oran}</label>`;
+                });
+            }
+            return data;
+        }
+
+        function BasvuruListesineGit(askiKodu, ilNo, ilceNo, mahalleNo) 
+        {
+            window.location.href = `/admin/basvuru?askiKodu=${askiKodu}&ilNo=${ilNo}&ilceNo=${ilceNo}&mahalleNo=${mahalleNo}`;
+        }
+
+    </script>
+}

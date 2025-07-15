@@ -1,0 +1,13 @@
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.deps.json
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\bin\Debug\net7.0\Csb.YerindeDonusum.Domain.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\obj\Debug\net7.0\Csb.YerindeDonusum.Domain.csproj.AssemblyReference.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\obj\Debug\net7.0\Csb.YerindeDonusum.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\obj\Debug\net7.0\Csb.YerindeDonusum.Domain.AssemblyInfoInputs.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\obj\Debug\net7.0\Csb.YerindeDonusum.Domain.AssemblyInfo.cs
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\obj\Debug\net7.0\Csb.YerindeDonusum.Domain.csproj.CoreCompileInputs.cache
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\obj\Debug\net7.0\EFCoreNpgsqlNetTopologySuite.cs
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\obj\Debug\net7.0\Csb.YerindeDonusum.Domain.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\obj\Debug\net7.0\refint\Csb.YerindeDonusum.Domain.dll
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\obj\Debug\net7.0\Csb.YerindeDonusum.Domain.pdb
+C:\Users\oguzkaan.yuce\source\repos\yerindedonusum\src\Core\Csb.YerindeDonusum.Domain\obj\Debug\net7.0\ref\Csb.YerindeDonusum.Domain.dll

@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bogus" Version="35.5.0" />
+    <PackageReference Include="Asp.Versioning.Mvc" Version="7.1.1" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="7.1.0" />
+    <PackageReference Include="CSB.Core.LogHandler" Version="1.1.6" />
+    <PackageReference Include="CSB.Core.MessageProducer" Version="1.0.1" />
+	<PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
+    <PackageReference Include="Hangfire.Dashboard.Basic.Authentication" Version="7.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="7.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.17">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NSwag.MSBuild" Version="13.19.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Csb.YerindeDonusum.Application\Csb.YerindeDonusum.Application.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Csb.YerindeDonusum.BackgroundJob\Csb.YerindeDonusum.BackgroundJob.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Csb.YerindeDonusum.Caching\Csb.YerindeDonusum.Caching.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Csb.YerindeDonusum.EDevlet\Csb.YerindeDonusum.EDevlet.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Csb.YerindeDonusum.NVIYapiBelge\Csb.YerindeDonusum.NVIYapiBelge.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Csb.YerindeDonusum.Santiyem\Csb.YerindeDonusum.Santiyem.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Csb.YerindeDonusum.Persistance\Csb.YerindeDonusum.Persistance.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Csb.YerindeDonusum.Takbis\Csb.YerindeDonusum.Takbis.csproj" />
+  </ItemGroup>
+
+</Project>

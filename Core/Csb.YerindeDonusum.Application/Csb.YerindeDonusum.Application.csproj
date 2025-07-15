@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Csb.YerindeDonusum.Domain\Csb.YerindeDonusum.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CSB.Core.LogHandler" Version="1.1.6" />
+      <PackageReference Include="CSB.Core.MessageProducer" Version="1.0.1" />
+      <PackageReference Include="EFCore.BulkExtensions" Version="7.8.1" />
+      <PackageReference Include="AutoMapper" Version="12.0.1" />
+      <PackageReference Include="CSB.Core" Version="0.9.7" />
+      <PackageReference Include="CSB.Core.Integration" Version="0.9.7" />
+      <PackageReference Include="CSB.Core.Integration.KPS" Version="0.9.8" />
+      <PackageReference Include="CSB.Core.Integration.NVI" Version="1.0.6" />
+      <PackageReference Include="CSB.Core.Utilities.Messaging" Version="0.9.3" />
+	  <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
+      <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+      <PackageReference Include="Hangfire.Core" Version="1.8.11" />
+      <PackageReference Include="MediatR" Version="12.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.17" />
+      <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
+      <PackageReference Include="Serilog" Version="3.1.1" />
+      <PackageReference Include="System.DirectoryServices.AccountManagement" Version="7.0.1" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
+	</ItemGroup>
+    
+</Project>
